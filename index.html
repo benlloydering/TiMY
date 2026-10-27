@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>TiMY Dual-Track Quest</title>
+  <style>
+    :root {
+      --harper-pink: #ff65a3;
+      --harper-aqua: #26c6da;
+      --harper-bg: #fff0f6;
+      --haisley-blue: #1e88e5;
+      --haisley-sky: #64b5f6;
+      --haisley-bg: #e3f2fd;
+      --bg-dark: #1f1b2e;
+    }
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      margin: 0;
+      padding: 0;
+      font-family: 'Comic Sans MS', 'Chalkboard SE', 'Fredoka', cursive, sans-serif;
+    }
+    body {
+      background: #f7f9fc;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    header {
+      background: #ffffff;
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      z-index: 10;
+    }
+    .brand {
+      font-size: 24px;
+      font-weight: 900;
+      color: #7b1fa2;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .tabs {
+      display: flex;
+      gap: 8px;
+    }
+    .tab-btn {
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      background: #eceff1;
+      color: #546e7a;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: #7b1fa2;
+      color: #fff;
+      transform: scale(1.05);
+    }
+    .parent-gear {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .tracks-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 12px;
+      overflow-y: auto;
+    }
+    .track-card {
+      flex: 1;
+      min-height: 200px;
+      border-radius: 24px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+      position: relative;
+    }
+    .harper-card {
+      background: linear-gradient(135deg, var(--harper-bg), #e0f7fa);
+      border: 4px solid var(--harper-pink);
+    }
+    .haisley-card {
+      background: linear-gradient(135deg, var(--haisley-bg), #bbdefb);
+      border: 4px solid var(--haisley-blue);
+    }
+    .child-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .child-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .avatar-badge {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .child-title {
+      font-size: 20px;
+      font-weight: 900;
+    }
+    .harper-card .child-title { color: var(--harper-pink); }
+    .haisley-card .child-title { color: var(--haisley-blue); }
+
+    .timer-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+    }
+    .timer-text {
+      font-size: 20px;
+      font-weight: 900;
+      color: #37474f;
+      min-width: 60px;
+      text-align: center;
+    }
+    .timer-btn {
+      border: none;
+      background: none;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .quest-path {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      position: relative;
+      margin: 20px 0;
+      padding: 0 20px;
+    }
+    .quest-line {
+      position: absolute;
+      top: 50%;
+      left: 60px;
+      right: 60px;
+      height: 10px;
+      background: rgba(0,0,0,0.08);
+      border-radius: 5px;
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+    .quest-stone {
+      position: relative;
+      z-index: 2;
+      background: white;
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .quest-stone.completed {
+      background: #a5d6a7;
+      border: 3px solid #43a047;
+      transform: scale(0.9);
+      opacity: 0.8;
+    }
+    .quest-stone.current {
+      border: 4px solid #ffb300;
+      transform: scale(1.15);
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,179,0,0.7); }
+      70% { box-shadow: 0 0 0 14px rgba(255,179,0,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,179,0,0); }
+    }
+    .stone-icon { font-size: 24px; }
+    .stone-label {
+      position: absolute;
+      bottom: -22px;
+      white-space: nowrap;
+      font-size: 11px;
+      font-weight: 800;
+      color: #455a64;
+    }
+    .avatar-token {
+      position: absolute;
+      top: -20px;
+      font-size: 26px;
+      animation: bounce 0.8s infinite alternate;
+    }
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-8px); }
+    }
+    .reward-castle {
+      position: relative;
+      z-index: 2;
+      font-size: 38px;
+    }
+    .footer-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .btn-add-adhoc {
+      border: none;
+      background: rgba(255,255,255,0.8);
+      font-weight: 900;
+      padding: 6px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #323232;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      font-size: 14px;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .toast.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .btn-undo {
+      background: #ffb74d;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+    }
+    .modal-content {
+      background: white;
+      padding: 24px;
+      border-radius: 20px;
+      max-width: 400px;
+      width: 90%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">⏱️ TiMY</div>
+    <div class="tabs">
+      <button class="tab-btn" id="tabMorning" onclick="switchMode('morning')">☀️ Morning</button>
+      <button class="tab-btn" id="tabChores" onclick="switchMode('chores')">⚡ Chores</button>
+      <button class="tab-btn" id="tabBedtime" onclick="switchMode('bedtime')">🌙 Bedtime</button>
+    </div>
+    <button class="parent-gear" onclick="openParentModal()">⚙️</button>
+  </header>
+
+  <div class="tracks-container">
+    <!-- Harper's Track -->
+    <div class="track-card harper-card" id="harperCard">
+      <div class="child-header">
+        <div class="child-info">
+          <div class="avatar-badge">🐱</div>
+          <div>
+            <div class="child-title">Harper (7)</div>
+            <div style="font-size: 12px; color: #546e7a;">Theme: Pink & Aqua</div>
+          </div>
+        </div>
+        <div class="timer-badge">
+          <span class="timer-text" id="harperTimer">05:00</span>
+          <button class="timer-btn" onclick="toggleTimer('harper')">▶️</button>
+          <button class="timer-btn" onclick="resetTimer('harper')">🔄</button>
+        </div>
+      </div>
+      <div class="quest-path" id="harperPath"></div>
+      <div class="footer-actions">
+        <button class="btn-add-adhoc" onclick="promptAdHoc('Harper')">+ Quick Chore</button>
+      </div>
+    </div>
+
+    <!-- Haisley's Track -->
+    <div class="track-card haisley-card" id="haisleyCard">
+      <div class="child-header">
+        <div class="child-info">
+          <div class="avatar-badge">🐶</div>
+          <div>
+            <div class="child-title">Haisley (5)</div>
+            <div style="font-size: 12px; color: #546e7a;">Theme: Royal & Sky Blue</div>
+          </div>
+        </div>
+        <div class="timer-badge">
+          <span class="timer-text" id="haisleyTimer">05:00</span>
+          <button class="timer-btn" onclick="toggleTimer('haisley')">▶️</button>
+          <button class="timer-btn" onclick="resetTimer('haisley')">🔄</button>
+        </div>
+      </div>
+      <div class="quest-path" id="haisleyPath"></div>
+      <div class="footer-actions">
+        <button class="btn-add-adhoc" onclick="promptAdHoc('Haisley')">+ Quick Chore</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <span id="toastMsg">Step completed!</span>
+    <button class="btn-undo" onclick="undoLastAction()">UNDO</button>
+  </div>
+
+  <div class="modal" id="parentModal">
+    <div class="modal-content">
+      <h3>Parent Settings</h3>
+      <div>
+        <label>Chores Quota per child:</label>
+        <select id="choreQuotaSelect" onchange="updateChoreQuota(this.value)">
+          <option value="1">1 Chore</option>
+          <option value="2" selected>2 Chores</option>
+          <option value="3">3 Chores</option>
+        </select>
+      </div>
+      <button class="tab-btn active" style="justify-content:center" onclick="autoAssignChores()">🎲 Re-Roll Chores Pool</button>
+      <button class="tab-btn" style="justify-content:center" onclick="closeParentModal()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    const ROUTINES = {
+      morning: [
+        { label: 'Pick Clothes', icon: '👗' },
+        { label: 'Get Dressed', icon: '👕' },
+        { label: 'Brush Teeth', icon: '🪥' },
+        { label: 'Get Backpack', icon: '🎒' },
+        { label: 'Shoes/Jacket', icon: '👟' }
+      ],
+      bedtime: [
+        { label: 'Pick Up Toys', icon: '🧸' },
+        { label: 'Pajamas', icon: '👚' },
+        { label: 'Brush Teeth', icon: '🪥' },
+        { label: 'Go Potty', icon: '🚽' },
+        { label: 'Read Book', icon: '📖' }
+      ]
+    };
+
+    const CHORE_POOL = [
+      { label: 'Floor Toy Tidy', icon: '🧸' },
+      { label: 'Clear Dinner Plate', icon: '🍽️' },
+      { label: 'Put Shoes on Rack', icon: '👞' },
+      { label: 'Dirty Clothes in Hamper', icon: '🧺' },
+      { label: 'Wipe Table', icon: '🧽' }
+    ];
+
+    let currentMode = 'morning';
+    let choreQuota = 2;
+    let lastCompleted = null;
+    let toastTimeout = null;
+
+    let state = {
+      Harper: { steps: [], activeIdx: 0, timerSec: 300, timerInterval: null },
+      Haisley: { steps: [], activeIdx: 0, timerSec: 300, timerInterval: null }
+    };
+
+    function determineSmartMode() {
+      const hour = new Date().getHours();
+      if (hour >= 6 && hour < 11) return 'morning';
+      if (hour >= 11 && hour < 18) return 'chores';
+      return 'bedtime';
+    }
+
+    function switchMode(mode) {
+      currentMode = mode;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      const activeTab = document.getElementById('tab' + mode.charAt(0).toUpperCase() + mode.slice(1));
+      if (activeTab) activeTab.classList.add('active');
+
+      if (mode === 'chores') {
+        autoAssignChores();
+      } else {
+        state.Harper.steps = JSON.parse(JSON.stringify(ROUTINES[mode]));
+        state.Haisley.steps = JSON.parse(JSON.stringify(ROUTINES[mode]));
+        state.Harper.activeIdx = 0;
+        state.Haisley.activeIdx = 0;
+        renderPaths();
+      }
+    }
+
+    function autoAssignChores() {
+      const shuffled = [...CHORE_POOL].sort(() => 0.5 - Math.random());
+      state.Harper.steps = shuffled.slice(0, choreQuota);
+      state.Haisley.steps = shuffled.slice(choreQuota, choreQuota * 2);
+      state.Harper.activeIdx = 0;
+      state.Haisley.activeIdx = 0;
+      renderPaths();
+      closeParentModal();
+    }
+
+    function renderPaths() {
+      renderChildPath('Harper', 'harperPath', '🐱');
+      renderChildPath('Haisley', 'haisleyPath', '🐶');
+    }
+
+    function renderChildPath(child, containerId, avatarEmoji) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '<div class="quest-line"></div>';
+
+      state[child].steps.forEach((step, idx) => {
+        const stone = document.createElement('div');
+        stone.className = 'quest-stone';
+        if (idx < state[child].activeIdx) stone.classList.add('completed');
+        if (idx === state[child].activeIdx) {
+          stone.classList.add('current');
+          const token = document.createElement('div');
+          token.className = 'avatar-token';
+          token.textContent = avatarEmoji;
+          stone.appendChild(token);
+        }
+
+        let pressTimer = null;
+        stone.addEventListener('pointerdown', () => {
+          if (idx === state[child].activeIdx) {
+            pressTimer = setTimeout(() => {
+              completeStep(child, idx);
+            }, 800);
+          }
+        });
+        stone.addEventListener('pointerup', () => clearTimeout(pressTimer));
+        stone.addEventListener('pointerleave', () => clearTimeout(pressTimer));
+
+        const icon = document.createElement('span');
+        icon.className = 'stone-icon';
+        icon.textContent = idx < state[child].activeIdx ? '✅' : step.icon;
+        stone.appendChild(icon);
+
+        const label = document.createElement('span');
+        label.className = 'stone-label';
+        label.textContent = step.label;
+        stone.appendChild(label);
+
+        container.appendChild(stone);
+      });
+
+      const castle = document.createElement('div');
+      castle.className = 'reward-castle';
+      castle.textContent = state[child].activeIdx >= state[child].steps.length ? '🎉' : '🏰';
+      container.appendChild(castle);
+    }
+
+    function completeStep(child, idx) {
+      lastCompleted = { child, idx };
+      state[child].activeIdx++;
+      renderPaths();
+
+      const taskName = state[child].steps[idx].label;
+      speakFeedback(`${child} completed ${taskName}! Awesome job!`);
+      showToast(`${child} finished: ${taskName}`);
+
+      if (state[child].activeIdx >= state[child].steps.length) {
+        setTimeout(() => {
+          speakFeedback(`Congratulations ${child}! You reached the castle!`);
+        }, 1200);
+      }
+    }
+
+    function undoLastAction() {
+      if (lastCompleted) {
+        state[lastCompleted.child].activeIdx = lastCompleted.idx;
+        renderPaths();
+        hideToast();
+        speakFeedback(`Undone for ${lastCompleted.child}`);
+        lastCompleted = null;
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(hideToast, 5000);
+    }
+
+    function hideToast() {
+      document.getElementById('toast').classList.remove('show');
+    }
+
+    function speakFeedback(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 1.0;
+        utterance.pitch = 1.2;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function promptAdHoc(child) {
+      const chore = prompt(`Add a quick chore for ${child}:`, "Wipe Counter");
+      if (chore) {
+        state[child].steps.push({ label: chore, icon: '⭐' });
+        renderPaths();
+      }
+    }
+
+    function toggleTimer(child) {
+      const key = child.charAt(0).toUpperCase() + child.slice(1);
+      const timerObj = state[key];
+      if (timerObj.timerInterval) {
+        clearInterval(timerObj.timerInterval);
+        timerObj.timerInterval = null;
+      } else {
+        timerObj.timerInterval = setInterval(() => {
+          if (timerObj.timerSec > 0) {
+            timerObj.timerSec--;
+            updateTimerDisplay(child, timerObj.timerSec);
+          } else {
+            clearInterval(timerObj.timerInterval);
+            timerObj.timerInterval = null;
+            speakFeedback(`${key}'s timer is finished!`);
+          }
+        }, 1000);
+      }
+    }
+
+    function resetTimer(child) {
+      const key = child.charAt(0).toUpperCase() + child.slice(1);
+      clearInterval(state[key].timerInterval);
+      state[key].timerInterval = null;
+      state[key].timerSec = 300;
+      updateTimerDisplay(child, 300);
+    }
+
+    function updateTimerDisplay(child, seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      document.getElementById(`${child}Timer`).textContent = 
+        `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+    }
+
+    function openParentModal() { document.getElementById('parentModal').style.display = 'flex'; }
+    function closeParentModal() { document.getElementById('parentModal').style.display = 'none'; }
+    function updateChoreQuota(val) { choreQuota = parseInt(val, 10); }
+
+    // Init on smart mode
+    switchMode(determineSmartMode());
+  </script>
+</body>
+</html>
