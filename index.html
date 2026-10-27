@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>TiMY Dual-Track Quest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --harper-pink: #ff65a3;
-      --harper-aqua: #26c6da;
-      --harper-bg: #fff0f6;
-      --haisley-blue: #1e88e5;
+      --harper-primary: #ff4081;
+      --harper-aqua: #00e5ff;
+      --haisley-primary: #1976d2;
       --haisley-sky: #64b5f6;
-      --haisley-bg: #e3f2fd;
-      --bg-dark: #1f1b2e;
     }
     * {
       box-sizing: border-box;
@@ -20,365 +20,552 @@
       -webkit-user-select: none;
       margin: 0;
       padding: 0;
-      font-family: 'Comic Sans MS', 'Chalkboard SE', 'Fredoka', cursive, sans-serif;
+      font-family: 'Fredoka', cursive, sans-serif;
     }
     body {
-      background: #f7f9fc;
+      background: #3b2063;
       display: flex;
       flex-direction: column;
       height: 100vh;
+      width: 100vw;
       overflow: hidden;
+      color: #333;
     }
+
+    /* TOP APP BAR */
     header {
-      background: #ffffff;
+      background: linear-gradient(180deg, #4c2882 0%, #361763 100%);
       padding: 8px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-      z-index: 10;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 50;
+      border-bottom: 2px solid rgba(255,255,255,0.1);
     }
     .brand {
-      font-size: 24px;
+      font-size: 26px;
       font-weight: 900;
-      color: #7b1fa2;
+      color: #fff;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .brand-clock {
+      background: #00e5ff;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
     }
     .tabs {
       display: flex;
-      gap: 8px;
+      background: rgba(0,0,0,0.25);
+      padding: 4px;
+      border-radius: 30px;
+      gap: 4px;
     }
     .tab-btn {
       border: none;
-      padding: 8px 16px;
+      padding: 6px 16px;
       border-radius: 20px;
       font-size: 14px;
-      font-weight: bold;
-      background: #eceff1;
-      color: #546e7a;
+      font-weight: 700;
+      background: transparent;
+      color: #cfb9f5;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.2s;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .tab-btn.active {
-      background: #7b1fa2;
+      background: linear-gradient(135deg, #ff77a9, #ff4081);
       color: #fff;
-      transform: scale(1.05);
+      box-shadow: 0 3px 8px rgba(255,64,129,0.5);
+      transform: scale(1.03);
     }
     .parent-gear {
-      background: none;
+      background: rgba(255,255,255,0.15);
       border: none;
-      font-size: 24px;
-      cursor: pointer;
-    }
-    .tracks-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      padding: 12px;
-      overflow-y: auto;
-    }
-    .track-card {
-      flex: 1;
-      min-height: 200px;
-      border-radius: 24px;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-      position: relative;
-    }
-    .harper-card {
-      background: linear-gradient(135deg, var(--harper-bg), #e0f7fa);
-      border: 4px solid var(--harper-pink);
-    }
-    .haisley-card {
-      background: linear-gradient(135deg, var(--haisley-bg), #bbdefb);
-      border: 4px solid var(--haisley-blue);
-    }
-    .child-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .child-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .avatar-badge {
-      width: 55px;
-      height: 55px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
-      background: white;
+      font-size: 18px;
+      cursor: pointer;
+      color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 30px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     }
-    .child-title {
-      font-size: 20px;
-      font-weight: 900;
-    }
-    .harper-card .child-title { color: var(--harper-pink); }
-    .haisley-card .child-title { color: var(--haisley-blue); }
 
-    .timer-badge {
+    /* QUEST ARENA */
+    .arena {
+      flex: 1;
       display: flex;
-      align-items: center;
-      gap: 10px;
-      background: white;
-      padding: 6px 14px;
-      border-radius: 20px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+      flex-direction: column;
+      padding: 10px 14px;
+      gap: 12px;
+      overflow: hidden;
     }
-    .timer-text {
-      font-size: 20px;
-      font-weight: 900;
-      color: #37474f;
-      min-width: 60px;
+
+    /* INDIVIDUAL TRACKS */
+    .quest-lane {
+      flex: 1;
+      border-radius: 28px;
+      position: relative;
+      display: flex;
+      overflow: hidden;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.25), inset 0 2px 4px rgba(255,255,255,0.6);
+      border: 4px solid #fff;
+    }
+    
+    /* Harper's Track */
+    .lane-harper {
+      background: linear-gradient(180deg, #dfa5e9 0%, #c47be0 35%, #9ae2ea 100%);
+    }
+    /* Haisley's Track */
+    .lane-haisley {
+      background: linear-gradient(180deg, #74c7f7 0%, #4ea8ea 35%, #88dfc4 100%);
+    }
+
+    /* LEFT CONTROLS (AVATAR & DIAL) */
+    .lane-sidebar {
+      width: 140px;
+      background: rgba(255,255,255,0.22);
+      backdrop-filter: blur(8px);
+      border-right: 3px solid rgba(255,255,255,0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      padding: 10px;
+      z-index: 10;
+    }
+    .child-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       text-align: center;
     }
-    .timer-btn {
-      border: none;
-      background: none;
-      font-size: 20px;
-      cursor: pointer;
+    .avatar-icon-ring {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+      border: 3px solid #ffca28;
+    }
+    .child-name {
+      font-size: 17px;
+      font-weight: 900;
+      color: #fff;
+      margin-top: 4px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    }
+    .child-age {
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(0,0,0,0.2);
+      color: #fff;
+      padding: 1px 8px;
+      border-radius: 12px;
     }
 
-    .quest-path {
+    /* CIRCULAR TIMER */
+    .timer-ring-box {
+      position: relative;
+      width: 74px;
+      height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .timer-svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+    .timer-circle-bg {
+      fill: #ffffff;
+      stroke: rgba(0,0,0,0.08);
+      stroke-width: 6;
+    }
+    .timer-circle-progress {
+      fill: none;
+      stroke-width: 7;
+      stroke-linecap: round;
+      stroke-dasharray: 200;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s linear;
+    }
+    .lane-harper .timer-circle-progress { stroke: var(--harper-primary); }
+    .lane-haisley .timer-circle-progress { stroke: var(--haisley-primary); }
+
+    .timer-center-text {
+      position: absolute;
+      font-size: 15px;
+      font-weight: 900;
+      color: #37474f;
+    }
+
+    /* THE WINDING TRAIL VIEWPORT */
+    .trail-viewport {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Background Cartoon Elements */
+    .bg-clouds {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 20%),
+                        radial-gradient(circle at 60% 20%, rgba(255,255,255,0.5) 0%, transparent 25%),
+                        radial-gradient(circle at 85% 40%, rgba(255,255,255,0.3) 0%, transparent 30%);
+      pointer-events: none;
+    }
+    .trail-svg-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* STEPPING STONE BUBBLES */
+    .stones-container {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
       display: flex;
       align-items: center;
       justify-content: space-around;
-      position: relative;
-      margin: 20px 0;
-      padding: 0 20px;
+      padding: 0 40px 0 30px;
+      z-index: 5;
     }
-    .quest-line {
-      position: absolute;
-      top: 50%;
-      left: 60px;
-      right: 60px;
-      height: 10px;
-      background: rgba(0,0,0,0.08);
-      border-radius: 5px;
-      transform: translateY(-50%);
-      z-index: 1;
-    }
-    .quest-stone {
+
+    .stone-node {
       position: relative;
-      z-index: 2;
-      background: white;
-      width: 65px;
-      height: 65px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      touch-action: none;
+    }
+    .stone-disc {
+      width: 68px;
+      height: 68px;
       border-radius: 50%;
+      background: #ffffff;
+      border: 4px solid #fff;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-      cursor: pointer;
-      transition: all 0.2s;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.2), inset 0 2px 4px rgba(255,255,255,0.8);
+      position: relative;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    .quest-stone.completed {
-      background: #a5d6a7;
-      border: 3px solid #43a047;
-      transform: scale(0.9);
-      opacity: 0.8;
+    .stone-disc .icon {
+      font-size: 28px;
+      transition: transform 0.2s;
     }
-    .quest-stone.current {
-      border: 4px solid #ffb300;
-      transform: scale(1.15);
-      animation: pulse 1.5s infinite;
-    }
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(255,179,0,0.7); }
-      70% { box-shadow: 0 0 0 14px rgba(255,179,0,0); }
-      100% { box-shadow: 0 0 0 0 rgba(255,179,0,0); }
-    }
-    .stone-icon { font-size: 24px; }
-    .stone-label {
+    .stone-label-card {
       position: absolute;
-      bottom: -22px;
-      white-space: nowrap;
-      font-size: 11px;
+      top: -30px;
+      background: #ffffff;
+      padding: 3px 10px;
+      border-radius: 14px;
+      font-size: 12px;
       font-weight: 800;
-      color: #455a64;
+      color: #37474f;
+      white-space: nowrap;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      border: 2px solid rgba(0,0,0,0.06);
     }
-    .avatar-token {
+
+    /* Node States */
+    .stone-node.completed .stone-disc {
+      background: #c8e6c9;
+      border-color: #4caf50;
+      transform: scale(0.9);
+      opacity: 0.85;
+    }
+    .stone-node.completed .icon {
+      filter: grayscale(0.2);
+    }
+    .stone-node.active .stone-disc {
+      transform: scale(1.18);
+      border-color: #ffd54f;
+      box-shadow: 0 0 0 6px rgba(255, 213, 79, 0.5), 0 12px 24px rgba(0,0,0,0.3);
+      animation: floatStone 2s infinite ease-in-out;
+    }
+    @keyframes floatStone {
+      0%, 100% { transform: scale(1.18) translateY(0); }
+      50% { transform: scale(1.18) translateY(-6px); }
+    }
+
+    /* THE MOVING AVATAR TOKEN */
+    .quest-token {
       position: absolute;
-      top: -20px;
-      font-size: 26px;
-      animation: bounce 0.8s infinite alternate;
+      width: 44px;
+      height: 44px;
+      background: #ffeb3b;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+      top: -24px;
+      right: -12px;
+      z-index: 20;
+      animation: bounceToken 0.7s infinite alternate ease-in-out;
     }
-    @keyframes bounce {
+    @keyframes bounceToken {
       from { transform: translateY(0); }
       to { transform: translateY(-8px); }
     }
-    .reward-castle {
-      position: relative;
-      z-index: 2;
-      font-size: 38px;
-    }
-    .footer-actions {
+
+    /* FINISH REWARD CASTLE */
+    .finish-castle-node {
       display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-    }
-    .btn-add-adhoc {
-      border: none;
-      background: rgba(255,255,255,0.8);
-      font-weight: 900;
-      padding: 6px 12px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 12px;
-    }
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #323232;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 20px;
-      display: flex;
-      gap: 12px;
+      flex-direction: column;
       align-items: center;
-      font-size: 14px;
-      z-index: 100;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
+      cursor: pointer;
+      position: relative;
     }
-    .toast.show {
-      opacity: 1;
-      pointer-events: auto;
+    .castle-box {
+      font-size: 46px;
+      filter: drop-shadow(0 8px 12px rgba(0,0,0,0.25));
+      animation: castleGlow 2.5s infinite alternate ease-in-out;
+    }
+    @keyframes castleGlow {
+      from { transform: scale(1); filter: drop-shadow(0 6px 10px rgba(0,0,0,0.2)); }
+      to { transform: scale(1.08); filter: drop-shadow(0 10px 18px rgba(255, 215, 0, 0.6)); }
+    }
+    .finish-banner {
+      background: linear-gradient(90deg, #ffb300, #ff8f00);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 900;
+      padding: 3px 10px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      border: 2px solid #fff;
+      margin-top: 4px;
+    }
+
+    /* IN-LINE AD-HOC QUICK ADD */
+    .adhoc-btn {
+      position: absolute;
+      bottom: 8px;
+      right: 14px;
+      background: rgba(255,255,255,0.7);
+      border: 2px dashed rgba(0,0,0,0.25);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      color: #37474f;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      z-index: 10;
+    }
+
+    /* TOAST SPEECH BANNER (SAFEGUARD) */
+    .speech-banner {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #ffffff;
+      padding: 10px 24px;
+      border-radius: 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-weight: 800;
+      color: #263238;
+      z-index: 100;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 3px solid #ffb300;
+    }
+    .speech-banner.show {
+      transform: translateX(-50%) translateY(0);
     }
     .btn-undo {
-      background: #ffb74d;
-      border: none;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-weight: bold;
+      background: #eceff1;
+      border: 2px solid #b0bec5;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 900;
       cursor: pointer;
+      color: #455a64;
     }
-    .modal {
+
+    /* PARENT SETTINGS MODAL */
+    .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 200;
     }
-    .modal-content {
-      background: white;
-      padding: 24px;
-      border-radius: 20px;
-      max-width: 400px;
+    .modal-card {
+      background: #ffffff;
       width: 90%;
+      max-width: 380px;
+      padding: 24px;
+      border-radius: 30px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
+    }
+    .modal-title { font-size: 20px; font-weight: 900; color: #4c2882; }
+    .select-group { display: flex; justify-content: space-between; align-items: center; }
+    .select-input { padding: 6px 12px; border-radius: 12px; font-weight: bold; border: 2px solid #ccc; }
+    .btn-action {
+      background: #4c2882;
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 16px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
+  <!-- TOP HEADER -->
   <header>
-    <div class="brand">⏱️ TiMY</div>
+    <div class="brand">
+      <div class="brand-clock">⏱️</div>
+      <span>TiMY</span>
+    </div>
     <div class="tabs">
       <button class="tab-btn" id="tabMorning" onclick="switchMode('morning')">☀️ Morning</button>
       <button class="tab-btn" id="tabChores" onclick="switchMode('chores')">⚡ Chores</button>
       <button class="tab-btn" id="tabBedtime" onclick="switchMode('bedtime')">🌙 Bedtime</button>
     </div>
-    <button class="parent-gear" onclick="openParentModal()">⚙️</button>
+    <button class="parent-gear" onclick="openSettings()">⚙️</button>
   </header>
 
-  <div class="tracks-container">
-    <!-- Harper's Track -->
-    <div class="track-card harper-card" id="harperCard">
-      <div class="child-header">
-        <div class="child-info">
-          <div class="avatar-badge">🐱</div>
-          <div>
-            <div class="child-title">Harper (7)</div>
-            <div style="font-size: 12px; color: #546e7a;">Theme: Pink & Aqua</div>
-          </div>
+  <!-- DUAL TRACK QUEST ARENA -->
+  <div class="arena">
+
+    <!-- HARPER'S TRACK (PINK & AQUA + ORANGE KITTEN) -->
+    <div class="quest-lane lane-harper" id="laneHarper">
+      <div class="lane-sidebar">
+        <div class="child-badge">
+          <div class="avatar-icon-ring">🐱</div>
+          <div class="child-name">Harper</div>
+          <div class="child-age">Age 7</div>
         </div>
-        <div class="timer-badge">
-          <span class="timer-text" id="harperTimer">05:00</span>
-          <button class="timer-btn" onclick="toggleTimer('harper')">▶️</button>
-          <button class="timer-btn" onclick="resetTimer('harper')">🔄</button>
+        <!-- Circular Visual Timer -->
+        <div class="timer-ring-box" onclick="toggleTimer('Harper')">
+          <svg class="timer-svg" viewBox="0 0 74 74">
+            <circle class="timer-circle-bg" cx="37" cy="37" r="32" />
+            <circle class="timer-circle-progress" id="harperProgress" cx="37" cy="37" r="32" />
+          </svg>
+          <span class="timer-center-text" id="harperTimerLabel">05:00</span>
         </div>
       </div>
-      <div class="quest-path" id="harperPath"></div>
-      <div class="footer-actions">
-        <button class="btn-add-adhoc" onclick="promptAdHoc('Harper')">+ Quick Chore</button>
+
+      <div class="trail-viewport">
+        <div class="bg-clouds"></div>
+        <svg class="trail-svg-container" id="svgHarper"></svg>
+        <div class="stones-container" id="stonesHarper"></div>
+        <button class="adhoc-btn" onclick="addQuickChore('Harper')">＋ Add Step</button>
       </div>
     </div>
 
-    <!-- Haisley's Track -->
-    <div class="track-card haisley-card" id="haisleyCard">
-      <div class="child-header">
-        <div class="child-info">
-          <div class="avatar-badge">🐶</div>
-          <div>
-            <div class="child-title">Haisley (5)</div>
-            <div style="font-size: 12px; color: #546e7a;">Theme: Royal & Sky Blue</div>
-          </div>
+    <!-- HAISLEY'S TRACK (ROYAL/SKY BLUE + BLUE POMCHI / CRAB) -->
+    <div class="quest-lane lane-haisley" id="laneHaisley">
+      <div class="lane-sidebar">
+        <div class="child-badge">
+          <div class="avatar-icon-ring">🐶</div>
+          <div class="child-name">Haisley</div>
+          <div class="child-age">Age 5</div>
         </div>
-        <div class="timer-badge">
-          <span class="timer-text" id="haisleyTimer">05:00</span>
-          <button class="timer-btn" onclick="toggleTimer('haisley')">▶️</button>
-          <button class="timer-btn" onclick="resetTimer('haisley')">🔄</button>
+        <!-- Circular Visual Timer -->
+        <div class="timer-ring-box" onclick="toggleTimer('Haisley')">
+          <svg class="timer-svg" viewBox="0 0 74 74">
+            <circle class="timer-circle-bg" cx="37" cy="37" r="32" />
+            <circle class="timer-circle-progress" id="haisleyProgress" cx="37" cy="37" r="32" />
+          </svg>
+          <span class="timer-center-text" id="haisleyTimerLabel">05:00</span>
         </div>
       </div>
-      <div class="quest-path" id="haisleyPath"></div>
-      <div class="footer-actions">
-        <button class="btn-add-adhoc" onclick="promptAdHoc('Haisley')">+ Quick Chore</button>
+
+      <div class="trail-viewport">
+        <div class="bg-clouds"></div>
+        <svg class="trail-svg-container" id="svgHaisley"></svg>
+        <div class="stones-container" id="stonesHaisley"></div>
+        <button class="adhoc-btn" onclick="addQuickChore('Haisley')">＋ Add Step</button>
       </div>
     </div>
+
   </div>
 
-  <div class="toast" id="toast">
-    <span id="toastMsg">Step completed!</span>
-    <button class="btn-undo" onclick="undoLastAction()">UNDO</button>
+  <!-- SPEECH / SAFEGUARD TOAST -->
+  <div class="speech-banner" id="speechToast">
+    <span id="speechMsg">✨ Step Completed!</span>
+    <button class="btn-undo" onclick="undoStep()">UNDO</button>
   </div>
 
-  <div class="modal" id="parentModal">
-    <div class="modal-content">
-      <h3>Parent Settings</h3>
-      <div>
-        <label>Chores Quota per child:</label>
-        <select id="choreQuotaSelect" onchange="updateChoreQuota(this.value)">
+  <!-- PARENT CONTROL MODAL -->
+  <div class="modal-overlay" id="parentModal">
+    <div class="modal-card">
+      <div class="modal-title">⚙️ Parent Controls</div>
+      <div class="select-group">
+        <label>Daily Chores Quota:</label>
+        <select class="select-input" id="choreQuotaSelect" onchange="setQuota(this.value)">
           <option value="1">1 Chore</option>
           <option value="2" selected>2 Chores</option>
           <option value="3">3 Chores</option>
         </select>
       </div>
-      <button class="tab-btn active" style="justify-content:center" onclick="autoAssignChores()">🎲 Re-Roll Chores Pool</button>
-      <button class="tab-btn" style="justify-content:center" onclick="closeParentModal()">Close</button>
+      <button class="btn-action" onclick="reRollChores()">🎲 Re-Roll Chore Challenge</button>
+      <button class="btn-action" style="background:#b0bec5;" onclick="closeSettings()">Close</button>
     </div>
   </div>
 
   <script>
+    // PRESET ROUTINES
     const ROUTINES = {
       morning: [
         { label: 'Pick Clothes', icon: '👗' },
         { label: 'Get Dressed', icon: '👕' },
         { label: 'Brush Teeth', icon: '🪥' },
-        { label: 'Get Backpack', icon: '🎒' },
-        { label: 'Shoes/Jacket', icon: '👟' }
+        { label: 'Backpack', icon: '🎒' },
+        { label: 'Shoes & Jacket', icon: '👟' }
       ],
       bedtime: [
         { label: 'Pick Up Toys', icon: '🧸' },
@@ -389,206 +576,249 @@
       ]
     };
 
-    const CHORE_POOL = [
+    // CHORE POOL
+    const CHORES = [
       { label: 'Floor Toy Tidy', icon: '🧸' },
       { label: 'Clear Dinner Plate', icon: '🍽️' },
-      { label: 'Put Shoes on Rack', icon: '👞' },
-      { label: 'Dirty Clothes in Hamper', icon: '🧺' },
-      { label: 'Wipe Table', icon: '🧽' }
+      { label: 'Put Shoes Away', icon: '👞' },
+      { label: 'Clothes in Hamper', icon: '🧺' },
+      { label: 'Wipe Counter', icon: '🧽' }
     ];
 
     let currentMode = 'morning';
     let choreQuota = 2;
-    let lastCompleted = null;
-    let toastTimeout = null;
+    let lastAction = null;
+    let toastTimer = null;
 
-    let state = {
-      Harper: { steps: [], activeIdx: 0, timerSec: 300, timerInterval: null },
-      Haisley: { steps: [], activeIdx: 0, timerSec: 300, timerInterval: null }
+    let appState = {
+      Harper: { steps: [], activeIdx: 0, timerTotal: 300, timerRemaining: 300, isRunning: false, interval: null, avatar: '🐱' },
+      Haisley: { steps: [], activeIdx: 0, timerTotal: 300, timerRemaining: 300, isRunning: false, interval: null, avatar: '🐶' }
     };
 
-    function determineSmartMode() {
-      const hour = new Date().getHours();
-      if (hour >= 6 && hour < 11) return 'morning';
-      if (hour >= 11 && hour < 18) return 'chores';
+    // SMART TIME-OF-DAY LOGIC
+    function getSmartMode() {
+      const h = new Date().getHours();
+      if (h >= 6 && h < 11) return 'morning';
+      if (h >= 11 && h < 18) return 'chores';
       return 'bedtime';
     }
 
     function switchMode(mode) {
       currentMode = mode;
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       const activeTab = document.getElementById('tab' + mode.charAt(0).toUpperCase() + mode.slice(1));
       if (activeTab) activeTab.classList.add('active');
 
       if (mode === 'chores') {
-        autoAssignChores();
+        reRollChores();
       } else {
-        state.Harper.steps = JSON.parse(JSON.stringify(ROUTINES[mode]));
-        state.Haisley.steps = JSON.parse(JSON.stringify(ROUTINES[mode]));
-        state.Harper.activeIdx = 0;
-        state.Haisley.activeIdx = 0;
-        renderPaths();
+        appState.Harper.steps = JSON.parse(JSON.stringify(ROUTINES[mode]));
+        appState.Haisley.steps = JSON.parse(JSON.stringify(ROUTINES[mode]));
+        appState.Harper.activeIdx = 0;
+        appState.Haisley.activeIdx = 0;
+        renderLanes();
       }
     }
 
-    function autoAssignChores() {
-      const shuffled = [...CHORE_POOL].sort(() => 0.5 - Math.random());
-      state.Harper.steps = shuffled.slice(0, choreQuota);
-      state.Haisley.steps = shuffled.slice(choreQuota, choreQuota * 2);
-      state.Harper.activeIdx = 0;
-      state.Haisley.activeIdx = 0;
-      renderPaths();
-      closeParentModal();
+    function reRollChores() {
+      const pool = [...CHORES].sort(() => 0.5 - Math.random());
+      appState.Harper.steps = pool.slice(0, choreQuota);
+      appState.Haisley.steps = pool.slice(choreQuota, choreQuota * 2);
+      appState.Harper.activeIdx = 0;
+      appState.Haisley.activeIdx = 0;
+      renderLanes();
+      closeSettings();
     }
 
-    function renderPaths() {
-      renderChildPath('Harper', 'harperPath', '🐱');
-      renderChildPath('Haisley', 'haisleyPath', '🐶');
+    // DRAW THE DUAL TRACKS & CONNECTING PATHWAYS
+    function renderLanes() {
+      renderChildLane('Harper', 'stonesHarper', 'svgHarper');
+      renderChildLane('Haisley', 'stonesHaisley', 'svgHaisley');
     }
 
-    function renderChildPath(child, containerId, avatarEmoji) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = '<div class="quest-line"></div>';
+    function renderChildLane(child, stonesId, svgId) {
+      const container = document.getElementById(stonesId);
+      container.innerHTML = '';
+      const steps = appState[child].steps;
+      const activeIdx = appState[child].activeIdx;
 
-      state[child].steps.forEach((step, idx) => {
-        const stone = document.createElement('div');
-        stone.className = 'quest-stone';
-        if (idx < state[child].activeIdx) stone.classList.add('completed');
-        if (idx === state[child].activeIdx) {
-          stone.classList.add('current');
-          const token = document.createElement('div');
-          token.className = 'avatar-token';
-          token.textContent = avatarEmoji;
-          stone.appendChild(token);
-        }
+      steps.forEach((step, idx) => {
+        const node = document.createElement('div');
+        node.className = `stone-node ${idx < activeIdx ? 'completed' : ''} ${idx === activeIdx ? 'active' : ''}`;
 
-        let pressTimer = null;
-        stone.addEventListener('pointerdown', () => {
-          if (idx === state[child].activeIdx) {
-            pressTimer = setTimeout(() => {
-              completeStep(child, idx);
-            }, 800);
+        // Milestone disc
+        const disc = document.createElement('div');
+        disc.className = 'stone-disc';
+        
+        // Drag / Long-press Safeguard
+        let pressTimeout = null;
+        node.addEventListener('pointerdown', (e) => {
+          if (idx === activeIdx) {
+            pressTimeout = setTimeout(() => {
+              advanceStep(child, idx);
+            }, 600);
           }
         });
-        stone.addEventListener('pointerup', () => clearTimeout(pressTimer));
-        stone.addEventListener('pointerleave', () => clearTimeout(pressTimer));
+        node.addEventListener('pointerup', () => clearTimeout(pressTimeout));
+        node.addEventListener('pointerleave', () => clearTimeout(pressTimeout));
 
-        const icon = document.createElement('span');
-        icon.className = 'stone-icon';
-        icon.textContent = idx < state[child].activeIdx ? '✅' : step.icon;
-        stone.appendChild(icon);
+        disc.innerHTML = `<span class="icon">${idx < activeIdx ? '⭐' : step.icon}</span>`;
+        node.appendChild(disc);
 
-        const label = document.createElement('span');
-        label.className = 'stone-label';
+        // Label Tag
+        const label = document.createElement('div');
+        label.className = 'stone-label-card';
         label.textContent = step.label;
-        stone.appendChild(label);
+        node.appendChild(label);
 
-        container.appendChild(stone);
+        // Bouncing Avatar Token on Active Node
+        if (idx === activeIdx) {
+          const token = document.createElement('div');
+          token.className = 'quest-token';
+          token.textContent = appState[child].avatar;
+          node.appendChild(token);
+        }
+
+        container.appendChild(node);
       });
 
-      const castle = document.createElement('div');
-      castle.className = 'reward-castle';
-      castle.textContent = state[child].activeIdx >= state[child].steps.length ? '🎉' : '🏰';
-      container.appendChild(castle);
+      // Finish Castle / Treasure Box
+      const castleNode = document.createElement('div');
+      castleNode.className = 'finish-castle-node';
+      castleNode.innerHTML = `
+        <div class="castle-box">${activeIdx >= steps.length ? '👑' : '🏰'}</div>
+        <div class="finish-banner">REWARD!</div>
+      `;
+      container.appendChild(castleNode);
+
+      // Draw SVG Path connecting stones
+      setTimeout(() => drawPathLine(container, svgId), 50);
     }
 
-    function completeStep(child, idx) {
-      lastCompleted = { child, idx };
-      state[child].activeIdx++;
-      renderPaths();
+    // SVG Curved Path Generator
+    function drawPathLine(stonesContainer, svgId) {
+      const svg = document.getElementById(svgId);
+      const stones = stonesContainer.querySelectorAll('.stone-disc, .castle-box');
+      if (stones.length < 2) return;
 
-      const taskName = state[child].steps[idx].label;
-      speakFeedback(`${child} completed ${taskName}! Awesome job!`);
-      showToast(`${child} finished: ${taskName}`);
+      const rects = Array.from(stones).map(s => {
+        const r = s.getBoundingClientRect();
+        const p = svg.getBoundingClientRect();
+        return { x: r.left - p.left + r.width / 2, y: r.top - p.top + r.height / 2 };
+      });
 
-      if (state[child].activeIdx >= state[child].steps.length) {
+      let d = `M ${rects[0].x} ${rects[0].y}`;
+      for (let i = 1; i < rects.length; i++) {
+        const midX = (rects[i - 1].x + rects[i].x) / 2;
+        const midY = (rects[i - 1].y + rects[i].y) / 2 + (i % 2 === 0 ? 15 : -15);
+        d += ` Q ${midX} ${midY}, ${rects[i].x} ${rects[i].y}`;
+      }
+
+      svg.innerHTML = `
+        <path d="${d}" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="12" stroke-linecap="round"/>
+        <path d="${d}" fill="none" stroke="#fff" stroke-dasharray="8 8" stroke-width="4" stroke-linecap="round"/>
+      `;
+    }
+
+    // STEP COMPLETION & VOICE PRAISE
+    function advanceStep(child, idx) {
+      lastAction = { child, idx };
+      appState[child].activeIdx++;
+      renderLanes();
+
+      const taskName = appState[child].steps[idx].label;
+      triggerVoice(`${child} finished ${taskName}! Fantastic job!`);
+      showBanner(`🎉 ${child} finished: ${taskName}!`);
+
+      if (appState[child].activeIdx >= appState[child].steps.length) {
         setTimeout(() => {
-          speakFeedback(`Congratulations ${child}! You reached the castle!`);
+          triggerVoice(`Hooray! ${child} reached the castle!`);
         }, 1200);
       }
     }
 
-    function undoLastAction() {
-      if (lastCompleted) {
-        state[lastCompleted.child].activeIdx = lastCompleted.idx;
-        renderPaths();
-        hideToast();
-        speakFeedback(`Undone for ${lastCompleted.child}`);
-        lastCompleted = null;
+    function undoStep() {
+      if (lastAction) {
+        appState[lastAction.child].activeIdx = lastAction.idx;
+        renderLanes();
+        hideBanner();
+        lastAction = null;
       }
     }
 
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      document.getElementById('toastMsg').textContent = msg;
+    function showBanner(text) {
+      const toast = document.getElementById('speechToast');
+      document.getElementById('speechMsg').textContent = text;
       toast.classList.add('show');
-      clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(hideToast, 5000);
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(hideBanner, 4500);
+    }
+    function hideBanner() {
+      document.getElementById('speechToast').classList.remove('show');
     }
 
-    function hideToast() {
-      document.getElementById('toast').classList.remove('show');
-    }
-
-    function speakFeedback(text) {
+    function triggerVoice(msg) {
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.rate = 1.0;
-        utterance.pitch = 1.2;
-        window.speechSynthesis.speak(utterance);
+        const utter = new SpeechSynthesisUtterance(msg);
+        utter.pitch = 1.25;
+        utter.rate = 1.05;
+        window.speechSynthesis.speak(utter);
       }
     }
 
-    function promptAdHoc(child) {
-      const chore = prompt(`Add a quick chore for ${child}:`, "Wipe Counter");
-      if (chore) {
-        state[child].steps.push({ label: chore, icon: '⭐' });
-        renderPaths();
+    function addQuickChore(child) {
+      const name = prompt(`Add a quick chore for ${child}:`, 'Tidy Bed');
+      if (name) {
+        appState[child].steps.push({ label: name, icon: '⭐' });
+        renderLanes();
       }
     }
 
+    // CIRCULAR TIMER FUNCTIONS
     function toggleTimer(child) {
-      const key = child.charAt(0).toUpperCase() + child.slice(1);
-      const timerObj = state[key];
-      if (timerObj.timerInterval) {
-        clearInterval(timerObj.timerInterval);
-        timerObj.timerInterval = null;
+      const state = appState[child];
+      if (state.isRunning) {
+        clearInterval(state.interval);
+        state.isRunning = false;
       } else {
-        timerObj.timerInterval = setInterval(() => {
-          if (timerObj.timerSec > 0) {
-            timerObj.timerSec--;
-            updateTimerDisplay(child, timerObj.timerSec);
+        state.isRunning = true;
+        state.interval = setInterval(() => {
+          if (state.timerRemaining > 0) {
+            state.timerRemaining--;
+            updateTimerDisplay(child);
           } else {
-            clearInterval(timerObj.timerInterval);
-            timerObj.timerInterval = null;
-            speakFeedback(`${key}'s timer is finished!`);
+            clearInterval(state.interval);
+            state.isRunning = false;
+            triggerVoice(`${child}'s timer is all done!`);
           }
         }, 1000);
       }
     }
 
-    function resetTimer(child) {
-      const key = child.charAt(0).toUpperCase() + child.slice(1);
-      clearInterval(state[key].timerInterval);
-      state[key].timerInterval = null;
-      state[key].timerSec = 300;
-      updateTimerDisplay(child, 300);
+    function updateTimerDisplay(child) {
+      const state = appState[child];
+      const mins = Math.floor(state.timerRemaining / 60);
+      const secs = state.timerRemaining % 60;
+      const label = document.getElementById(child.toLowerCase() + 'TimerLabel');
+      label.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+
+      // Update circular SVG gauge
+      const progressCircle = document.getElementById(child.toLowerCase() + 'Progress');
+      const totalCircumference = 200; // 2 * PI * 32
+      const fraction = state.timerRemaining / state.timerTotal;
+      progressCircle.style.strokeDashoffset = totalCircumference * (1 - fraction);
     }
 
-    function updateTimerDisplay(child, seconds) {
-      const mins = Math.floor(seconds / 60);
-      const secs = seconds % 60;
-      document.getElementById(`${child}Timer`).textContent = 
-        `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
-    }
+    // PARENT CONTROLS
+    function openSettings() { document.getElementById('parentModal').style.display = 'flex'; }
+    function closeSettings() { document.getElementById('parentModal').style.display = 'none'; }
+    function setQuota(val) { choreQuota = parseInt(val, 10); }
 
-    function openParentModal() { document.getElementById('parentModal').style.display = 'flex'; }
-    function closeParentModal() { document.getElementById('parentModal').style.display = 'none'; }
-    function updateChoreQuota(val) { choreQuota = parseInt(val, 10); }
+    window.addEventListener('resize', () => renderLanes());
 
-    // Init on smart mode
-    switchMode(determineSmartMode());
+    // Boot on Smart Schedule
+    switchMode(getSmartMode());
   </script>
 </body>
 </html>
