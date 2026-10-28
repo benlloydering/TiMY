@@ -4,673 +4,153 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>TiMY Dual-Track Quest</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;800;900&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --harper-primary: #ff4081;
-      --harper-aqua: #00e5ff;
-      --haisley-primary: #1976d2;
-      --haisley-sky: #64b5f6;
-    }
-    * {
-      box-sizing: border-box;
-      user-select: none;
-      -webkit-user-select: none;
-      margin: 0;
-      padding: 0;
-      font-family: 'Fredoka', cursive, sans-serif;
-    }
-    body {
-      background: #3b2063;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-      color: #333;
-    }
-
-    /* TOP APP BAR */
-    header {
-      background: linear-gradient(180deg, #4c2882 0%, #361763 100%);
-      padding: 8px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      z-index: 50;
-      border-bottom: 2px solid rgba(255,255,255,0.1);
-    }
-    .brand {
-      font-size: 26px;
-      font-weight: 900;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    }
-    .brand-clock {
-      background: #00e5ff;
-      border: 3px solid #fff;
-      border-radius: 50%;
-      width: 34px;
-      height: 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-    }
-    .tabs {
-      display: flex;
-      background: rgba(0,0,0,0.25);
-      padding: 4px;
-      border-radius: 30px;
-      gap: 4px;
-    }
-    .tab-btn {
-      border: none;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 700;
-      background: transparent;
-      color: #cfb9f5;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .tab-btn.active {
-      background: linear-gradient(135deg, #ff77a9, #ff4081);
-      color: #fff;
-      box-shadow: 0 3px 8px rgba(255,64,129,0.5);
-      transform: scale(1.03);
-    }
-    .parent-gear {
-      background: rgba(255,255,255,0.15);
-      border: none;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      font-size: 18px;
-      cursor: pointer;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* QUEST ARENA */
-    .arena {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      padding: 10px 14px;
-      gap: 12px;
-      overflow: hidden;
-    }
-
-    /* INDIVIDUAL TRACKS */
-    .quest-lane {
-      flex: 1;
-      border-radius: 28px;
-      position: relative;
-      display: flex;
-      overflow: hidden;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.25), inset 0 2px 4px rgba(255,255,255,0.6);
-      border: 4px solid #fff;
-    }
+    * { box-sizing: border-box; user-select: none; -webkit-user-select: none; margin: 0; padding: 0; font-family: 'Fredoka', sans-serif; }
+    body { background: #361763; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
     
-    /* Harper's Track */
-    .lane-harper {
-      background: linear-gradient(180deg, #dfa5e9 0%, #c47be0 35%, #9ae2ea 100%);
-    }
-    /* Haisley's Track */
-    .lane-haisley {
-      background: linear-gradient(180deg, #74c7f7 0%, #4ea8ea 35%, #88dfc4 100%);
-    }
+    header { background: #4c2882; padding: 6px 14px; display: flex; justify-content: space-between; align-items: center; color: white; border-bottom: 2px solid rgba(255,255,255,0.15); }
+    .brand { font-size: 22px; font-weight: 900; display: flex; align-items: center; gap: 6px; }
+    .tabs { display: flex; background: rgba(0,0,0,0.3); padding: 3px; border-radius: 30px; gap: 4px; }
+    .tab-btn { border: none; padding: 6px 14px; border-radius: 20px; font-weight: 800; background: transparent; color: #d1c4e9; cursor: pointer; }
+    .tab-btn.active { background: linear-gradient(135deg, #ff77a9, #ff4081); color: #fff; transform: scale(1.04); }
 
-    /* LEFT CONTROLS (AVATAR & DIAL) */
-    .lane-sidebar {
-      width: 140px;
-      background: rgba(255,255,255,0.22);
-      backdrop-filter: blur(8px);
-      border-right: 3px solid rgba(255,255,255,0.4);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-around;
-      padding: 10px;
-      z-index: 10;
-    }
-    .child-badge {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-    .avatar-icon-ring {
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.18);
-      border: 3px solid #ffca28;
-    }
-    .child-name {
-      font-size: 17px;
-      font-weight: 900;
-      color: #fff;
-      margin-top: 4px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.4);
-    }
-    .child-age {
-      font-size: 11px;
-      font-weight: 700;
-      background: rgba(0,0,0,0.2);
-      color: #fff;
-      padding: 1px 8px;
-      border-radius: 12px;
-    }
+    .arena { flex: 1; display: flex; flex-direction: column; padding: 8px 10px; gap: 10px; overflow: hidden; }
+    
+    /* OVERALL TIMER BORDER - Shrinks via JavaScript */
+    .lane { flex: 1; border-radius: 24px; border: 12px solid #ffffff; display: flex; position: relative; overflow: hidden; transition: border-width 1s linear; }
+    .lane-harper { background: linear-gradient(135deg, #f8bbd0 0%, #e1bee7 40%, #b2ebf2 100%); }
+    .lane-haisley { background: linear-gradient(135deg, #bbdefb 0%, #90caf9 40%, #b2dfdb 100%); }
 
-    /* CIRCULAR TIMER */
-    .timer-ring-box {
-      position: relative;
-      width: 74px;
-      height: 74px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-    .timer-svg {
-      width: 100%;
-      height: 100%;
-      transform: rotate(-90deg);
-    }
-    .timer-circle-bg {
-      fill: #ffffff;
-      stroke: rgba(0,0,0,0.08);
-      stroke-width: 6;
-    }
-    .timer-circle-progress {
-      fill: none;
-      stroke-width: 7;
-      stroke-linecap: round;
-      stroke-dasharray: 200;
-      stroke-dashoffset: 0;
-      transition: stroke-dashoffset 1s linear;
-    }
-    .lane-harper .timer-circle-progress { stroke: var(--harper-primary); }
-    .lane-haisley .timer-circle-progress { stroke: var(--haisley-primary); }
+    .sidebar { width: 110px; background: rgba(255,255,255,0.25); border-right: 3px solid rgba(255,255,255,0.4); display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; padding: 6px; z-index: 10; }
+    .avatar-ring { width: 52px; height: 52px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    .name-tag { font-size: 15px; font-weight: 900; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+    
+    /* INDIVIDUAL PIE TIMER */
+    .pie-timer { width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: conic-gradient(#ff4081 100%, rgba(255,255,255,0.4) 0); box-shadow: 0 4px 8px rgba(0,0,0,0.2); cursor: pointer; }
+    .lane-haisley .pie-timer { background: conic-gradient(#1976d2 100%, rgba(255,255,255,0.4) 0); }
+    .pie-inner { width: 44px; height: 44px; background: #fff; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .pie-inner span { font-size: 13px; font-weight: 900; color: #333; }
 
-    .timer-center-text {
-      position: absolute;
-      font-size: 15px;
-      font-weight: 900;
-      color: #37474f;
-    }
+    /* MISSION TIME DISPLAY */
+    .mission-time { font-size: 10px; font-weight: 900; color: #fff; text-align: center; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 8px; margin-top: -5px; }
 
-    /* THE WINDING TRAIL VIEWPORT */
-    .trail-viewport {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-    }
+    .trail { flex: 1; display: flex; align-items: center; padding: 0 25px; position: relative; gap: 12px; overflow-x: auto; }
+    .trail-line { position: absolute; left: 30px; right: 50px; height: 12px; background: rgba(255,255,255,0.4); border: 2px dashed #ffffff; border-radius: 8px; z-index: 1; }
+    
+    .stone { width: 64px; height: 64px; border-radius: 50%; background: #fff; border: 4px solid #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; cursor: pointer; position: relative; }
+    .stone .icon { font-size: 26px; }
+    .stone .label { position: absolute; bottom: -22px; background: #fff; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 900; white-space: nowrap; }
+    
+    .stone.active { transform: scale(1.15); border-color: #ffd54f; box-shadow: 0 0 0 4px rgba(255,213,79,0.5); }
+    .stone.done { background: #c8e6c9; border-color: #4caf50; transform: scale(0.9); opacity: 0.8; }
+    
+    .avatar-token { position: absolute; top: -20px; right: -8px; width: 34px; height: 34px; background: #ffeb3b; border: 2px solid #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; z-index: 10; animation: bounce 0.6s infinite alternate; }
+    @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-6px); } }
 
-    /* Background Cartoon Elements */
-    .bg-clouds {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-image: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 20%),
-                        radial-gradient(circle at 60% 20%, rgba(255,255,255,0.5) 0%, transparent 25%),
-                        radial-gradient(circle at 85% 40%, rgba(255,255,255,0.3) 0%, transparent 30%);
-      pointer-events: none;
-    }
-    .trail-svg-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    /* STEPPING STONE BUBBLES */
-    .stones-container {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      padding: 0 40px 0 30px;
-      z-index: 5;
-    }
-
-    .stone-node {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: pointer;
-      touch-action: none;
-    }
-    .stone-disc {
-      width: 68px;
-      height: 68px;
-      border-radius: 50%;
-      background: #ffffff;
-      border: 4px solid #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.2), inset 0 2px 4px rgba(255,255,255,0.8);
-      position: relative;
-      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .stone-disc .icon {
-      font-size: 28px;
-      transition: transform 0.2s;
-    }
-    .stone-label-card {
-      position: absolute;
-      top: -30px;
-      background: #ffffff;
-      padding: 3px 10px;
-      border-radius: 14px;
-      font-size: 12px;
-      font-weight: 800;
-      color: #37474f;
-      white-space: nowrap;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      border: 2px solid rgba(0,0,0,0.06);
-    }
-
-    /* Node States */
-    .stone-node.completed .stone-disc {
-      background: #c8e6c9;
-      border-color: #4caf50;
-      transform: scale(0.9);
-      opacity: 0.85;
-    }
-    .stone-node.completed .icon {
-      filter: grayscale(0.2);
-    }
-    .stone-node.active .stone-disc {
-      transform: scale(1.18);
-      border-color: #ffd54f;
-      box-shadow: 0 0 0 6px rgba(255, 213, 79, 0.5), 0 12px 24px rgba(0,0,0,0.3);
-      animation: floatStone 2s infinite ease-in-out;
-    }
-    @keyframes floatStone {
-      0%, 100% { transform: scale(1.18) translateY(0); }
-      50% { transform: scale(1.18) translateY(-6px); }
-    }
-
-    /* THE MOVING AVATAR TOKEN */
-    .quest-token {
-      position: absolute;
-      width: 44px;
-      height: 44px;
-      background: #ffeb3b;
-      border: 3px solid #fff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.3);
-      top: -24px;
-      right: -12px;
-      z-index: 20;
-      animation: bounceToken 0.7s infinite alternate ease-in-out;
-    }
-    @keyframes bounceToken {
-      from { transform: translateY(0); }
-      to { transform: translateY(-8px); }
-    }
-
-    /* FINISH REWARD CASTLE */
-    .finish-castle-node {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: pointer;
-      position: relative;
-    }
-    .castle-box {
-      font-size: 46px;
-      filter: drop-shadow(0 8px 12px rgba(0,0,0,0.25));
-      animation: castleGlow 2.5s infinite alternate ease-in-out;
-    }
-    @keyframes castleGlow {
-      from { transform: scale(1); filter: drop-shadow(0 6px 10px rgba(0,0,0,0.2)); }
-      to { transform: scale(1.08); filter: drop-shadow(0 10px 18px rgba(255, 215, 0, 0.6)); }
-    }
-    .finish-banner {
-      background: linear-gradient(90deg, #ffb300, #ff8f00);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 900;
-      padding: 3px 10px;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      border: 2px solid #fff;
-      margin-top: 4px;
-    }
-
-    /* IN-LINE AD-HOC QUICK ADD */
-    .adhoc-btn {
-      position: absolute;
-      bottom: 8px;
-      right: 14px;
-      background: rgba(255,255,255,0.7);
-      border: 2px dashed rgba(0,0,0,0.25);
-      border-radius: 20px;
-      padding: 4px 12px;
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      color: #37474f;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      z-index: 10;
-    }
-
-    /* TOAST SPEECH BANNER (SAFEGUARD) */
-    .speech-banner {
-      position: fixed;
-      bottom: 16px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: #ffffff;
-      padding: 10px 24px;
-      border-radius: 40px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      font-weight: 800;
-      color: #263238;
-      z-index: 100;
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      border: 3px solid #ffb300;
-    }
-    .speech-banner.show {
-      transform: translateX(-50%) translateY(0);
-    }
-    .btn-undo {
-      background: #eceff1;
-      border: 2px solid #b0bec5;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 900;
-      cursor: pointer;
-      color: #455a64;
-    }
-
-    /* PARENT SETTINGS MODAL */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(4px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 200;
-    }
-    .modal-card {
-      background: #ffffff;
-      width: 90%;
-      max-width: 380px;
-      padding: 24px;
-      border-radius: 30px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .modal-title { font-size: 20px; font-weight: 900; color: #4c2882; }
-    .select-group { display: flex; justify-content: space-between; align-items: center; }
-    .select-input { padding: 6px 12px; border-radius: 12px; font-weight: bold; border: 2px solid #ccc; }
-    .btn-action {
-      background: #4c2882;
-      color: #fff;
-      border: none;
-      padding: 12px;
-      border-radius: 16px;
-      font-size: 15px;
-      font-weight: 900;
-      cursor: pointer;
-    }
+    .goal-castle { z-index: 2; text-align: center; margin-left: 10px; }
+    .castle-icon { font-size: 40px; }
+    .goal-badge { background: #ffb300; color: #fff; font-size: 10px; font-weight: 900; padding: 2px 8px; border-radius: 10px; }
+    .free-time-badge { background: #00e676; color: #fff; font-size: 12px; font-weight: 900; padding: 4px 10px; border-radius: 12px; margin-top: 4px; display: none; animation: pop 0.5s ease-out; }
+    @keyframes pop { 0% { transform: scale(0.5); } 100% { transform: scale(1); } }
   </style>
 </head>
 <body>
-
-  <!-- TOP HEADER -->
   <header>
-    <div class="brand">
-      <div class="brand-clock">⏱️</div>
-      <span>TiMY</span>
-    </div>
+    <div class="brand"><div style="background:#00e5ff; border-radius:50%; width:24px; height:24px; text-align:center;">⏱️</div> TiMY</div>
     <div class="tabs">
-      <button class="tab-btn" id="tabMorning" onclick="switchMode('morning')">☀️ Morning</button>
-      <button class="tab-btn" id="tabChores" onclick="switchMode('chores')">⚡ Chores</button>
-      <button class="tab-btn" id="tabBedtime" onclick="switchMode('bedtime')">🌙 Bedtime</button>
+      <button class="tab-btn active">☀️ Morning</button>
+      <button class="tab-btn">⚡ Chores</button>
+      <button class="tab-btn">🌙 Bedtime</button>
     </div>
-    <button class="parent-gear" onclick="openSettings()">⚙️</button>
+    <div style="width:24px;"></div>
   </header>
 
-  <!-- DUAL TRACK QUEST ARENA -->
   <div class="arena">
-
-    <!-- HARPER'S TRACK (PINK & AQUA + ORANGE KITTEN) -->
-    <div class="quest-lane lane-harper" id="laneHarper">
-      <div class="lane-sidebar">
-        <div class="child-badge">
-          <div class="avatar-icon-ring">🐱</div>
-          <div class="child-name">Harper</div>
-          <div class="child-age">Age 7</div>
+    <!-- Harper -->
+    <div class="lane lane-harper" id="laneHarper">
+      <div class="sidebar">
+        <div class="avatar-ring">🐱</div>
+        <div class="name-tag">Harper</div>
+        <div class="pie-timer" id="pieHarper" onclick="startPreview('Harper')">
+          <div class="pie-inner"><span id="txtHarper">3:00</span></div>
         </div>
-        <!-- Circular Visual Timer -->
-        <div class="timer-ring-box" onclick="toggleTimer('Harper')">
-          <svg class="timer-svg" viewBox="0 0 74 74">
-            <circle class="timer-circle-bg" cx="37" cy="37" r="32" />
-            <circle class="timer-circle-progress" id="harperProgress" cx="37" cy="37" r="32" />
-          </svg>
-          <span class="timer-center-text" id="harperTimerLabel">05:00</span>
-        </div>
+        <div class="mission-time" id="totalHarper">Total: 25:00</div>
       </div>
-
-      <div class="trail-viewport">
-        <div class="bg-clouds"></div>
-        <svg class="trail-svg-container" id="svgHarper"></svg>
-        <div class="stones-container" id="stonesHarper"></div>
-        <button class="adhoc-btn" onclick="addQuickChore('Harper')">＋ Add Step</button>
+      <div class="trail">
+        <div class="trail-line"></div>
+        <div class="stone done"><span class="icon">⭐</span><span class="label">Clothes</span></div>
+        <div class="stone active"><div class="avatar-token">🐱</div><span class="icon">🪥</span><span class="label">Teeth</span></div>
+        <div class="stone"><span class="icon">🎒</span><span class="label">Backpack</span></div>
+        <div class="goal-castle">
+          <div class="castle-icon">🏰</div>
+          <div class="goal-badge" id="badgeHarper">REWARD!</div>
+          <div class="free-time-badge" id="freeHarper">22:00 FREE TIME!</div>
+        </div>
       </div>
     </div>
 
-    <!-- HAISLEY'S TRACK (ROYAL/SKY BLUE + BLUE POMCHI / CRAB) -->
-    <div class="quest-lane lane-haisley" id="laneHaisley">
-      <div class="lane-sidebar">
-        <div class="child-badge">
-          <div class="avatar-icon-ring">🐶</div>
-          <div class="child-name">Haisley</div>
-          <div class="child-age">Age 5</div>
+    <!-- Haisley -->
+    <div class="lane lane-haisley" id="laneHaisley">
+      <div class="sidebar">
+        <div class="avatar-ring">🐶</div>
+        <div class="name-tag">Haisley</div>
+        <div class="pie-timer" id="pieHaisley" onclick="startPreview('Haisley')">
+          <div class="pie-inner"><span id="txtHaisley">3:00</span></div>
         </div>
-        <!-- Circular Visual Timer -->
-        <div class="timer-ring-box" onclick="toggleTimer('Haisley')">
-          <svg class="timer-svg" viewBox="0 0 74 74">
-            <circle class="timer-circle-bg" cx="37" cy="37" r="32" />
-            <circle class="timer-circle-progress" id="haisleyProgress" cx="37" cy="37" r="32" />
-          </svg>
-          <span class="timer-center-text" id="haisleyTimerLabel">05:00</span>
+        <div class="mission-time" id="totalHaisley">Total: 25:00</div>
+      </div>
+      <div class="trail">
+        <div class="trail-line"></div>
+        <div class="stone done"><span class="icon">⭐</span><span class="label">Clothes</span></div>
+        <div class="stone active"><div class="avatar-token">🐶</div><span class="icon">🪥</span><span class="label">Teeth</span></div>
+        <div class="stone"><span class="icon">🎒</span><span class="label">Backpack</span></div>
+        <div class="goal-castle">
+          <div class="castle-icon">🏰</div>
+          <div class="goal-badge" id="badgeHaisley">REWARD!</div>
+          <div class="free-time-badge" id="freeHaisley">22:00 FREE TIME!</div>
         </div>
       </div>
-
-      <div class="trail-viewport">
-        <div class="bg-clouds"></div>
-        <svg class="trail-svg-container" id="svgHaisley"></svg>
-        <div class="stones-container" id="stonesHaisley"></div>
-        <button class="adhoc-btn" onclick="addQuickChore('Haisley')">＋ Add Step</button>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- SPEECH / SAFEGUARD TOAST -->
-  <div class="speech-banner" id="speechToast">
-    <span id="speechMsg">✨ Step Completed!</span>
-    <button class="btn-undo" onclick="undoStep()">UNDO</button>
-  </div>
-
-  <!-- PARENT CONTROL MODAL -->
-  <div class="modal-overlay" id="parentModal">
-    <div class="modal-card">
-      <div class="modal-title">⚙️ Parent Controls</div>
-      <div class="select-group">
-        <label>Daily Chores Quota:</label>
-        <select class="select-input" id="choreQuotaSelect" onchange="setQuota(this.value)">
-          <option value="1">1 Chore</option>
-          <option value="2" selected>2 Chores</option>
-          <option value="3">3 Chores</option>
-        </select>
-      </div>
-      <button class="btn-action" onclick="reRollChores()">🎲 Re-Roll Chore Challenge</button>
-      <button class="btn-action" style="background:#b0bec5;" onclick="closeSettings()">Close</button>
     </div>
   </div>
 
   <script>
-    // PRESET ROUTINES
-    const ROUTINES = {
-      morning: [
-        { label: 'Pick Clothes', icon: '👗' },
-        { label: 'Get Dressed', icon: '👕' },
-        { label: 'Brush Teeth', icon: '🪥' },
-        { label: 'Backpack', icon: '🎒' },
-        { label: 'Shoes & Jacket', icon: '👟' }
-      ],
-      bedtime: [
-        { label: 'Pick Up Toys', icon: '🧸' },
-        { label: 'Pajamas', icon: '👚' },
-        { label: 'Brush Teeth', icon: '🪥' },
-        { label: 'Go Potty', icon: '🚽' },
-        { label: 'Read Book', icon: '📖' }
-      ]
-    };
+    // PREVIEW ANIMATION SCRIPT (Sped up for testing)
+    function startPreview(child) {
+      let stepTime = 180; // 3 mins in seconds
+      let totalTime = 1500; // 25 mins total
+      const maxBorder = 12; // Starting border width
 
-    // CHORE POOL
-    const CHORES = [
-      { label: 'Floor Toy Tidy', icon: '🧸' },
-      { label: 'Clear Dinner Plate', icon: '🍽️' },
-      { label: 'Put Shoes Away', icon: '👞' },
-      { label: 'Clothes in Hamper', icon: '🧺' },
-      { label: 'Wipe Counter', icon: '🧽' }
-    ];
+      setInterval(() => {
+        if (stepTime > 0) stepTime -= 2; // Speeding up time for the preview
+        if (totalTime > 0) totalTime -= 2;
 
-    let currentMode = 'morning';
-    let choreQuota = 2;
-    let lastAction = null;
-    let toastTimer = null;
-
-    let appState = {
-      Harper: { steps: [], activeIdx: 0, timerTotal: 300, timerRemaining: 300, isRunning: false, interval: null, avatar: '🐱' },
-      Haisley: { steps: [], activeIdx: 0, timerTotal: 300, timerRemaining: 300, isRunning: false, interval: null, avatar: '🐶' }
-    };
-
-    // SMART TIME-OF-DAY LOGIC
-    function getSmartMode() {
-      const h = new Date().getHours();
-      if (h >= 6 && h < 11) return 'morning';
-      if (h >= 11 && h < 18) return 'chores';
-      return 'bedtime';
-    }
-
-    function switchMode(mode) {
-      currentMode = mode;
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      const activeTab = document.getElementById('tab' + mode.charAt(0).toUpperCase() + mode.slice(1));
-      if (activeTab) activeTab.classList.add('active');
-
-      if (mode === 'chores') {
-        reRollChores();
-      } else {
-        appState.Harper.steps = JSON.parse(JSON.stringify(ROUTINES[mode]));
-        appState.Haisley.steps = JSON.parse(JSON.stringify(ROUTINES[mode]));
-        appState.Harper.activeIdx = 0;
-        appState.Haisley.activeIdx = 0;
-        renderLanes();
-      }
-    }
-
-    function reRollChores() {
-      const pool = [...CHORES].sort(() => 0.5 - Math.random());
-      appState.Harper.steps = pool.slice(0, choreQuota);
-      appState.Haisley.steps = pool.slice(choreQuota, choreQuota * 2);
-      appState.Harper.activeIdx = 0;
-      appState.Haisley.activeIdx = 0;
-      renderLanes();
-      closeSettings();
-    }
-
-    // DRAW THE DUAL TRACKS & CONNECTING PATHWAYS
-    function renderLanes() {
-      renderChildLane('Harper', 'stonesHarper', 'svgHarper');
-      renderChildLane('Haisley', 'stonesHaisley', 'svgHaisley');
-    }
-
-    function renderChildLane(child, stonesId, svgId) {
-      const container = document.getElementById(stonesId);
-      container.innerHTML = '';
-      const steps = appState[child].steps;
-      const activeIdx = appState[child].activeIdx;
-
-      steps.forEach((step, idx) => {
-        const node = document.createElement('div');
-        node.className = `stone-node ${idx < activeIdx ? 'completed' : ''} ${idx === activeIdx ? 'active' : ''}`;
-
-        // Milestone disc
-        const disc = document.createElement('div');
-        disc.className = 'stone-disc';
+        // 1. Update Pie Chart
+        const pct = (stepTime / 180) * 100;
+        const color = child === 'Harper' ? '#ff4081' : '#1976d2';
+        document.getElementById('pie' + child).style.background = `conic-gradient(${color} ${pct}%, rgba(255,255,255,0.4) 0)`;
         
-        // Drag / Long-press Safeguard
-        let pressTimeout = null;
-        node.addEventListener('pointerdown', (e) => {
-          if (idx === activeIdx) {
-            pressTimeout = setTimeout(() => {
-              advanceStep(child, idx);
-            }, 600);
-          }
-        });
-        node.addEventListener('pointerup', () => clearTimeout(pressTimeout));
-        node.addEventListener('pointerleave', () => clearTimeout(pressTimeout));
+        let sM = Math.floor(Math.max(0, stepTime) / 60);
+        let sS = Math.max(0, stepTime) % 60;
+        document.getElementById('txt' + child).textContent = `${sM}:${String(sS).padStart(2,'0')}`;
 
-        disc.innerHTML = `<span class="icon">${idx < activeIdx ? '⭐' : step.icon}</span>`;
-        node.appendChild(disc);
+        // 2. Update Overall Border Thickness
+        const borderPct = totalTime / 1500;
+        document.getElementById('lane' + child).style.borderWidth = `${Math.max(2, maxBorder * borderPct)}px`;
 
-        // Label Tag
-        const label = document.createElement('div');
-        label.className = 'stone-label-card';
-        label.textContent = step.label;
-        node.appendChild(label);
+        let tM = Math.floor(Math.max(0, totalTime) / 60);
+        let tS = Math.max(0, totalTime) % 60;
+        document.getElementById('total' + child).textContent = `Total: ${tM}:${String(tS).padStart(2,'0')}`;
 
-        // Bouncing Avatar Token on Active Node
-        if (idx === activeIdx) {
-          const t
+        // 3. Simulate hitting the Castle & Free Time!
+        if (stepTime <= 0) {
+          document.getElementById('badge' + child).style.display = 'none';
+          const freeBadge = document.getElementById('free' + child);
+          freeBadge.style.display = 'block';
+          freeBadge.textContent = `${tM}:${String(tS).padStart(2,'0')} FREE TIME!`;
+        }
+      }, 100); // Ticks fast for the visual preview
+    }
+  </script>
+</body>
+</html>
