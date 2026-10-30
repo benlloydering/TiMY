@@ -3,11 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>TiMY Dual-Track Quest</title>
+  <title>TiMY - Dual-Track Quest</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700;800;900&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --harper-pink: #ff6097;
+      --harper-sand: #ff9100;
+      --haisley-blue: #0288d1;
+      --haisley-sand: #00e5ff;
+    }
     * {
       box-sizing: border-box;
       user-select: none;
@@ -17,7 +23,7 @@
       font-family: 'Fredoka', cursive, sans-serif;
     }
     body {
-      background: #361763;
+      background: #2a1447;
       display: flex;
       flex-direction: column;
       height: 100vh;
@@ -25,59 +31,63 @@
       overflow: hidden;
     }
 
+    /* TOP APP BAR */
     header {
-      background: #4c2882;
-      padding: 6px 14px;
+      background: #3e1b69;
+      height: 48px;
+      padding: 0 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      border-bottom: 2px solid rgba(255,255,255,0.12);
       z-index: 50;
-      border-bottom: 2px solid rgba(255,255,255,0.15);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
     }
     .brand {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 900;
       color: #fff;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      letter-spacing: 0.5px;
     }
     .brand-clock {
       background: #00e5ff;
       border: 2px solid #fff;
       border-radius: 50%;
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
+      font-size: 14px;
     }
     .tabs {
       display: flex;
-      background: rgba(0,0,0,0.3);
+      background: rgba(0,0,0,0.35);
       padding: 3px;
       border-radius: 30px;
       gap: 4px;
     }
     .tab-btn {
       border: none;
-      padding: 6px 14px;
+      padding: 5px 14px;
       border-radius: 20px;
       font-size: 13px;
       font-weight: 800;
       background: transparent;
-      color: #d1c4e9;
+      color: #cfbce8;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 5px;
+      transition: all 0.2s ease;
     }
     .tab-btn.active {
-      background: linear-gradient(135deg, #ff77a9, #ff4081);
+      background: linear-gradient(135deg, #ff7ba8, #ff4081);
       color: #fff;
-      box-shadow: 0 3px 8px rgba(255,64,129,0.5);
+      box-shadow: 0 2px 8px rgba(255,64,129,0.5);
     }
     .header-actions {
       display: flex;
@@ -85,304 +95,295 @@
       align-items: center;
     }
     .icon-btn {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.18);
       border: none;
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      font-size: 16px;
+      font-size: 15px;
       color: white;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: background 0.2s;
     }
+    .icon-btn:hover { background: rgba(255,255,255,0.3); }
 
+    /* DUAL TRACK ARENA */
     .arena {
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding: 8px 10px;
-      gap: 10px;
+      gap: 6px;
+      padding: 6px 10px;
       overflow: hidden;
     }
 
+    /* INDIVIDUAL LANES */
     .lane {
       flex: 1;
-      border-radius: 24px;
-      border: 12px solid #ffffff;
+      border-radius: 22px;
       display: flex;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-      transition: border-width 1s linear;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+      border: 3px solid rgba(255,255,255,0.85);
     }
     .lane-harper {
-      background: linear-gradient(135deg, #f8bbd0 0%, #e1bee7 40%, #b2ebf2 100%);
+      background: linear-gradient(180deg, #d8b4e2 0%, #ecd4f0 45%, #cae8ec 100%);
     }
     .lane-haisley {
-      background: linear-gradient(135deg, #bbdefb 0%, #90caf9 40%, #b2dfdb 100%);
+      background: linear-gradient(180deg, #98cff5 0%, #c4e4f8 45%, #bfe8df 100%);
     }
 
+    /* LEFT SIDEBAR (CARD + HOURGLASS) */
     .sidebar {
-      width: 110px;
-      background: rgba(255,255,255,0.25);
-      backdrop-filter: blur(6px);
-      border-right: 3px solid rgba(255,255,255,0.4);
+      width: 140px;
+      background: rgba(255,255,255,0.32);
+      backdrop-filter: blur(10px);
+      border-right: 3px solid rgba(255,255,255,0.6);
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: space-evenly;
-      padding: 4px;
-      z-index: 10;
-      flex-shrink: 0;
-    }
-    .avatar-ring {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      border: 3px solid #ffca28;
-    }
-    .name-tag {
-      font-size: 14px;
-      font-weight: 900;
-      color: #fff;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    }
-
-    .pie-timer {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: conic-gradient(#ff4081 100%, rgba(255,255,255,0.4) 0);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      cursor: pointer;
-    }
-    .lane-haisley .pie-timer {
-      background: conic-gradient(#1976d2 100%, rgba(255,255,255,0.4) 0);
-    }
-    .pie-inner {
-      width: 42px;
-      height: 42px;
-      background: #fff;
-      border-radius: 50%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .pie-inner span {
-      font-size: 12px;
-      font-weight: 900;
-      color: #333;
-    }
-
-    .mission-pill {
-      font-size: 10px;
-      font-weight: 900;
-      color: #fff;
-      background: rgba(0,0,0,0.3);
-      padding: 2px 6px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .trail {
-      flex: 1;
-      display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 25px;
-      position: relative;
-      overflow-x: auto;
-      overflow-y: hidden;
-      gap: 12px;
+      padding: 8px 6px;
+      z-index: 10;
+      flex-shrink: 0;
     }
-    .trail-line {
-      position: absolute;
-      left: 30px;
-      right: 50px;
-      height: 12px;
-      background: rgba(255,255,255,0.4);
-      border: 2px dashed #ffffff;
-      border-radius: 8px;
-      z-index: 1;
-    }
-
-    .stone {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
+    .child-card {
       background: #ffffff;
-      border: 4px solid #ffffff;
+      border-radius: 18px;
+      padding: 5px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+      border: 2px solid rgba(255,255,255,0.9);
+      width: 95%;
+    }
+    .avatar-bubble {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #ffecb3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      border: 2px solid #ffb300;
+      flex-shrink: 0;
+    }
+    .child-info { display: flex; flex-direction: column; }
+    .child-name { font-size: 15px; font-weight: 900; color: #2e1e47; line-height: 1.1; }
+    .child-age { font-size: 11px; font-weight: 700; color: #786b8c; }
+
+    /* BIG HOURGLASS */
+    .hourglass-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.18);
-      position: relative;
-      z-index: 2;
-      flex-shrink: 0;
       cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
     }
-    .stone .icon { font-size: 24px; }
-    .stone .label {
-      position: absolute;
-      bottom: -22px;
-      background: #ffffff;
-      padding: 2px 8px;
-      border-radius: 10px;
-      font-size: 10px;
-      font-weight: 900;
-      color: #37474f;
-      white-space: nowrap;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    .hourglass-svg {
+      width: 82px;
+      height: 102px;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
     }
-
-    .stone.active {
-      transform: scale(1.15);
-      border-color: #ffd54f;
-      box-shadow: 0 0 0 5px rgba(255,213,79,0.5);
-      animation: pulseStone 1.6s infinite alternate;
-    }
-    @keyframes pulseStone {
-      from { transform: scale(1.15) translateY(0); }
-      to { transform: scale(1.15) translateY(-5px); }
-    }
-    .stone.done {
-      background: #c8e6c9;
-      border-color: #4caf50;
-      transform: scale(0.9);
-      opacity: 0.85;
-    }
-
-    .avatar-token {
-      position: absolute;
-      top: -20px;
-      right: -8px;
-      width: 34px;
-      height: 34px;
-      background: #ffeb3b;
+    .total-time-pill {
+      background: rgba(46, 30, 71, 0.85);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
       border: 2px solid #ffffff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      animation: bounce 0.6s infinite alternate ease-in-out;
-      z-index: 10;
+      margin-top: -6px;
+      z-index: 5;
+      letter-spacing: 0.5px;
     }
-    @keyframes bounce {
+
+    /* WINDING QUEST VIEWPORT */
+    .quest-canvas {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+    .landscape-bg {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+    }
+    .trail-layer {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+    }
+
+    /* STEPPING STONES & UNIFIED TOUCH TARGET */
+    .stone-group {
+      cursor: pointer;
+      touch-action: none;
+    }
+    .stone-disc {
+      fill: #ffffff;
+      stroke: #d0c2de;
+      stroke-width: 4;
+      filter: drop-shadow(0 5px 6px rgba(0,0,0,0.18));
+      transition: all 0.25s ease;
+    }
+    .stone-group.done .stone-disc {
+      fill: #b9f6ca;
+      stroke: #00c853;
+    }
+    .stone-group.active .stone-disc {
+      stroke: #ffca28;
+      stroke-width: 5;
+    }
+
+    /* ACTIVE TASK PIE TIMER RING */
+    .task-timer-bg {
+      fill: none;
+      stroke: rgba(0,0,0,0.1);
+      stroke-width: 7;
+    }
+    .task-timer-gauge {
+      fill: none;
+      stroke-width: 7;
+      stroke-linecap: round;
+      transform-origin: center;
+      transform: rotate(-90deg);
+      transition: stroke-dashoffset 1s linear;
+    }
+    .lane-harper .task-timer-gauge { stroke: var(--harper-pink); }
+    .lane-haisley .task-timer-gauge { stroke: var(--haisley-blue); }
+
+    /* FLOATING PILLS: TASK NAME & TIME */
+    .task-name-pill {
+      position: absolute;
+      transform: translate(-50%, -100%);
+      background: #ffffff;
+      padding: 4px 10px;
+      border-radius: 14px;
+      font-size: 11px;
+      font-weight: 900;
+      color: #372352;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.16);
+      border: 2px solid rgba(0,0,0,0.06);
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 15;
+    }
+    .time-bubble {
+      position: absolute;
+      transform: translate(-50%, 0);
+      background: #ffffff;
+      padding: 3px 12px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 900;
+      color: #2b1c42;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+      border: 2px solid #ffca28;
+      pointer-events: none;
+      z-index: 15;
+    }
+
+    /* FAIRYTALE REWARD CASTLE */
+    .castle-wrapper {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 20;
+    }
+    .castle-svg {
+      width: 95px;
+      height: 95px;
+      filter: drop-shadow(0 8px 12px rgba(0,0,0,0.22));
+      animation: floatCastle 3s infinite alternate ease-in-out;
+    }
+    @keyframes floatCastle {
       from { transform: translateY(0); }
       to { transform: translateY(-6px); }
     }
-
-    .goal-castle {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 2;
-      flex-shrink: 0;
-      margin-left: 10px;
-    }
-    .castle-icon {
-      font-size: 40px;
-      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.25));
-    }
-    .goal-badge {
+    .reward-badge {
       background: linear-gradient(90deg, #ffb300, #ff8f00);
       color: #fff;
-      font-size: 10px;
-      font-weight: 900;
-      padding: 2px 8px;
-      border-radius: 10px;
-      border: 2px solid #fff;
-      margin-top: 2px;
-    }
-
-    .inspect-box {
-      background: #ff9800;
-      color: #fff;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 10px;
-      font-weight: 900;
-      cursor: pointer;
-      margin-top: 4px;
-      border: 2px solid #fff;
-      display: none;
-      animation: bounce 0.8s infinite alternate;
-    }
-    .free-time-box {
-      background: #00e676;
-      color: #fff;
-      padding: 4px 10px;
-      border-radius: 12px;
       font-size: 11px;
       font-weight: 900;
-      margin-top: 4px;
-      border: 2px solid #fff;
-      display: none;
-    }
-
-    .adhoc-btn {
-      position: absolute;
-      bottom: 6px;
-      right: 12px;
-      background: rgba(255,255,255,0.7);
-      border: 2px dashed rgba(0,0,0,0.25);
-      border-radius: 16px;
       padding: 3px 10px;
+      border-radius: 12px;
+      border: 2px solid #fff;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      margin-top: -8px;
+    }
+    .btn-inspect {
+      background: #ff6d00;
+      color: #fff;
       font-size: 11px;
-      font-weight: 800;
+      font-weight: 900;
+      padding: 4px 12px;
+      border-radius: 14px;
+      border: 2px solid #fff;
       cursor: pointer;
-      z-index: 10;
+      display: none;
+      box-shadow: 0 4px 12px rgba(255,109,0,0.4);
+      animation: pulse 1s infinite alternate;
+      margin-top: -6px;
+    }
+    .btn-free-time {
+      background: #00e676;
+      color: #104222;
+      font-size: 11px;
+      font-weight: 900;
+      padding: 4px 12px;
+      border-radius: 14px;
+      border: 2px solid #fff;
+      display: none;
+      margin-top: -6px;
     }
 
-    .banner {
+    /* BANNER TOAST */
+    .toast-banner {
       position: fixed;
-      bottom: 15px;
+      bottom: 14px;
       left: 50%;
       transform: translateX(-50%) translateY(100px);
       background: #ffffff;
       padding: 10px 22px;
       border-radius: 30px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.45);
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       font-weight: 900;
-      color: #263238;
-      z-index: 100;
+      font-size: 13px;
+      color: #2b1842;
       border: 3px solid #ffb300;
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 100;
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    .banner.show { transform: translateX(-50%) translateY(0); }
+    .toast-banner.show { transform: translateX(-50%) translateY(0); }
     .btn-undo {
       background: #eceff1;
       border: 2px solid #b0bec5;
-      padding: 4px 10px;
+      padding: 4px 12px;
       border-radius: 16px;
       font-size: 11px;
       font-weight: 900;
       cursor: pointer;
+      color: #37474f;
     }
 
+    /* MODAL */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.65);
       backdrop-filter: blur(4px);
       display: none;
       align-items: center;
@@ -393,23 +394,23 @@
       background: #ffffff;
       width: 90%;
       max-width: 360px;
-      padding: 20px;
+      padding: 22px;
       border-radius: 26px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
       display: flex;
       flex-direction: column;
       gap: 14px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     }
-    .modal-title { font-size: 18px; font-weight: 900; color: #4c2882; }
-    .select-group { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 800; }
+    .modal-title { font-size: 19px; font-weight: 900; color: #3e1b69; }
+    .select-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 800; }
     .select-input { padding: 4px 10px; border-radius: 10px; font-weight: bold; border: 2px solid #ccc; }
-    .btn-action {
-      background: #4c2882;
+    .modal-btn {
+      background: #3e1b69;
       color: #fff;
       border: none;
-      padding: 10px;
+      padding: 11px;
       border-radius: 14px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 900;
       cursor: pointer;
     }
@@ -417,10 +418,11 @@
 </head>
 <body>
 
+  <!-- TOP APP BAR -->
   <header>
     <div class="brand">
       <div class="brand-clock">⏱️</div>
-      <span>TiMY</span>
+      <span>TiMY Quest</span>
     </div>
     <div class="tabs">
       <button class="tab-btn" id="tabMorning" onclick="switchMode('Morning')">☀️ Morning</button>
@@ -428,54 +430,149 @@
       <button class="tab-btn" id="tabBedtime" onclick="switchMode('Bedtime')">🌙 Bedtime</button>
     </div>
     <div class="header-actions">
-      <button class="icon-btn" onclick="fetchSheetData()" title="Sync from Sheet">🔄</button>
-      <button class="icon-btn" onclick="openSettings()" title="Settings">⚙️</button>
+      <button class="icon-btn" onclick="fetchSheetData()" title="Sync Google Sheet">🔄</button>
+      <button class="icon-btn" onclick="openSettings()" title="Parent Settings">⚙️</button>
     </div>
   </header>
 
+  <!-- ARENA: HARPER & HAISLEY TRACKS -->
   <div class="arena">
-    <!-- Harper's Lane -->
+
+    <!-- HARPER'S TRACK -->
     <div class="lane lane-harper" id="laneHarper">
       <div class="sidebar">
-        <div class="avatar-ring">🐱</div>
-        <div class="name-tag">Harper</div>
-        <div class="pie-timer" id="pieHarper" onclick="toggleTimer('Harper')">
-          <div class="pie-inner"><span id="txtHarper">05:00</span></div>
+        <div class="child-card">
+          <div class="avatar-bubble">🐱</div>
+          <div class="child-info">
+            <span class="child-name">Harper</span>
+            <span class="child-age">Age 7</span>
+          </div>
         </div>
-        <div class="mission-pill" id="totalHarper" onclick="editTotalTime('Harper')">Total: 25m</div>
+
+        <!-- Big Hourglass Total Timer -->
+        <div class="hourglass-container" onclick="toggleTimer('Harper')">
+          <svg class="hourglass-svg" viewBox="0 0 80 100">
+            <!-- Wood Frame Caps -->
+            <rect x="5" y="4" width="70" height="9" rx="4.5" fill="#8d5b36" stroke="#5c381e" stroke-width="2"/>
+            <rect x="5" y="87" width="70" height="9" rx="4.5" fill="#8d5b36" stroke="#5c381e" stroke-width="2"/>
+            <!-- Glass Shell -->
+            <path d="M 16 13 Q 16 48, 38 50 Q 16 52, 16 87 L 64 87 Q 64 52, 42 50 Q 64 48, 64 13 Z" fill="rgba(255,255,255,0.4)" stroke="#5c381e" stroke-width="2.5"/>
+            <!-- Top Sand Bulb -->
+            <path id="sandTopHarper" d="M 20 20 Q 20 48, 40 49 Q 60 48, 60 20 Z" fill="var(--harper-sand)"/>
+            <!-- Sand Stream -->
+            <line id="sandStreamHarper" x1="40" y1="50" x2="40" y2="85" stroke="var(--harper-sand)" stroke-width="2.5" stroke-dasharray="2 2" opacity="0"/>
+            <!-- Bottom Sand Bulb -->
+            <path id="sandBottomHarper" d="M 22 85 Q 40 85, 58 85 Z" fill="var(--harper-sand)"/>
+            <!-- Glass Highlight Refraction -->
+            <path d="M 20 18 Q 21 44, 34 47" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+          </svg>
+          <div class="total-time-pill" id="totalPillHarper">Total: 25:00</div>
+        </div>
       </div>
-      <div class="trail" id="trailHarper">
-        <div class="trail-line"></div>
+
+      <!-- Winding Path Canvas -->
+      <div class="quest-canvas" id="canvasHarper">
+        <svg class="landscape-bg" viewBox="0 0 1000 350" preserveAspectRatio="none">
+          <!-- Gentle Background Hills -->
+          <path d="M 0 350 L 0 180 Q 280 110, 520 190 T 1000 150 L 1000 350 Z" fill="rgba(255,255,255,0.2)"/>
+          <path d="M 0 350 L 0 240 Q 340 180, 680 250 T 1000 220 L 1000 350 Z" fill="rgba(255,255,255,0.3)"/>
+        </svg>
+        <svg class="trail-layer" id="svgHarper" viewBox="0 0 1000 350" preserveAspectRatio="none"></svg>
+
+        <!-- Castle Goal -->
+        <div class="castle-wrapper">
+          <svg class="castle-svg" viewBox="0 0 100 100">
+            <rect x="25" y="45" width="50" height="45" rx="4" fill="#ba68c8" stroke="#4a148c" stroke-width="2"/>
+            <rect x="42" y="65" width="16" height="25" rx="8" fill="#4a148c"/>
+            <rect x="15" y="30" width="20" height="58" rx="3" fill="#ab47bc" stroke="#4a148c" stroke-width="2"/>
+            <polygon points="12,30 25,6 38,30" fill="#e91e63" stroke="#880e4f" stroke-width="2"/>
+            <rect x="65" y="30" width="20" height="58" rx="3" fill="#ab47bc" stroke="#4a148c" stroke-width="2"/>
+            <polygon points="62,30 75,6 88,30" fill="#e91e63" stroke="#880e4f" stroke-width="2"/>
+            <polygon points="38,45 50,20 62,45" fill="#f06292" stroke="#880e4f" stroke-width="2"/>
+            <!-- Gold Flags -->
+            <polygon points="25,6 25,0 35,3" fill="#ffd54f"/>
+            <polygon points="75,6 75,0 85,3" fill="#ffd54f"/>
+          </svg>
+          <div class="reward-badge" id="badgeHarper">REWARD!</div>
+          <button class="btn-inspect" id="inspectHarper" onclick="approveInspection('Harper')">👀 Inspect</button>
+          <div class="btn-free-time" id="freeHarper">FREE TIME!</div>
+        </div>
       </div>
-      <button class="adhoc-btn" onclick="addQuickStep('Harper')">＋ Add Step</button>
     </div>
 
-    <!-- Haisley's Lane -->
+    <!-- HAISLEY'S TRACK -->
     <div class="lane lane-haisley" id="laneHaisley">
       <div class="sidebar">
-        <div class="avatar-ring">🐶</div>
-        <div class="name-tag">Haisley</div>
-        <div class="pie-timer" id="pieHaisley" onclick="toggleTimer('Haisley')">
-          <div class="pie-inner"><span id="txtHaisley">05:00</span></div>
+        <div class="child-card">
+          <div class="avatar-bubble">🐶</div>
+          <div class="child-info">
+            <span class="child-name">Haisley</span>
+            <span class="child-age">Age 5</span>
+          </div>
         </div>
-        <div class="mission-pill" id="totalHaisley" onclick="editTotalTime('Haisley')">Total: 25m</div>
+
+        <!-- Big Hourglass Total Timer -->
+        <div class="hourglass-container" onclick="toggleTimer('Haisley')">
+          <svg class="hourglass-svg" viewBox="0 0 80 100">
+            <!-- Wood Frame Caps -->
+            <rect x="5" y="4" width="70" height="9" rx="4.5" fill="#8d5b36" stroke="#5c381e" stroke-width="2"/>
+            <rect x="5" y="87" width="70" height="9" rx="4.5" fill="#8d5b36" stroke="#5c381e" stroke-width="2"/>
+            <!-- Glass Shell -->
+            <path d="M 16 13 Q 16 48, 38 50 Q 16 52, 16 87 L 64 87 Q 64 52, 42 50 Q 64 48, 64 13 Z" fill="rgba(255,255,255,0.4)" stroke="#5c381e" stroke-width="2.5"/>
+            <!-- Top Sand Bulb -->
+            <path id="sandTopHaisley" d="M 20 20 Q 20 48, 40 49 Q 60 48, 60 20 Z" fill="var(--haisley-sand)"/>
+            <!-- Sand Stream -->
+            <line id="sandStreamHaisley" x1="40" y1="50" x2="40" y2="85" stroke="var(--haisley-sand)" stroke-width="2.5" stroke-dasharray="2 2" opacity="0"/>
+            <!-- Bottom Sand Bulb -->
+            <path id="sandBottomHaisley" d="M 22 85 Q 40 85, 58 85 Z" fill="var(--haisley-sand)"/>
+            <!-- Glass Highlight Refraction -->
+            <path d="M 20 18 Q 21 44, 34 47" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+          </svg>
+          <div class="total-time-pill" id="totalPillHaisley">Total: 25:00</div>
+        </div>
       </div>
-      <div class="trail" id="trailHaisley">
-        <div class="trail-line"></div>
+
+      <!-- Winding Path Canvas -->
+      <div class="quest-canvas" id="canvasHaisley">
+        <svg class="landscape-bg" viewBox="0 0 1000 350" preserveAspectRatio="none">
+          <path d="M 0 350 L 0 180 Q 280 110, 520 190 T 1000 150 L 1000 350 Z" fill="rgba(255,255,255,0.2)"/>
+          <path d="M 0 350 L 0 240 Q 340 180, 680 250 T 1000 220 L 1000 350 Z" fill="rgba(255,255,255,0.3)"/>
+        </svg>
+        <svg class="trail-layer" id="svgHaisley" viewBox="0 0 1000 350" preserveAspectRatio="none"></svg>
+
+        <!-- Castle Goal -->
+        <div class="castle-wrapper">
+          <svg class="castle-svg" viewBox="0 0 100 100">
+            <rect x="25" y="45" width="50" height="45" rx="4" fill="#0288d1" stroke="#01579b" stroke-width="2"/>
+            <rect x="42" y="65" width="16" height="25" rx="8" fill="#01579b"/>
+            <rect x="15" y="30" width="20" height="58" rx="3" fill="#29b6f6" stroke="#01579b" stroke-width="2"/>
+            <polygon points="12,30 25,6 38,30" fill="#ffd54f" stroke="#ff8f00" stroke-width="2"/>
+            <rect x="65" y="30" width="20" height="58" rx="3" fill="#29b6f6" stroke="#01579b" stroke-width="2"/>
+            <polygon points="62,30 75,6 88,30" fill="#ffd54f" stroke="#ff8f00" stroke-width="2"/>
+            <polygon points="38,45 50,20 62,45" fill="#4fc3f7" stroke="#01579b" stroke-width="2"/>
+            <polygon points="25,6 25,0 35,3" fill="#ff4081"/>
+            <polygon points="75,6 75,0 85,3" fill="#ff4081"/>
+          </svg>
+          <div class="reward-badge" id="badgeHaisley">REWARD!</div>
+          <button class="btn-inspect" id="inspectHaisley" onclick="approveInspection('Haisley')">👀 Inspect</button>
+          <div class="btn-free-time" id="freeHaisley">FREE TIME!</div>
+        </div>
       </div>
-      <button class="adhoc-btn" onclick="addQuickStep('Haisley')">＋ Add Step</button>
     </div>
+
   </div>
 
-  <div class="banner" id="banner">
-    <span id="bannerText">✨ Great Job!</span>
-    <button class="btn-undo" onclick="undo()">UNDO</button>
+  <!-- SPEECH & ACTION TOAST -->
+  <div class="toast-banner" id="toast">
+    <span id="toastMsg">✨ Step Completed!</span>
+    <button class="btn-undo" onclick="undoStep()">UNDO</button>
   </div>
 
+  <!-- PARENT SETTINGS MODAL -->
   <div class="modal-overlay" id="parentModal">
     <div class="modal-card">
       <div class="modal-title">⚙️ Parent Controls</div>
-      <div class="select-group">
+      <div class="select-row">
         <label>Daily Chores Quota:</label>
         <select class="select-input" id="quotaSelect" onchange="setQuota(this.value)">
           <option value="1">1 Chore</option>
@@ -484,20 +581,21 @@
           <option value="4">4 Chores</option>
         </select>
       </div>
-      <button class="btn-action" onclick="reRollChores()">🎲 Re-Roll Chore Challenge</button>
-      <button class="btn-action" style="background:#00b0ff;" onclick="fetchSheetData()">🔄 Re-Sync with Sheet</button>
-      <button class="btn-action" style="background:#b0bec5;" onclick="closeSettings()">Close</button>
+      <button class="modal-btn" onclick="reRollChores()">🎲 Re-Roll Chore Challenge</button>
+      <button class="modal-btn" style="background:#0288d1;" onclick="fetchSheetData()">🔄 Re-Sync with Sheet</button>
+      <button class="modal-btn" style="background:#8d5b36;" onclick="requestWakeLock()">📱 Keep Screen Awake</button>
+      <button class="modal-btn" style="background:#b0bec5;" onclick="closeSettings()">Close</button>
     </div>
   </div>
 
   <script>
-    // 1. READ: Published CSV URL for downloading the chore schedule
-    const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR6EF30t9YRoYXRpQB7RTRM9xLdb2mrv812-tqEeI3vnfPeHuskcNQ8eP857WdvTFOQlM8IiezK29KG/pub?gid=1686199436&single=true&output=csv";
+    // ==========================================
+    // CONFIGURATION & DATA SOURCE
+    // ==========================================
+    // PASTE YOUR PUBLISHED GOOGLE SHEET CSV LINK HERE:
+    const SHEET_CSV_URL = "https://script.google.com/macros/s/AKfycbzK0kHEOXN2vTz4CypxBoKjD5kbJ_4ckdn_MSHXq7yOs-CxB4toahwUVB28y9utY8tpKQ/exec";
 
-    // 2. WRITE: Apps Script Web App URL for logging completed chores
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxb04fLoLGgllLjsTKQG6sbe8iC87FpHlWiRImZ2fzeRfA19Bkfz5Ie3sDqK6HmURatSw/exec";
-
-    // Built-in fallbacks based on your Family Chore Tracker spreadsheet
+    // Built-in offline fallback data from Family_Chore_Tracker_and_Dinner_Menu
     let rawSheetData = [
       { Child: 'Harper', Category: 'Morning', Step: 1, Task: 'Wake up & make bed', Minutes: 5, Emoji: '🛏️' },
       { Child: 'Harper', Category: 'Morning', Step: 2, Task: 'Get dressed', Minutes: 5, Emoji: '👕' },
@@ -511,9 +609,9 @@
       { Child: 'Harper', Category: 'Bedtime', Step: 4, Task: 'Clear bedroom floor', Minutes: 5, Emoji: '🧸' },
       { Child: 'Harper', Category: 'Bedtime', Step: 5, Task: 'In bed & lights out', Minutes: 5, Emoji: '🌙' },
 
-      { Child: 'Harper', Category: 'Chores', Step: 1, Task: 'Feed pets & check water bowls', Minutes: 5, Emoji: '🐾' },
-      { Child: 'Harper', Category: 'Chores', Step: 2, Task: 'Empty small bathroom trash cans', Minutes: 5, Emoji: '🗑️' },
-      { Child: 'Harper', Category: 'Chores', Step: 3, Task: 'Clear dining table & wipe down', Minutes: 5, Emoji: '🍽️' },
+      { Child: 'Harper', Category: 'Chores', Step: 1, Task: 'Feed pets & water bowls', Minutes: 5, Emoji: '🐾' },
+      { Child: 'Harper', Category: 'Chores', Step: 2, Task: 'Empty small bathroom trash', Minutes: 5, Emoji: '🗑️' },
+      { Child: 'Harper', Category: 'Chores', Step: 3, Task: 'Clear dining table & wipe', Minutes: 5, Emoji: '🍽️' },
       { Child: 'Harper', Category: 'Chores', Step: 4, Task: 'Sort & match laundry socks', Minutes: 10, Emoji: '🧦' },
 
       { Child: 'Haisley', Category: 'Morning', Step: 1, Task: 'Potty & wash face', Minutes: 5, Emoji: '🧼' },
@@ -537,20 +635,79 @@
     let currentMode = 'Morning';
     let choreQuota = 2;
     let lastAction = null;
-    let toastTimer = null;
+    let toastTimeout = null;
+    let wakeLockSentinel = null;
 
     let appState = {
       Harper: { steps: [], activeIdx: 0, stepRemaining: 0, stepTotal: 0, missionTotal: 0, missionRemaining: 0, isRunning: false, isFreeTime: false, isInspecting: false, interval: null, avatar: '🐱' },
       Haisley: { steps: [], activeIdx: 0, stepRemaining: 0, stepTotal: 0, missionTotal: 0, missionRemaining: 0, isRunning: false, isFreeTime: false, isInspecting: false, interval: null, avatar: '🐶' }
     };
 
-    function getSmartMode() {
-      const h = new Date().getHours();
-      if (h >= 6 && h < 11) return 'Morning';
-      if (h >= 11 && h < 18) return 'Chores';
-      return 'Bedtime';
+    // ==========================================
+    // WEB AUDIO API - DISTINCT SIGNATURE CHIMES
+    // ==========================================
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playTone(freq, type, duration, delay = 0, gainLevel = 0.2) {
+      setTimeout(() => {
+        try {
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+          gain.gain.setValueAtTime(gainLevel, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + duration);
+        } catch (e) {}
+      }, delay);
     }
 
+    // Harper: Bright higher-pitched chime (Glockenspiel Major chord)
+    function chimeHarper() {
+      playTone(523.25, 'triangle', 0.4, 0, 0.25);   // C5
+      playTone(659.25, 'triangle', 0.4, 120, 0.25); // E5
+      playTone(783.99, 'sine', 0.7, 240, 0.3);      // G5
+    }
+    // Haisley: Warm, round lower chime (Marimba bouncy interval)
+    function chimeHaisley() {
+      playTone(349.23, 'sine', 0.35, 0, 0.3);       // F4
+      playTone(440.00, 'sine', 0.35, 120, 0.3);     // A4
+      playTone(523.25, 'triangle', 0.6, 240, 0.25); // C5
+    }
+
+    // 30-Second Friendly Warning Ticks
+    function warningHarper() {
+      playTone(783.99, 'sine', 0.15, 0, 0.15);
+      playTone(1046.50, 'sine', 0.25, 120, 0.2);
+    }
+    function warningHaisley() {
+      playTone(440.00, 'sine', 0.15, 0, 0.18);
+      playTone(587.33, 'sine', 0.25, 120, 0.22);
+    }
+
+    // ==========================================
+    // SCREEN WAKE LOCK (PREVENT TABLET SLEEP)
+    // ==========================================
+    async function requestWakeLock() {
+      if ('wakeLock' in navigator) {
+        try {
+          wakeLockSentinel = await navigator.wakeLock.request('screen');
+        } catch (err) {}
+      }
+    }
+    document.addEventListener('visibilitychange', () => {
+      if (wakeLockSentinel !== null && document.visibilityState === 'visible') {
+        requestWakeLock();
+      }
+    });
+
+    // ==========================================
+    // GOOGLE SHEETS LIVE SYNC
+    // ==========================================
     async function fetchSheetData() {
       if (!SHEET_CSV_URL) {
         setupMode(currentMode);
@@ -562,6 +719,7 @@
         const rows = text.split('\n').map(r => r.split(','));
         const parsed = [];
         for (let i = 1; i < rows.length; i++) {
+          if (!rows[i] || rows[i].length < 4) continue;
           const [child, cat, step, task, mins, emoji] = rows[i];
           if (child && task) {
             parsed.push({
@@ -576,10 +734,20 @@
         }
         if (parsed.length > 0) rawSheetData = parsed;
         setupMode(currentMode);
-        showBanner('🔄 Synced fresh data from Google Sheet!');
+        showToast('🔄 Synced fresh data from Google Sheet!');
       } catch (err) {
         setupMode(currentMode);
       }
+    }
+
+    // ==========================================
+    // MODE SWITCHING & SETUP
+    // ==========================================
+    function getSmartMode() {
+      const h = new Date().getHours();
+      if (h >= 6 && h < 11) return 'Morning';
+      if (h >= 11 && h < 18) return 'Chores';
+      return 'Bedtime';
     }
 
     function switchMode(mode) {
@@ -617,9 +785,9 @@
           state.stepRemaining = state.stepTotal;
         }
 
-        updateTimersDisplay(child);
+        updateHourglass(child);
       });
-      render();
+      renderAll();
     }
 
     function reRollChores() {
@@ -627,106 +795,240 @@
       closeSettings();
     }
 
-    function render() {
-      drawTrack('Harper', 'trailHarper');
-      drawTrack('Haisley', 'trailHaisley');
+    // ==========================================
+    // CURVED PATH & MILESTONE RENDERING
+    // ==========================================
+    function renderAll() {
+      renderTrack('Harper', 'svgHarper', 'canvasHarper');
+      renderTrack('Haisley', 'svgHaisley', 'canvasHaisley');
     }
 
-    function drawTrack(child, trailId) {
-      const container = document.getElementById(trailId);
-      container.innerHTML = '<div class="trail-line"></div>';
+    function renderTrack(child, svgId, canvasId) {
+      const svg = document.getElementById(svgId);
+      const canvas = document.getElementById(canvasId);
+      svg.innerHTML = '';
+
+      // Remove existing HTML floating labels
+      canvas.querySelectorAll('.task-name-pill, .time-bubble').forEach(el => el.remove());
+
       const state = appState[child];
+      const count = state.steps.length;
+      if (count === 0) return;
 
-      state.steps.forEach((step, idx) => {
-        const stone = document.createElement('div');
-        stone.className = 'stone';
-        if (idx < state.activeIdx) stone.classList.add('done');
-        if (idx === state.activeIdx) {
-          stone.classList.add('active');
-          const token = document.createElement('div');
-          token.className = 'avatar-token';
-          token.textContent = state.avatar;
-          stone.appendChild(token);
-        }
+      // Distribute coordinates along a gentle S-curve across 1000px coordinate space
+      const startX = 70;
+      const endX = 820;
+      const stepX = (endX - startX) / (count - 1 || 1);
 
-        let pressHold = null;
-        stone.addEventListener('pointerdown', () => {
+      const points = [];
+      for (let i = 0; i < count; i++) {
+        const x = startX + i * stepX;
+        // Natural sine wave wave curve: alternating up and down
+        const y = 175 + Math.sin((i / (count - 1 || 1)) * Math.PI * 2) * 55;
+        points.push({ x, y });
+      }
+
+      // Draw Curvy Cobblestone Path Underneath
+      let pathD = `M ${points[0].x} ${points[0].y}`;
+      for (let i = 1; i < count; i++) {
+        const prev = points[i - 1];
+        const curr = points[i];
+        const midX = (prev.x + curr.x) / 2;
+        pathD += ` Q ${prev.x + (curr.x - prev.x) * 0.4} ${prev.y}, ${midX} ${(prev.y + curr.y) / 2} T ${curr.x} ${curr.y}`;
+      }
+      // Connect final stone to castle
+      pathD += ` Q ${endX + 40} ${points[count-1].y}, 910 175`;
+
+      // Thick Base Path
+      const basePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      basePath.setAttribute('d', pathD);
+      basePath.setAttribute('fill', 'none');
+      basePath.setAttribute('stroke', 'rgba(186, 160, 209, 0.7)');
+      basePath.setAttribute('stroke-width', '42');
+      basePath.setAttribute('stroke-linecap', 'round');
+      svg.appendChild(basePath);
+
+      // Cobblestone Paver Outline
+      const stonePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      stonePath.setAttribute('d', pathD);
+      stonePath.setAttribute('fill', 'none');
+      stonePath.setAttribute('stroke', '#ffffff');
+      stonePath.setAttribute('stroke-width', '24');
+      stonePath.setAttribute('stroke-dasharray', '14 8');
+      stonePath.setAttribute('stroke-linecap', 'round');
+      svg.appendChild(stonePath);
+
+      // Draw Interactive Stepping Stones
+      points.forEach((pt, idx) => {
+        const step = state.steps[idx];
+        const isActive = idx === state.activeIdx;
+        const isDone = idx < state.activeIdx;
+
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.setAttribute('class', `stone-group ${isActive ? 'active' : ''} ${isDone ? 'done' : ''}`);
+
+        // Big Touch-and-Hold Target (Safeguard)
+        let holdTimer = null;
+        g.addEventListener('pointerdown', (e) => {
           if (idx === state.activeIdx && !state.isInspecting && !state.isFreeTime) {
-            pressHold = setTimeout(() => finishStep(child, idx), 500);
+            holdTimer = setTimeout(() => finishStep(child, idx), 500);
           }
         });
-        stone.addEventListener('pointerup', () => clearTimeout(pressHold));
-        stone.addEventListener('pointerleave', () => clearTimeout(pressHold));
+        g.addEventListener('pointerup', () => clearTimeout(holdTimer));
+        g.addEventListener('pointerleave', () => clearTimeout(holdTimer));
 
-        stone.innerHTML += `
-          <span class="icon">${idx < state.activeIdx ? '⭐' : step.icon}</span>
-          <span class="label">${step.label}</span>
-        `;
-        container.appendChild(stone);
+        // Stone Base Circle
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', pt.x);
+        circle.setAttribute('cy', pt.y);
+        circle.setAttribute('r', '32');
+        circle.setAttribute('class', 'stone-disc');
+        g.appendChild(circle);
+
+        // Circular Task Countdown Gauge on Active Stone
+        if (isActive && !state.isFreeTime && !state.isInspecting) {
+          const bgGauge = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          bgGauge.setAttribute('cx', pt.x);
+          bgGauge.setAttribute('cy', pt.y);
+          bgGauge.setAttribute('r', '32');
+          bgGauge.setAttribute('class', 'task-timer-bg');
+          g.appendChild(bgGauge);
+
+          const fgGauge = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          fgGauge.setAttribute('cx', pt.x);
+          fgGauge.setAttribute('cy', pt.y);
+          fgGauge.setAttribute('r', '32');
+          fgGauge.setAttribute('class', 'task-timer-gauge');
+          fgGauge.setAttribute('id', `gauge_${child}`);
+          const circumference = 2 * Math.PI * 32;
+          fgGauge.setAttribute('stroke-dasharray', circumference);
+          const fraction = state.stepTotal > 0 ? (state.stepRemaining / state.stepTotal) : 0;
+          fgGauge.setAttribute('stroke-dashoffset', circumference * (1 - fraction));
+          g.appendChild(fgGauge);
+        }
+
+        // Center Emoji or Checkmark
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', pt.x);
+        text.setAttribute('y', pt.y + 8);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('font-size', '24');
+        text.textContent = isDone ? '⭐' : step.icon;
+        g.appendChild(text);
+
+        // Avatar Token sitting on active stone
+        if (isActive) {
+          const avatarG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+          const tokenCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          tokenCircle.setAttribute('cx', pt.x + 22);
+          tokenCircle.setAttribute('cy', pt.y - 22);
+          tokenCircle.setAttribute('r', '17');
+          tokenCircle.setAttribute('fill', '#ffeb3b');
+          tokenCircle.setAttribute('stroke', '#ffffff');
+          tokenCircle.setAttribute('stroke-width', '2.5');
+          avatarG.appendChild(tokenCircle);
+
+          const tokenTxt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          tokenTxt.setAttribute('x', pt.x + 22);
+          tokenTxt.setAttribute('y', pt.y - 16);
+          tokenTxt.setAttribute('text-anchor', 'middle');
+          tokenTxt.setAttribute('font-size', '15');
+          tokenTxt.textContent = state.avatar;
+          avatarG.appendChild(tokenTxt);
+          g.appendChild(avatarG);
+        }
+
+        svg.appendChild(g);
+
+        // Position Floating HTML Pills (Name above, Countdown below)
+        const leftPercent = (pt.x / 1000) * 100;
+        const topPercent = (pt.y / 350) * 100;
+
+        if (isActive) {
+          const namePill = document.createElement('div');
+          namePill.className = 'task-name-pill';
+          namePill.style.left = `${leftPercent}%`;
+          namePill.style.top = `calc(${topPercent}% - 42px)`;
+          namePill.innerHTML = `${step.label} ${step.icon}`;
+          canvas.appendChild(namePill);
+
+          const timeBubble = document.createElement('div');
+          timeBubble.className = 'time-bubble';
+          timeBubble.id = `timeBubble_${child}`;
+          timeBubble.style.left = `${leftPercent}%`;
+          timeBubble.style.top = `calc(${topPercent}% + 42px)`;
+          const sM = Math.floor(state.stepRemaining / 60);
+          const sS = state.stepRemaining % 60;
+          timeBubble.textContent = `${String(sM).padStart(2,'0')}:${String(sS).padStart(2,'0')}`;
+          canvas.appendChild(timeBubble);
+        }
       });
 
-      const goal = document.createElement('div');
-      goal.className = 'goal-castle';
-      goal.innerHTML = `
-        <div class="castle-icon">${state.isFreeTime ? '👑' : '🏰'}</div>
-        <div class="goal-badge" id="badge${child}">REWARD!</div>
-        <div class="inspect-box" id="inspect${child}" onclick="approveInspection('${child}')">👀 Parent Inspect</div>
-        <div class="free-time-box" id="free${child}">FREE TIME!</div>
-      `;
-      container.appendChild(goal);
-
-      const inspectBtn = goal.querySelector(`#inspect${child}`);
-      const freeBadge = goal.querySelector(`#free${child}`);
-      const badgeReward = goal.querySelector(`#badge${child}`);
+      // Update Castle End States
+      const laneEl = document.getElementById(`lane${child}`);
+      const inspectBtn = laneEl.querySelector(`#inspect${child}`);
+      const freeBadge = laneEl.querySelector(`#free${child}`);
+      const rewardBadge = laneEl.querySelector(`#badge${child}`);
 
       if (state.isInspecting) {
         inspectBtn.style.display = 'block';
-        badgeReward.style.display = 'none';
+        rewardBadge.style.display = 'none';
         freeBadge.style.display = 'none';
       } else if (state.isFreeTime) {
         inspectBtn.style.display = 'none';
-        badgeReward.style.display = 'none';
+        rewardBadge.style.display = 'none';
         freeBadge.style.display = 'block';
       } else {
         inspectBtn.style.display = 'none';
-        badgeReward.style.display = 'block';
+        rewardBadge.style.display = 'block';
         freeBadge.style.display = 'none';
       }
     }
 
+    // ==========================================
+    // STEP COMPLETION & VOICE PRAISE
+    // ==========================================
     function finishStep(child, idx) {
       const state = appState[child];
       lastAction = { child, idx };
       state.activeIdx++;
 
+      // Play child's signature sound
+      if (child === 'Harper') chimeHarper();
+      else chimeHaisley();
+
       const taskName = state.steps[idx].label;
-      speak(`${child} finished ${taskName}!`);
-      showBanner(`🎉 ${child} finished: ${taskName}!`);
+      speak(`${child} finished ${taskName}! Awesome job!`);
+      showToast(`🎉 ${child} finished: ${taskName}!`);
 
       if (state.activeIdx < state.steps.length) {
         state.stepTotal = state.steps[state.activeIdx].minutes * 60;
         state.stepRemaining = state.stepTotal;
-        updateTimersDisplay(child);
       } else {
+        // Routine Complete -> Parent Inspection Pause
         clearInterval(state.interval);
         state.isRunning = false;
         state.isInspecting = true;
-        speak(`Hooray! ${child} finished all tasks. Calling Mom and Dad for inspection!`);
-        showBanner(`👀 ${child} finished! Tap "Parent Inspect" to confirm and unlock Free Time!`);
+        speak(`Hooray! ${child} finished all tasks. Parent inspection time!`);
+        showToast(`👀 ${child} finished! Tap "Inspect" to unlock Free Time.`);
       }
-      render();
+      renderAll();
+      updateHourglass(child);
     }
 
     function approveInspection(child) {
       const state = appState[child];
       state.isInspecting = false;
       state.isFreeTime = true;
-      speak(`Awesome job! ${child} earned free playtime!`);
+      if (child === 'Harper') chimeHarper();
+      else chimeHaisley();
+      speak(`Inspection approved! Enjoy your free time, ${child}!`);
       startTimer(child);
-      render();
+      renderAll();
+      updateHourglass(child);
     }
 
-    function undo() {
+    function undoStep() {
       if (lastAction) {
         const state = appState[lastAction.child];
         state.activeIdx = lastAction.idx;
@@ -734,18 +1036,23 @@
         state.isFreeTime = false;
         state.stepTotal = state.steps[state.activeIdx].minutes * 60;
         state.stepRemaining = state.stepTotal;
-        updateTimersDisplay(lastAction.child);
-        render();
-        hideBanner();
+        hideToast();
+        renderAll();
+        updateHourglass(lastAction.child);
         lastAction = null;
       }
     }
 
+    // ==========================================
+    // TIMERS & HOURGLASS PHYSICS
+    // ==========================================
     function toggleTimer(child) {
+      requestWakeLock();
       const state = appState[child];
       if (state.isRunning) {
         clearInterval(state.interval);
         state.isRunning = false;
+        document.getElementById(`sandStream${child}`).style.opacity = '0';
       } else {
         startTimer(child);
       }
@@ -755,100 +1062,104 @@
       const state = appState[child];
       state.isRunning = true;
       if (state.interval) clearInterval(state.interval);
+      document.getElementById(`sandStream${child}`).style.opacity = '1';
 
       state.interval = setInterval(() => {
         if (state.missionRemaining > 0) {
           state.missionRemaining--;
         }
+
         if (!state.isFreeTime && state.stepRemaining > 0) {
           state.stepRemaining--;
+          // 30-Second Warning Chime
+          if (state.stepRemaining === 30) {
+            if (child === 'Harper') warningHarper();
+            else warningHaisley();
+          }
         }
 
-        updateTimersDisplay(child);
+        updateHourglass(child);
+        updateStepTimer(child);
 
         if (state.isFreeTime && state.missionRemaining <= 0) {
           clearInterval(state.interval);
           state.isRunning = false;
-          speak(`${child}'s free time is up! Time to get ready to go.`);
+          document.getElementById(`sandStream${child}`).style.opacity = '0';
+          speak(`${child}'s free time is finished!`);
         }
       }, 1000);
     }
 
-    function updateTimersDisplay(child) {
+    function updateStepTimer(child) {
       const state = appState[child];
-
-      const pie = document.getElementById('pie' + child);
-      const txt = document.getElementById('txt' + child);
-      let sM, sS;
-
-      if (state.isFreeTime) {
-        sM = Math.floor(state.missionRemaining / 60);
-        sS = state.missionRemaining % 60;
-        txt.textContent = `${sM}:${String(sS).padStart(2,'0')}`;
-        pie.style.background = `conic-gradient(#00e676 100%, rgba(255,255,255,0.4) 0)`;
-      } else {
-        sM = Math.floor(state.stepRemaining / 60);
-        sS = state.stepRemaining % 60;
-        txt.textContent = `${sM}:${String(sS).padStart(2,'0')}`;
-        const pct = state.stepTotal > 0 ? (state.stepRemaining / state.stepTotal) * 100 : 0;
-        const color = child === 'Harper' ? '#ff4081' : '#1976d2';
-        pie.style.background = `conic-gradient(${color} ${pct}%, rgba(255,255,255,0.4) 0)`;
+      const bubble = document.getElementById(`timeBubble_${child}`);
+      if (bubble) {
+        const sM = Math.floor(state.stepRemaining / 60);
+        const sS = state.stepRemaining % 60;
+        bubble.textContent = `${String(sM).padStart(2,'0')}:${String(sS).padStart(2,'0')}`;
       }
 
-      const lane = document.getElementById('lane' + child);
-      const borderRatio = state.missionTotal > 0 ? state.missionRemaining / state.missionTotal : 0;
-      lane.style.borderWidth = `${Math.max(2, 12 * borderRatio)}px`;
+      const gauge = document.getElementById(`gauge_${child}`);
+      if (gauge && state.stepTotal > 0) {
+        const circumference = 2 * Math.PI * 32;
+        const fraction = state.stepRemaining / state.stepTotal;
+        gauge.style.strokeDashoffset = circumference * (1 - fraction);
+      }
+    }
+
+    function updateHourglass(child) {
+      const state = appState[child];
+      const pill = document.getElementById(`totalPill${child}`);
 
       const tM = Math.floor(state.missionRemaining / 60);
       const tS = state.missionRemaining % 60;
-      document.getElementById('total' + child).textContent = state.isFreeTime 
-        ? `Free: ${tM}:${String(tS).padStart(2,'0')}` 
-        : `Total: ${tM}m`;
+      pill.textContent = state.isFreeTime ? `Free: ${tM}:${String(tS).padStart(2,'0')}` : `Total: ${tM}:${String(tS).padStart(2,'0')}`;
+
+      // Sand Level Geometry
+      const ratio = state.missionTotal > 0 ? (state.missionRemaining / state.missionTotal) : 0;
+      const topSand = document.getElementById(`sandTop${child}`);
+      const bottomSand = document.getElementById(`sandBottom${child}`);
+
+      // Top Bulb drains from top down (y=20 down to y=49)
+      const topY = 49 - (29 * ratio);
+      topSand.setAttribute('d', `M 20 ${topY} Q 20 48, 40 49 Q 60 48, 60 ${topY} Z`);
+
+      // Bottom Bulb fills from bottom up (y=85 up to y=62)
+      const bottomY = 85 - (23 * (1 - ratio));
+      bottomSand.setAttribute('d', `M 20 85 Q 40 ${bottomY}, 60 85 Z`);
     }
 
-    function editTotalTime(child) {
-      const currentMins = Math.ceil(appState[child].missionRemaining / 60);
-      const val = prompt(`Set total mission minutes for ${child}:`, currentMins);
-      if (val && !isNaN(val)) {
-        appState[child].missionTotal = parseInt(val) * 60;
-        appState[child].missionRemaining = appState[child].missionTotal;
-        updateTimersDisplay(child);
-      }
-    }
-
-    function addQuickStep(child) {
-      const title = prompt(`Add extra step for ${child}:`, 'Extra Task');
-      if (title) {
-        appState[child].steps.push({ label: title, icon: '⭐', minutes: 5 });
-        appState[child].missionTotal += 300;
-        appState[child].missionRemaining += 300;
-        updateTimersDisplay(child);
-        render();
-      }
-    }
-
-    function speak(text) {
+    // ==========================================
+    // UTILITIES & FEEDBACK
+    // ==========================================
+    function speak(msg) {
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(text);
-        u.pitch = 1.3;
-        window.speechSynthesis.speak(u);
+        const utter = new SpeechSynthesisUtterance(msg);
+        utter.pitch = 1.25;
+        utter.rate = 1.05;
+        window.speechSynthesis.speak(utter);
       }
     }
 
-    function showBanner(msg) {
-      const b = document.getElementById('banner');
-      document.getElementById('bannerText').textContent = msg;
-      b.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(hideBanner, 4500);
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').textContent = text;
+      toast.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(hideToast, 4000);
     }
-    function hideBanner() { document.getElementById('banner').classList.remove('show'); }
+    function hideToast() {
+      document.getElementById('toast').classList.remove('show');
+    }
 
     function openSettings() { document.getElementById('parentModal').style.display = 'flex'; }
     function closeSettings() { document.getElementById('parentModal').style.display = 'none'; }
-    function setQuota(val) { choreQuota = parseInt(val); }
+    function setQuota(val) { choreQuota = parseInt(val, 10); }
 
+    window.addEventListener('resize', () => renderAll());
+
+    // Boot app with smart time-of-day
     switchMode(getSmartMode());
   </script>
 </body>
