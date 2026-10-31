@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TiMY Quest - Dual Track</title>
     <style>
-        /* CSS Variables for Easy Theming */
+        /* CSS Variables */
         :root {
             --harper-bg: linear-gradient(135deg, #fce4ec 0%, #e0f7fa 100%);
             --haisley-bg: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
@@ -20,22 +20,34 @@
             display: flex; flex-direction: column; gap: 10px; overflow: hidden;
         }
 
-        /* --- Start Audio Overlay --- */
+        /* --- Audio & Loading Overlay --- */
         #start-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.8); z-index: 1000;
-            display: flex; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.85); z-index: 1000;
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
         }
         .start-btn {
             background: #ff4081; color: white; padding: 20px 40px;
             font-size: 24px; font-weight: bold; border-radius: 50px;
             border: 4px solid white; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            transition: background 0.3s;
         }
+        .start-btn:disabled { background: #555; border-color: #777; cursor: not-allowed; }
 
-        /* --- Settings Header --- */
+        /* --- Settings Header & Modal --- */
         .header { display: flex; justify-content: space-between; align-items: center; color: white; padding: 0 20px; }
-        .gear-btn { background: none; border: none; font-size: 24px; cursor: pointer; }
+        .gear-btn { background: none; border: none; font-size: 24px; cursor: pointer; transition: transform 0.2s; }
+        .gear-btn:active { transform: rotate(45deg); }
         
+        #settings-modal {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: white; padding: 20px; border-radius: 15px; z-index: 2000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center;
+        }
+        #settings-modal h3 { margin-top: 0; }
+        #settings-modal input { width: 60px; font-size: 20px; text-align: center; margin: 10px; }
+        #settings-modal button { background: #2196f3; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
         /* --- Track Containers --- */
         .track-board {
             flex: 1; border-radius: 20px; padding: 15px;
@@ -51,17 +63,16 @@
             background: white; border-radius: 15px; padding: 10px;
             text-align: center; width: 140px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             display: flex; flex-direction: column; align-items: center; z-index: 10;
+            flex-shrink: 0;
         }
         
         .avatar-emoji { font-size: 32px; line-height: 1; margin-bottom: 5px; }
-        /* Avater Color Filters */
-        #harper-avatar { filter: hue-rotate(250deg) saturate(1.5); } /* Orange -> Purple */
-        #haisley-avatar { filter: hue-rotate(180deg) saturate(2); }  /* Orange/Brown -> Blue */
+        #harper-avatar { filter: hue-rotate(250deg) saturate(1.5); } 
+        #haisley-avatar { filter: hue-rotate(180deg) saturate(2); }  
 
         .profile-name { font-weight: bold; font-size: 16px; margin: 0; }
         .profile-age { font-size: 12px; color: #666; margin: 0 0 10px 0; }
 
-        /* The Visual Donut Timer */
         .donut-container {
             width: 80px; height: 80px; border-radius: 50%;
             background: conic-gradient(#4caf50 100%, #e0e0e0 0);
@@ -77,10 +88,8 @@
         /* --- The Straight Line Path --- */
         .path-container {
             display: flex; align-items: center; flex: 1; position: relative;
-            padding-left: 20px;
+            padding-left: 20px; min-width: 600px;
         }
-        
-        /* The physical line connecting nodes */
         .track-line {
             position: absolute; top: 50%; left: 0; right: 0; height: 12px;
             background: var(--track-color); transform: translateY(-50%); z-index: 1;
@@ -108,12 +117,6 @@
         }
         .task-time { font-size: 11px; color: #666; margin-top: 2px; font-weight: bold; }
 
-        .reroll-btn {
-            position: absolute; top: -10px; right: -10px; background: #2196f3; color: white;
-            border: none; border-radius: 50%; width: 24px; height: 24px; font-size: 12px;
-            cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 5;
-        }
-
         /* End Castle */
         .castle-node .node-circle { background: transparent; border: none; font-size: 60px; box-shadow: none; }
         
@@ -123,16 +126,26 @@
 </head>
 <body>
 
-    <!-- Audio Unlock Overlay -->
-    <div id="start-overlay" onclick="startApp()">
-        <button class="start-btn">Start TiMY Quest</button>
+    <!-- Loading & Audio Unlock Overlay -->
+    <div id="start-overlay">
+        <button class="start-btn" id="start-btn" disabled>Loading Data...</button>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal">
+        <h3>App Settings</h3>
+        <p>Target chores per child (1-5):</p>
+        <input type="number" id="chore-count-input" min="1" max="5">
+        <br>
+        <button onclick="saveSettings()">Save & Reload Track</button>
+        <button onclick="closeSettings()" style="background:#999;">Cancel</button>
     </div>
 
     <!-- Header -->
     <div class="header">
         <h2>TiMY Quest</h2>
         <div>
-            <button class="gear-btn" onclick="alert('Settings coming soon: Will link to Google Sheet!')">⚙️</button>
+            <button class="gear-btn" onclick="openSettings()">⚙️</button>
         </div>
     </div>
 
@@ -142,18 +155,12 @@
             <div class="avatar-emoji" id="harper-avatar">🐱</div>
             <p class="profile-name">Harper</p>
             <p class="profile-age">Age 7</p>
-            <div class="donut-container" id="harper-donut">
-                <div class="donut-inner" id="harper-time-text">30:00</div>
-            </div>
+            <div class="donut-container" id="harper-donut"><div class="donut-inner" id="harper-time-text">30:00</div></div>
         </div>
         <div class="path-container">
             <div class="track-line"></div>
             <div id="harper-nodes" style="display:flex; z-index: 2;"></div>
-            <!-- Castle -->
-            <div class="task-node castle-node">
-                <div class="node-circle" onclick="celebrate('Harper')">🏰</div>
-                <div class="task-label">Free Time!</div>
-            </div>
+            <div class="task-node castle-node"><div class="node-circle" onclick="celebrate('Harper')">🏰</div><div class="task-label">Free Time!</div></div>
         </div>
     </div>
 
@@ -163,95 +170,103 @@
             <div class="avatar-emoji" id="haisley-avatar">🐶</div>
             <p class="profile-name">Haisley</p>
             <p class="profile-age">Age 5</p>
-            <div class="donut-container" id="haisley-donut">
-                <div class="donut-inner" id="haisley-time-text">30:00</div>
-            </div>
+            <div class="donut-container" id="haisley-donut"><div class="donut-inner" id="haisley-time-text">30:00</div></div>
         </div>
         <div class="path-container">
             <div class="track-line"></div>
             <div id="haisley-nodes" style="display:flex; z-index: 2;"></div>
-            <!-- Castle -->
-            <div class="task-node castle-node">
-                <div class="node-circle" onclick="celebrate('Haisley')">🏰</div>
-                <div class="task-label">Free Time!</div>
-            </div>
+            <div class="task-node castle-node"><div class="node-circle" onclick="celebrate('Haisley')">🏰</div><div class="task-label">Free Time!</div></div>
         </div>
     </div>
 
     <script>
-        // --- Dummy Data (Will be replaced by Google Sheet Fetch) ---
-        // This array mimics what the app will pull from your spreadsheet.
-        const spreadsheetData = [
-            { name: "Make Bed", emoji: "🛏️", time: 5, mustDo: false, day: "Any" },
-            { name: "Clean Playroom", emoji: "🧸", time: 10, mustDo: true, day: "Saturday" },
-            { name: "Read Book", emoji: "📚", time: 15, mustDo: false, day: "Saturday" },
-            { name: "Sweep Floor", emoji: "🧹", time: 10, mustDo: false, day: "Tuesday" },
-            { name: "Feed Pets", emoji: "🐈", time: 5, mustDo: false, day: "Any" }
-        ];
+        // YOUR LIVE DATA URL
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbzK0kHEOXN2vTz4CypxBoKjD5kbJ_4ckdn_MSHXq7yOs-CxB4toahwUVB28y9utY8tpKQ/exec";
         
+        let spreadsheetData = [];
+        let synth = window.speechSynthesis;
+        let globalChoreTarget = parseInt(localStorage.getItem('timyChoreCount')) || 3;
+
         // Fixed morning tasks that happen every day before chores
         const morningTasks = [
             { name: "Breakfast & Vitamins", emoji: "🥣", time: 10 },
             { name: "Brush Teeth", emoji: "🪥", time: 5 }
         ];
 
-        let synth = window.speechSynthesis;
+        // --- 1. Boot up and Fetch Data ---
+        window.onload = async () => {
+            const btn = document.getElementById('start-btn');
+            try {
+                const response = await fetch(scriptUrl + "?action=GET_TODAY_CHORES");
+                spreadsheetData = await response.json();
+                
+                // Unlock the start button once data is loaded
+                btn.innerText = "Start TiMY Quest";
+                btn.disabled = false;
+                btn.onclick = startApp;
+            } catch (error) {
+                console.error("Fetch Error:", error);
+                btn.innerText = "Error loading. Start Anyway?";
+                btn.disabled = false;
+                btn.onclick = startApp;
+            }
+        };
 
-        // --- Core App Logic ---
-        
         function startApp() {
             document.getElementById('start-overlay').style.display = 'none';
-            // Silent speech to unlock the browser's audio engine
+            // Silent speech to unlock audio engine
             let utter = new SpeechSynthesisUtterance("");
             synth.speak(utter); 
             
-            // Initialize trackers if not loaded from memory
-            renderTrack('harper-nodes', generateDailyRoutine(3)); 
-            renderTrack('haisley-nodes', generateDailyRoutine(3)); 
+            buildTracks();
         }
 
-        // The Smart Randomizer Logic (The Funnel)
-        function generateDailyRoutine(choreCount) {
+        // --- 2. The Smart Randomizer Logic ---
+        function generateDailyRoutine() {
             let today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
             let selectedChores = [];
-            let allChores = [...spreadsheetData]; // Copy array
+            let allChores = [...spreadsheetData];
 
-            // 1. Must Do
+            // A. Must Do (Checkboxes)
             let mustDo = allChores.filter(c => c.mustDo);
             selectedChores.push(...mustDo);
 
-            // 2. Today's Chores
-            if (selectedChores.length < choreCount) {
+            // B. Today's Chores
+            if (selectedChores.length < globalChoreTarget) {
                 let todaysChores = allChores.filter(c => c.day === today && !c.mustDo);
                 todaysChores.sort(() => 0.5 - Math.random()); // Shuffle
-                let needed = choreCount - selectedChores.length;
+                let needed = globalChoreTarget - selectedChores.length;
                 selectedChores.push(...todaysChores.slice(0, needed));
             }
 
-            // 3. "Any" Chores (Fill remaining slots)
-            if (selectedChores.length < choreCount) {
+            // C. "Any" Chores
+            if (selectedChores.length < globalChoreTarget) {
                 let anyChores = allChores.filter(c => c.day === "Any" && !c.mustDo);
                 anyChores.sort(() => 0.5 - Math.random()); // Shuffle
-                let needed = choreCount - selectedChores.length;
+                let needed = globalChoreTarget - selectedChores.length;
                 selectedChores.push(...anyChores.slice(0, needed));
             }
 
-            // Combine fixed morning tasks with the selected chores
-            return [...morningTasks, ...selectedChores.slice(0, choreCount)];
+            // Combine morning tasks with selected chores up to the target amount
+            return [...morningTasks, ...selectedChores.slice(0, globalChoreTarget)];
         }
 
-        // --- UI Rendering ---
+        // --- 3. UI Rendering ---
+        function buildTracks() {
+            renderTrack('harper-nodes', generateDailyRoutine()); 
+            renderTrack('haisley-nodes', generateDailyRoutine()); 
+        }
+
         function renderTrack(containerId, tasks) {
             const container = document.getElementById(containerId);
-            container.innerHTML = ''; // Clear existing
+            container.innerHTML = ''; 
             
             tasks.forEach((task, index) => {
                 let isFirst = index === 0;
                 let nodeHTML = `
                     <div class="task-node">
-                        ${index > 1 ? `<button class="reroll-btn" onclick="alert('Will swap this chore!')">🎲</button>` : ''}
-                        <div class="node-circle ${isFirst ? 'active' : ''}" onclick="completeTask(this, '${task.name}', ${task.time})">
-                            ${task.emoji}
+                        <div class="node-circle ${isFirst ? 'active' : ''}" onclick="completeTask(this, '${task.name}')">
+                            ${task.emoji || "✨"}
                         </div>
                         <div class="task-label">${task.name}</div>
                         <div class="task-time">${task.time}:00</div>
@@ -261,45 +276,46 @@
             });
         }
 
-        // --- Interaction Logic ---
-        function completeTask(element, taskName, minutes) {
-            if (!element.classList.contains('active')) return; // Can only click active node
+        function completeTask(element, taskName) {
+            if (!element.classList.contains('active')) return;
 
-            // Speak immediately
             let utterThis = new SpeechSynthesisUtterance(`Great job finishing ${taskName}!`);
             synth.speak(utterThis);
 
-            // Change UI to gold star
             element.classList.remove('active');
             element.classList.add('completed');
             element.innerHTML = '⭐';
 
-            // Find next node and activate it
             let nextNode = element.parentElement.nextElementSibling;
             if (nextNode && nextNode.querySelector('.node-circle')) {
                 nextNode.querySelector('.node-circle').classList.add('active');
             }
-
-            // In the real app, we will subtract time from the donut here.
-            updateDonut('harper', 75); // Example: drain visually to 75%
-        }
-
-        function updateDonut(child, percentage) {
-            // Colors: Green -> Yellow -> Red based on percentage
-            let color = '#4caf50';
-            if (percentage < 50) color = '#ffeb3b';
-            if (percentage < 15) color = '#f44336';
-            
-            document.getElementById(`${child}-donut`).style.background = 
-                `conic-gradient(${color} ${percentage}%, #e0e0e0 0)`;
         }
 
         function celebrate(name) {
-            let utter = new SpeechSynthesisUtterance(`Congratulations ${name}! You reached the castle and earned your free time!`);
+            let utter = new SpeechSynthesisUtterance(`Congratulations ${name}! You reached the castle!`);
             synth.speak(utter);
-            alert(`🎉 ${name} Finished! (Google Sheet Sync Triggered)`);
         }
 
+        // --- 4. Settings Logic ---
+        function openSettings() {
+            document.getElementById('chore-count-input').value = globalChoreTarget;
+            document.getElementById('settings-modal').style.display = 'block';
+        }
+        function closeSettings() {
+            document.getElementById('settings-modal').style.display = 'none';
+        }
+        function saveSettings() {
+            let val = parseInt(document.getElementById('chore-count-input').value);
+            if(val >= 1 && val <= 5) {
+                globalChoreTarget = val;
+                localStorage.setItem('timyChoreCount', val);
+                buildTracks();
+                closeSettings();
+            } else {
+                alert("Please pick a number between 1 and 5");
+            }
+        }
     </script>
 </body>
 </html>
