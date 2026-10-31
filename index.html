@@ -1,628 +1,305 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>TiMY - Dual-Track Quest</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --harper-pink: #ff6097;
-      --harper-sand: #ff9100;
-      --haisley-blue: #0288d1;
-      --haisley-sand: #00e5ff;
-    }
-    * {
-      box-sizing: border-box;
-      user-select: none;
-      -webkit-user-select: none;
-      margin: 0;
-      padding: 0;
-      font-family: 'Fredoka', cursive, sans-serif;
-    }
-    body {
-      background: #2a1447;
-      display: flex;
-      flex-direction: column;
-      height: 100dvh;
-      width: 100vw;
-      overflow: hidden;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TiMY Quest - Dual Track</title>
+    <style>
+        /* CSS Variables for Easy Theming */
+        :root {
+            --harper-bg: linear-gradient(135deg, #fce4ec 0%, #e0f7fa 100%);
+            --haisley-bg: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            --track-color: #d1c4e9;
+            --text-dark: #333;
+        }
 
-    /* START OVERLAY */
-    #startOverlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(42, 20, 71, 0.95);
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: white;
-    }
-    .btn-start-quest {
-      background: linear-gradient(135deg, #ff4081, #00e5ff);
-      border: 4px solid #fff;
-      padding: 16px 32px;
-      font-size: 28px;
-      font-weight: 900;
-      border-radius: 40px;
-      color: #fff;
-      cursor: pointer;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      animation: pulseBtn 1.5s infinite alternate;
-    }
-    @keyframes pulseBtn { from { transform: scale(1); } to { transform: scale(1.05); } }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; }
+        
+        body { 
+            margin: 0; padding: 10px; background-color: #2c1a4d; height: 100vh;
+            display: flex; flex-direction: column; gap: 10px; overflow: hidden;
+        }
 
-    /* TOP APP BAR */
-    header {
-      background: #3e1b69;
-      height: 42px;
-      padding: 0 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid rgba(255,255,255,0.12);
-      z-index: 50;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
-      flex-shrink: 0;
-    }
-    .brand { font-size: 18px; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 8px; }
-    .brand-clock { background: #00e5ff; border: 2px solid #fff; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
-    .tabs { display: flex; background: rgba(0,0,0,0.35); padding: 3px; border-radius: 30px; gap: 4px; }
-    .tab-btn { border: none; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 800; background: transparent; color: #cfbce8; cursor: pointer; display: flex; align-items: center; gap: 5px; }
-    .tab-btn.active { background: linear-gradient(135deg, #ff7ba8, #ff4081); color: #fff; box-shadow: 0 2px 8px rgba(255,64,129,0.5); }
-    .header-actions { display: flex; gap: 8px; }
-    .icon-btn { background: rgba(255,255,255,0.18); border: none; width: 28px; height: 28px; border-radius: 50%; font-size: 14px; color: white; cursor: pointer; }
+        /* --- Start Audio Overlay --- */
+        #start-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.8); z-index: 1000;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .start-btn {
+            background: #ff4081; color: white; padding: 20px 40px;
+            font-size: 24px; font-weight: bold; border-radius: 50px;
+            border: 4px solid white; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
 
-    /* DUAL TRACK ARENA */
-    .arena { flex: 1; display: flex; flex-direction: column; gap: 6px; padding: 6px 10px; overflow: hidden; }
-    .lane { flex: 1; border-radius: 22px; display: flex; position: relative; overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,0.35); border: 3px solid rgba(255,255,255,0.85); }
-    .lane-harper { background: linear-gradient(180deg, #d8b4e2 0%, #ecd4f0 45%, #cae8ec 100%); }
-    .lane-haisley { background: linear-gradient(180deg, #98cff5 0%, #c4e4f8 45%, #bfe8df 100%); }
+        /* --- Settings Header --- */
+        .header { display: flex; justify-content: space-between; align-items: center; color: white; padding: 0 20px; }
+        .gear-btn { background: none; border: none; font-size: 24px; cursor: pointer; }
+        
+        /* --- Track Containers --- */
+        .track-board {
+            flex: 1; border-radius: 20px; padding: 15px;
+            display: flex; align-items: center; gap: 20px;
+            box-shadow: inset 0 0 20px rgba(255,255,255,0.5);
+            position: relative; overflow-x: auto;
+        }
+        #harper-track { background: var(--harper-bg); }
+        #haisley-track { background: var(--haisley-bg); }
 
-    /* LEFT SIDEBAR */
-    .sidebar { width: 120px; background: rgba(255,255,255,0.32); backdrop-filter: blur(10px); border-right: 3px solid rgba(255,255,255,0.6); display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; padding: 4px; z-index: 10; flex-shrink: 0; }
-    .child-card { background: #ffffff; border-radius: 14px; padding: 4px 6px; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.12); border: 2px solid rgba(255,255,255,0.9); width: 100%; }
-    .avatar-bubble { width: 32px; height: 32px; border-radius: 50%; background: #ffecb3; display: flex; align-items: center; justify-content: center; font-size: 18px; border: 2px solid #ffb300; flex-shrink: 0; }
-    .avatar-haisley { filter: sepia(1) hue-rotate(180deg) saturate(3); }
-    .child-info { display: flex; flex-direction: column; }
-    .child-name { font-size: 13px; font-weight: 900; color: #2e1e47; line-height: 1.1; }
-    .child-age { font-size: 10px; font-weight: 700; color: #786b8c; }
+        /* --- Profile & Donut Timer --- */
+        .profile-card {
+            background: white; border-radius: 15px; padding: 10px;
+            text-align: center; width: 140px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: flex; flex-direction: column; align-items: center; z-index: 10;
+        }
+        
+        .avatar-emoji { font-size: 32px; line-height: 1; margin-bottom: 5px; }
+        /* Avater Color Filters */
+        #harper-avatar { filter: hue-rotate(250deg) saturate(1.5); } /* Orange -> Purple */
+        #haisley-avatar { filter: hue-rotate(180deg) saturate(2); }  /* Orange/Brown -> Blue */
 
-    /* BIG HOURGLASS */
-    .hourglass-container { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-    .hourglass-svg { width: 65px; height: 85px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); }
-    .total-time-pill { background: rgba(46, 30, 71, 0.85); color: #fff; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 12px; border: 2px solid #ffffff; margin-top: -4px; z-index: 5; }
+        .profile-name { font-weight: bold; font-size: 16px; margin: 0; }
+        .profile-age { font-size: 12px; color: #666; margin: 0 0 10px 0; }
 
-    /* WINDING QUEST VIEWPORT */
-    .quest-canvas { flex: 1; position: relative; overflow: hidden; }
-    .landscape-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-    .trail-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        /* The Visual Donut Timer */
+        .donut-container {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: conic-gradient(#4caf50 100%, #e0e0e0 0);
+            display: flex; justify-content: center; align-items: center;
+            margin-bottom: 5px; transition: background 1s linear;
+        }
+        .donut-inner {
+            width: 65px; height: 65px; background: white; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-weight: bold; font-size: 18px; color: #333;
+        }
 
-    /* 3D STEPPING STONES */
-    .stone-group { cursor: pointer; touch-action: none; }
-    .stone-disc { fill: #ffffff; stroke: #d0c2de; stroke-width: 4; filter: drop-shadow(0 6px 8px rgba(0,0,0,0.25)); transition: all 0.25s ease; }
-    .stone-group.done .stone-disc { fill: #b9f6ca; stroke: #00c853; }
-    .stone-group.active .stone-disc { stroke: #ffca28; stroke-width: 5; }
+        /* --- The Straight Line Path --- */
+        .path-container {
+            display: flex; align-items: center; flex: 1; position: relative;
+            padding-left: 20px;
+        }
+        
+        /* The physical line connecting nodes */
+        .track-line {
+            position: absolute; top: 50%; left: 0; right: 0; height: 12px;
+            background: var(--track-color); transform: translateY(-50%); z-index: 1;
+            border-radius: 10px; border: 2px solid white;
+        }
 
-    .task-timer-bg { fill: none; stroke: rgba(0,0,0,0.1); stroke-width: 7; }
-    .task-timer-gauge { fill: none; stroke-width: 7; stroke-linecap: round; transform-origin: center; transform: rotate(-90deg); transition: stroke-dashoffset 1s linear; }
-    .lane-harper .task-timer-gauge { stroke: var(--harper-pink); }
-    .lane-haisley .task-timer-gauge { stroke: var(--haisley-blue); }
+        /* --- Task Nodes --- */
+        .task-node {
+            position: relative; z-index: 2; display: flex; flex-direction: column;
+            align-items: center; margin-right: 40px;
+        }
+        .node-circle {
+            width: 70px; height: 70px; border-radius: 50%; background: white;
+            border: 4px solid #ddd; display: flex; justify-content: center; align-items: center;
+            font-size: 28px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.2s, border-color 0.3s;
+        }
+        .node-circle.active { border-color: #ffca28; transform: scale(1.1); animation: pulse 2s infinite; }
+        .node-circle.completed { background: #ffca28; border-color: #ff8f00; }
+        
+        .task-label {
+            background: white; padding: 4px 8px; border-radius: 10px; font-size: 12px;
+            font-weight: bold; margin-top: 8px; text-align: center; max-width: 90px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .task-time { font-size: 11px; color: #666; margin-top: 2px; font-weight: bold; }
 
-    /* FLOATING PILLS */
-    .task-name-pill { position: absolute; transform: translate(-50%, -100%); background: #ffffff; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: 900; color: #372352; box-shadow: 0 4px 10px rgba(0,0,0,0.16); border: 2px solid rgba(0,0,0,0.06); white-space: nowrap; pointer-events: none; z-index: 15; }
-    .time-bubble { position: absolute; transform: translate(-50%, 0); background: #ffffff; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 900; color: #2b1c42; box-shadow: 0 4px 10px rgba(0,0,0,0.18); border: 2px solid #ffca28; pointer-events: none; z-index: 15; }
+        .reroll-btn {
+            position: absolute; top: -10px; right: -10px; background: #2196f3; color: white;
+            border: none; border-radius: 50%; width: 24px; height: 24px; font-size: 12px;
+            cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 5;
+        }
 
-    /* CASTLE GOAL & BUTTONS */
-    .castle-wrapper { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; z-index: 20; }
-    .castle-svg { width: 75px; height: 75px; filter: drop-shadow(0 6px 10px rgba(0,0,0,0.22)); animation: floatCastle 3s infinite alternate ease-in-out; }
-    @keyframes floatCastle { from { transform: translateY(0); } to { transform: translateY(-4px); } }
-    .reward-badge { background: linear-gradient(90deg, #ffb300, #ff8f00); color: #fff; font-size: 10px; font-weight: 900; padding: 2px 8px; border-radius: 10px; border: 2px solid #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.2); margin-top: -6px; }
-    .inspect-actions { display: none; flex-direction: column; gap: 4px; margin-top: -4px; }
-    .btn-approve { background: #00e676; color: #104222; font-size: 11px; font-weight: 900; padding: 4px 10px; border-radius: 12px; border: 2px solid #fff; cursor: pointer; box-shadow: 0 4px 12px rgba(0,230,118,0.4); animation: pulse 1s infinite alternate; }
-    .btn-try-again { background: #ff6d00; color: #fff; font-size: 10px; font-weight: 900; padding: 3px 10px; border-radius: 12px; border: 2px solid #fff; cursor: pointer; }
-    .btn-free-time { background: #00e5ff; color: #003333; font-size: 11px; font-weight: 900; padding: 4px 10px; border-radius: 12px; border: 2px solid #fff; display: none; margin-top: -4px; }
+        /* End Castle */
+        .castle-node .node-circle { background: transparent; border: none; font-size: 60px; box-shadow: none; }
+        
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 202, 40, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 202, 40, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 202, 40, 0); } }
 
-    /* BANNER TOAST */
-    .toast-banner { position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%) translateY(100px); background: #ffffff; padding: 8px 20px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.45); display: flex; align-items: center; gap: 12px; font-weight: 900; font-size: 12px; border: 3px solid #ffb300; z-index: 100; transition: transform 0.35s ease; }
-    .toast-banner.show { transform: translateX(-50%) translateY(0); }
-  </style>
+    </style>
 </head>
 <body>
 
-  <!-- START OVERLAY -->
-  <div id="startOverlay" onclick="initQuest()">
-    <button class="btn-start-quest">Tap to Start Quest! 🚀</button>
-  </div>
-
-  <header>
-    <div class="brand">
-      <div class="brand-clock">⏱️</div>
-      <span>TiMY Quest</span>
-    </div>
-    <div class="tabs">
-      <button class="tab-btn" id="tabMorning" onclick="switchMode('Morning')">☀️ Morning</button>
-      <button class="tab-btn" id="tabChores" onclick="switchMode('Chores')">⚡ Chores</button>
-      <button class="tab-btn" id="tabBedtime" onclick="switchMode('Bedtime')">🌙 Bedtime</button>
-    </div>
-    <div class="header-actions">
-      <button class="icon-btn" onclick="fetchSheetData()" title="Sync">🔄</button>
-    </div>
-  </header>
-
-  <div class="arena">
-    <!-- HARPER'S TRACK -->
-    <div class="lane lane-harper" id="laneHarper">
-      <div class="sidebar">
-        <div class="child-card">
-          <div class="avatar-bubble">🐱</div>
-          <div class="child-info"><span class="child-name">Harper</span><span class="child-age">Age 7</span></div>
-        </div>
-        <div class="hourglass-container" onclick="toggleTimer('Harper')">
-          <svg class="hourglass-svg" viewBox="0 0 80 100">
-            <rect x="5" y="4" width="70" height="9" rx="4.5" fill="#8d5b36" stroke="#5c381e" stroke-width="2"/>
-            <rect x="5" y="87" width="70" height="9" rx="4.5" fill="#8d5b36" stroke="#5c381e" stroke-width="2"/>
-            <path d="M 16 13 Q 16 48, 38 50 Q 16 52, 16 87 L 64 87 Q 64 52, 42 50 Q 64 48, 64 13 Z" fill="rgba(255,255,255,0.4)" stroke="#5c381e" stroke-width="2.5"/>
-            <path id="sandTopHarper" d="M 20 20 Q 20 48, 40 49 Q 60 48, 60 20 Z" fill="var(--harper-sand)"/>
-            <line id="sandStreamHarper" x1="40" y1="50" x2="40" y2="85" stroke="var(--harper-sand)" stroke-width="2.5" stroke-dasharray="2 2" opacity="0"/>
-            <path id="sandBottomHarper" d="M 22 85 Q 40 85, 58 85 Z" fill="var(--harper-sand)"/>
-            <path d="M 20 18 Q 21 44, 34 47" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
-          </svg>
-          <div class="total-time-pill" id="totalPillHarper">Total: 25:00</div>
-        </div>
-      </div>
-      <div class="quest-canvas" id="canvasHarper">
-        <svg class="landscape-bg" viewBox="0 0 1000 350" preserveAspectRatio="xMidYMid slice">
-          <path d="M 0 350 L 0 180 Q 280 110, 520 190 T 1000 150 L 1000 350 Z" fill="rgba(255,255,255,0.2)"/>
-          <path d="M 0 350 L 0 240 Q 340 180, 680 250 T 1000 220 L 1000 350 Z" fill="rgba(255,255,255,0.3)"/>
-        </svg>
-        <svg class="trail-layer" id="svgHarper" viewBox="0 0 1000 350" preserveAspectRatio="xMidYMid slice"></svg>
-        <div class="castle-wrapper">
-          <svg class="castle-svg" viewBox="0 0 100 100">
-            <rect x="25" y="45" width="50" height="45" rx="4" fill="#ba68c8" stroke="#4a148c" stroke-width="2"/>
-            <rect x="42" y="65" width="16" height="25" rx="8" fill="#4a148c"/>
-            <rect x="15" y="30" width="20" height="58" rx="3" fill="#ab47bc" stroke="#4a148c" stroke-width="2"/>
-            <polygon points="12,30 25,6 38,30" fill="#e91e63" stroke="#880e4f" stroke-width="2"/>
-            <rect x="65" y="30" width="20" height="58" rx="3" fill="#ab47bc" stroke="#4a148c" stroke-width="2"/>
-            <polygon points="62,30 75,6 88,30" fill="#e91e63" stroke="#880e4f" stroke-width="2"/>
-            <polygon points="38,45 50,20 62,45" fill="#f06292" stroke="#880e4f" stroke-width="2"/>
-            <polygon points="25,6 25,0 35,3" fill="#ffd54f"/>
-            <polygon points="75,6 75,0 85,3" fill="#ffd54f"/>
-          </svg>
-          <div class="reward-badge" id="badgeHarper">REWARD!</div>
-          <div class="inspect-actions" id="inspectHarper">
-            <button class="btn-approve" onclick="approveInspection('Harper')">✅ Approve</button>
-            <button class="btn-try-again" onclick="tryAgain('Harper')">↩️ Try Again</button>
-          </div>
-          <div class="btn-free-time" id="freeHarper">FREE TIME!</div>
-        </div>
-      </div>
+    <!-- Audio Unlock Overlay -->
+    <div id="start-overlay" onclick="startApp()">
+        <button class="start-btn">Start TiMY Quest</button>
     </div>
 
-    <!-- HAISLEY'S TRACK -->
-    <div class="lane lane-haisley" id="laneHaisley">
-      <div class="sidebar">
-        <div class="child-card">
-          <div class="avatar-bubble avatar-haisley">🐶</div>
-          <div class="child-info"><span class="child-name">Haisley</span><span class="child-age">Age 5</span></div>
+    <!-- Header -->
+    <div class="header">
+        <h2>TiMY Quest</h2>
+        <div>
+            <button class="gear-btn" onclick="alert('Settings coming soon: Will link to Google Sheet!')">⚙️</button>
         </div>
-        <div class="hourglass-container" onclick="toggleTimer('Haisley')">
-          <svg class="hourglass-svg" viewBox="0 0 80 100">
-            <rect x="5" y="4" width="70" height="9" rx="4.5" fill="#8d5b36" stroke="#5c381e" stroke-width="2"/>
-            <rect x="5" y="87" width="70" height="9" rx="4.5" fill="#8d5b36" stroke="#5c381e" stroke-width="2"/>
-            <path d="M 16 13 Q 16 48, 38 50 Q 16 52, 16 87 L 64 87 Q 64 52, 42 50 Q 64 48, 64 13 Z" fill="rgba(255,255,255,0.4)" stroke="#5c381e" stroke-width="2.5"/>
-            <path id="sandTopHaisley" d="M 20 20 Q 20 48, 40 49 Q 60 48, 60 20 Z" fill="var(--haisley-sand)"/>
-            <line id="sandStreamHaisley" x1="40" y1="50" x2="40" y2="85" stroke="var(--haisley-sand)" stroke-width="2.5" stroke-dasharray="2 2" opacity="0"/>
-            <path id="sandBottomHaisley" d="M 22 85 Q 40 85, 58 85 Z" fill="var(--haisley-sand)"/>
-            <path d="M 20 18 Q 21 44, 34 47" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
-          </svg>
-          <div class="total-time-pill" id="totalPillHaisley">Total: 25:00</div>
-        </div>
-      </div>
-      <div class="quest-canvas" id="canvasHaisley">
-        <svg class="landscape-bg" viewBox="0 0 1000 350" preserveAspectRatio="xMidYMid slice">
-          <path d="M 0 350 L 0 180 Q 280 110, 520 190 T 1000 150 L 1000 350 Z" fill="rgba(255,255,255,0.2)"/>
-          <path d="M 0 350 L 0 240 Q 340 180, 680 250 T 1000 220 L 1000 350 Z" fill="rgba(255,255,255,0.3)"/>
-        </svg>
-        <svg class="trail-layer" id="svgHaisley" viewBox="0 0 1000 350" preserveAspectRatio="xMidYMid slice"></svg>
-        <div class="castle-wrapper">
-          <svg class="castle-svg" viewBox="0 0 100 100">
-            <rect x="25" y="45" width="50" height="45" rx="4" fill="#0288d1" stroke="#01579b" stroke-width="2"/>
-            <rect x="42" y="65" width="16" height="25" rx="8" fill="#01579b"/>
-            <rect x="15" y="30" width="20" height="58" rx="3" fill="#29b6f6" stroke="#01579b" stroke-width="2"/>
-            <polygon points="12,30 25,6 38,30" fill="#ffd54f" stroke="#ff8f00" stroke-width="2"/>
-            <rect x="65" y="30" width="20" height="58" rx="3" fill="#29b6f6" stroke="#01579b" stroke-width="2"/>
-            <polygon points="62,30 75,6 88,30" fill="#ffd54f" stroke="#ff8f00" stroke-width="2"/>
-            <polygon points="38,45 50,20 62,45" fill="#4fc3f7" stroke="#01579b" stroke-width="2"/>
-            <polygon points="25,6 25,0 35,3" fill="#ff4081"/>
-            <polygon points="75,6 75,0 85,3" fill="#ff4081"/>
-          </svg>
-          <div class="reward-badge" id="badgeHaisley">REWARD!</div>
-          <div class="inspect-actions" id="inspectHaisley">
-            <button class="btn-approve" onclick="approveInspection('Haisley')">✅ Approve</button>
-            <button class="btn-try-again" onclick="tryAgain('Haisley')">↩️ Try Again</button>
-          </div>
-          <div class="btn-free-time" id="freeHaisley">FREE TIME!</div>
-        </div>
-      </div>
     </div>
-  </div>
 
-  <div class="toast-banner" id="toast"><span id="toastMsg">✨</span></div>
+    <!-- Harper's Track -->
+    <div class="track-board" id="harper-track">
+        <div class="profile-card">
+            <div class="avatar-emoji" id="harper-avatar">🐱</div>
+            <p class="profile-name">Harper</p>
+            <p class="profile-age">Age 7</p>
+            <div class="donut-container" id="harper-donut">
+                <div class="donut-inner" id="harper-time-text">30:00</div>
+            </div>
+        </div>
+        <div class="path-container">
+            <div class="track-line"></div>
+            <div id="harper-nodes" style="display:flex; z-index: 2;"></div>
+            <!-- Castle -->
+            <div class="task-node castle-node">
+                <div class="node-circle" onclick="celebrate('Harper')">🏰</div>
+                <div class="task-label">Free Time!</div>
+            </div>
+        </div>
+    </div>
 
-  <script>
-    // HARDCODED YOUR GOOGLE APPS SCRIPT URL HERE
-    const SHEET_CSV_URL = "https://script.google.com/macros/s/AKfycbzK0kHEOXN2vTz4CypxBoKjD5kbJ_4ckdn_MSHXq7yOs-CxB4toahwUVB28y9utY8tpKQ/exec";
+    <!-- Haisley's Track -->
+    <div class="track-board" id="haisley-track">
+        <div class="profile-card">
+            <div class="avatar-emoji" id="haisley-avatar">🐶</div>
+            <p class="profile-name">Haisley</p>
+            <p class="profile-age">Age 5</p>
+            <div class="donut-container" id="haisley-donut">
+                <div class="donut-inner" id="haisley-time-text">30:00</div>
+            </div>
+        </div>
+        <div class="path-container">
+            <div class="track-line"></div>
+            <div id="haisley-nodes" style="display:flex; z-index: 2;"></div>
+            <!-- Castle -->
+            <div class="task-node castle-node">
+                <div class="node-circle" onclick="celebrate('Haisley')">🏰</div>
+                <div class="task-label">Free Time!</div>
+            </div>
+        </div>
+    </div>
 
-    let rawSheetData = [
-      { Child: 'Harper', Category: 'Morning', Step: 1, Task: 'Wake up & make bed', Minutes: 5, Emoji: '🛏️' },
-      { Child: 'Harper', Category: 'Morning', Step: 2, Task: 'Get dressed', Minutes: 5, Emoji: '👕' },
-      { Child: 'Harper', Category: 'Morning', Step: 3, Task: 'Eat breakfast & vitamins', Minutes: 10, Emoji: '🥣' },
-      { Child: 'Harper', Category: 'Morning', Step: 4, Task: 'Brush teeth & style hair', Minutes: 5, Emoji: '🪥' },
-      { Child: 'Harper', Category: 'Morning', Step: 5, Task: 'Pack backpack', Minutes: 5, Emoji: '🎒' },
-      { Child: 'Haisley', Category: 'Morning', Step: 1, Task: 'Potty & wash face', Minutes: 5, Emoji: '🧼' },
-      { Child: 'Haisley', Category: 'Morning', Step: 2, Task: 'Get dressed', Minutes: 5, Emoji: '👕' },
-      { Child: 'Haisley', Category: 'Morning', Step: 3, Task: 'Eat breakfast', Minutes: 10, Emoji: '🥣' },
-      { Child: 'Haisley', Category: 'Morning', Step: 4, Task: 'Brush teeth', Minutes: 5, Emoji: '🪥' },
-      { Child: 'Haisley', Category: 'Morning', Step: 5, Task: 'Shoes by front door', Minutes: 5, Emoji: '👟' }
-    ];
+    <script>
+        // --- Dummy Data (Will be replaced by Google Sheet Fetch) ---
+        // This array mimics what the app will pull from your spreadsheet.
+        const spreadsheetData = [
+            { name: "Make Bed", emoji: "🛏️", time: 5, mustDo: false, day: "Any" },
+            { name: "Clean Playroom", emoji: "🧸", time: 10, mustDo: true, day: "Saturday" },
+            { name: "Read Book", emoji: "📚", time: 15, mustDo: false, day: "Saturday" },
+            { name: "Sweep Floor", emoji: "🧹", time: 10, mustDo: false, day: "Tuesday" },
+            { name: "Feed Pets", emoji: "🐈", time: 5, mustDo: false, day: "Any" }
+        ];
+        
+        // Fixed morning tasks that happen every day before chores
+        const morningTasks = [
+            { name: "Breakfast & Vitamins", emoji: "🥣", time: 10 },
+            { name: "Brush Teeth", emoji: "🪥", time: 5 }
+        ];
 
-    let currentMode = 'Morning';
-    let toastTimeout = null;
-    let wakeLockSentinel = null;
-    let audioCtx = null;
+        let synth = window.speechSynthesis;
 
-    let appState = {
-      Harper: { steps: [], activeIdx: 0, stepRemaining: 0, stepTotal: 0, missionTotal: 0, missionRemaining: 0, bankedFreeTime: 0, isRunning: false, isFreeTime: false, isInspecting: false, interval: null, avatar: '🐱', isBlue: false },
-      Haisley: { steps: [], activeIdx: 0, stepRemaining: 0, stepTotal: 0, missionTotal: 0, missionRemaining: 0, bankedFreeTime: 0, isRunning: false, isFreeTime: false, isInspecting: false, interval: null, avatar: '🐶', isBlue: true }
-    };
+        // --- Core App Logic ---
+        
+        function startApp() {
+            document.getElementById('start-overlay').style.display = 'none';
+            // Silent speech to unlock the browser's audio engine
+            let utter = new SpeechSynthesisUtterance("");
+            synth.speak(utter); 
+            
+            // Initialize trackers if not loaded from memory
+            renderTrack('harper-nodes', generateDailyRoutine(3)); 
+            renderTrack('haisley-nodes', generateDailyRoutine(3)); 
+        }
 
-    appState.Harper.bankedFreeTime = parseInt(localStorage.getItem('timy_harper_bank') || '0', 10);
-    appState.Haisley.bankedFreeTime = parseInt(localStorage.getItem('timy_haisley_bank') || '0', 10);
+        // The Smart Randomizer Logic (The Funnel)
+        function generateDailyRoutine(choreCount) {
+            let today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+            let selectedChores = [];
+            let allChores = [...spreadsheetData]; // Copy array
 
-    // ==========================================
-    // INITIALIZATION & FETCH LOGIC
-    // ==========================================
-    async function initQuest() {
-      document.getElementById('startOverlay').style.display = 'none';
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      requestWakeLock();
-      await fetchSheetData();
-      switchMode(getSmartMode());
-    }
+            // 1. Must Do
+            let mustDo = allChores.filter(c => c.mustDo);
+            selectedChores.push(...mustDo);
 
-    async function requestWakeLock() {
-      if ('wakeLock' in navigator) {
-        try { wakeLockSentinel = await navigator.wakeLock.request('screen'); } catch (err) {}
-      }
-    }
-    document.addEventListener('visibilitychange', () => {
-      if (wakeLockSentinel !== null && document.visibilityState === 'visible') requestWakeLock();
-    });
-    window.addEventListener('beforeunload', (e) => {
-      if (appState.Harper.isRunning || appState.Haisley.isRunning) { e.preventDefault(); e.returnValue = 'Timers running!'; }
-    });
-
-    // UNIVERSAL JSON/CSV FETCHER
-    async function fetchSheetData() {
-      if (!SHEET_CSV_URL) return;
-      try {
-        const resp = await fetch(SHEET_CSV_URL);
-        const text = await resp.text();
-        let parsed = [];
-        try {
-          // Attempt JSON parsing (Google Apps Script)
-          const data = JSON.parse(text);
-          parsed = data.map(r => ({
-            Child: (r.Child || r.child || '').trim(),
-            Category: (r.Category || r.category || 'Morning').trim(),
-            Step: parseInt(r.Step || r.step) || 1,
-            Task: (r.Task || r.task || '').trim(),
-            Minutes: parseInt(r.Minutes || r.minutes) || 5,
-            Emoji: (r.Emoji || r.emoji || '⭐').trim()
-          })).filter(r => r.Child && r.Task);
-        } catch (err) {
-          // Fallback to CSV parsing (Publish to web)
-          const rows = text.split('\n').map(r => r.split(','));
-          for (let i = 1; i < rows.length; i++) {
-            if (!rows[i] || rows[i].length < 4) continue;
-            const [child, cat, step, task, mins, emoji] = rows[i];
-            if (child && task) {
-              parsed.push({ Child: child.trim(), Category: cat ? cat.trim() : 'Morning', Step: parseInt(step)||1, Task: task.trim(), Minutes: parseInt(mins)||5, Emoji: emoji ? emoji.trim() : '⭐' });
+            // 2. Today's Chores
+            if (selectedChores.length < choreCount) {
+                let todaysChores = allChores.filter(c => c.day === today && !c.mustDo);
+                todaysChores.sort(() => 0.5 - Math.random()); // Shuffle
+                let needed = choreCount - selectedChores.length;
+                selectedChores.push(...todaysChores.slice(0, needed));
             }
-          }
-        }
-        if (parsed.length > 0) {
-          rawSheetData = parsed;
-          showToast('🔄 Synced with Google Sheets!');
-        }
-      } catch (err) {}
-    }
 
-    // ==========================================
-    // AUDIO ENGINE
-    // ==========================================
-    function playTone(freq, type, duration, delay = 0) {
-      if (!audioCtx) return;
-      setTimeout(() => {
-        try {
-          if (audioCtx.state === 'suspended') audioCtx.resume();
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-          gain.gain.setValueAtTime(0.2, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-          osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + duration);
-        } catch (e) {}
-      }, delay);
-    }
+            // 3. "Any" Chores (Fill remaining slots)
+            if (selectedChores.length < choreCount) {
+                let anyChores = allChores.filter(c => c.day === "Any" && !c.mustDo);
+                anyChores.sort(() => 0.5 - Math.random()); // Shuffle
+                let needed = choreCount - selectedChores.length;
+                selectedChores.push(...anyChores.slice(0, needed));
+            }
 
-    function chimeHarper() { playTone(523.25, 'triangle', 0.4, 0); playTone(659.25, 'triangle', 0.4, 120); playTone(783.99, 'sine', 0.7, 240); }
-    function chimeHaisley() { playTone(349.23, 'sine', 0.35, 0); playTone(440.00, 'sine', 0.35, 120); playTone(523.25, 'triangle', 0.6, 240); }
-    function warningHarper() { playTone(783.99, 'sine', 0.15, 0); playTone(1046.50, 'sine', 0.25, 120); }
-    function warningHaisley() { playTone(440.00, 'sine', 0.15, 0); playTone(587.33, 'sine', 0.25, 120); }
-    function speak(msg) {
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(msg); utter.pitch = 1.25; utter.rate = 1.05; window.speechSynthesis.speak(utter);
-      }
-    }
-
-    // ==========================================
-    // STATE LOGIC
-    // ==========================================
-    function getSmartMode() {
-      const h = new Date().getHours();
-      if (h >= 6 && h < 11) return 'Morning';
-      if (h >= 11 && h < 18) return 'Chores';
-      return 'Bedtime';
-    }
-
-    function switchMode(mode) {
-      currentMode = mode;
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      const activeTab = document.getElementById('tab' + mode);
-      if (activeTab) activeTab.classList.add('active');
-      setupMode(mode);
-    }
-
-    function setupMode(mode) {
-      ['Harper', 'Haisley'].forEach(child => {
-        const state = appState[child];
-        clearInterval(state.interval);
-        state.isRunning = false; state.isFreeTime = false; state.isInspecting = false; state.activeIdx = 0;
-        document.getElementById(`sandStream${child}`).style.opacity = '0';
-
-        let available = rawSheetData.filter(d => d.Child.toLowerCase() === child.toLowerCase() && d.Category.toLowerCase() === mode.toLowerCase());
-        if (mode === 'Chores') available = [...available].sort(() => 0.5 - Math.random()).slice(0, 2);
-        state.steps = available.map(a => ({ label: a.Task, icon: a.Emoji, minutes: a.Minutes }));
-
-        let totalMins = state.steps.reduce((sum, s) => sum + s.minutes, 0);
-        state.missionTotal = totalMins * 60;
-        state.missionRemaining = state.missionTotal;
-
-        if (state.steps.length > 0) {
-          state.stepTotal = state.steps[0].minutes * 60;
-          state.stepRemaining = state.stepTotal;
-        }
-        updateHourglass(child);
-      });
-      renderAll();
-    }
-
-    // ==========================================
-    // RENDERING
-    // ==========================================
-    function renderAll() { renderTrack('Harper', 'svgHarper', 'canvasHarper'); renderTrack('Haisley', 'svgHaisley', 'canvasHaisley'); }
-
-    function renderTrack(child, svgId, canvasId) {
-      const svg = document.getElementById(svgId);
-      const canvas = document.getElementById(canvasId);
-      svg.innerHTML = '';
-      canvas.querySelectorAll('.task-name-pill, .time-bubble').forEach(el => el.remove());
-
-      const state = appState[child];
-      const count = state.steps.length;
-      if (count === 0) return;
-
-      const startX = 70, endX = 820, stepX = (endX - startX) / (count - 1 || 1);
-      const points = [];
-      for (let i = 0; i < count; i++) {
-        points.push({ x: startX + i * stepX, y: 175 + Math.sin((i / (count - 1 || 1)) * Math.PI * 2) * 55 });
-      }
-
-      let pathD = `M ${points[0].x} ${points[0].y}`;
-      for (let i = 1; i < count; i++) {
-        const prev = points[i - 1], curr = points[i];
-        pathD += ` Q ${prev.x + (curr.x - prev.x) * 0.4} ${prev.y}, ${(prev.x + curr.x)/2} ${(prev.y + curr.y)/2} T ${curr.x} ${curr.y}`;
-      }
-      pathD += ` Q ${endX + 40} ${points[count-1].y}, 910 175`;
-
-      const basePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      basePath.setAttribute('d', pathD); basePath.setAttribute('fill', 'none'); basePath.setAttribute('stroke', 'rgba(186, 160, 209, 0.7)'); basePath.setAttribute('stroke-width', '42'); basePath.setAttribute('stroke-linecap', 'round');
-      svg.appendChild(basePath);
-
-      const stonePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      stonePath.setAttribute('d', pathD); stonePath.setAttribute('fill', 'none'); stonePath.setAttribute('stroke', '#ffffff'); stonePath.setAttribute('stroke-width', '24'); stonePath.setAttribute('stroke-dasharray', '14 8'); stonePath.setAttribute('stroke-linecap', 'round');
-      svg.appendChild(stonePath);
-
-      points.forEach((pt, idx) => {
-        const step = state.steps[idx];
-        const isActive = idx === state.activeIdx;
-        const isDone = idx < state.activeIdx;
-
-        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        g.setAttribute('class', `stone-group ${isActive ? 'active' : ''} ${isDone ? 'done' : ''}`);
-
-        let holdTimer = null;
-        g.addEventListener('pointerdown', () => { if (isActive && !state.isInspecting && !state.isFreeTime) holdTimer = setTimeout(() => finishStep(child, idx), 500); });
-        g.addEventListener('pointerup', () => clearTimeout(holdTimer)); g.addEventListener('pointerleave', () => clearTimeout(holdTimer));
-
-        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('cx', pt.x); circle.setAttribute('cy', pt.y); circle.setAttribute('r', '32'); circle.setAttribute('class', 'stone-disc');
-        g.appendChild(circle);
-
-        if (isActive && !state.isFreeTime && !state.isInspecting) {
-          const bgGauge = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          bgGauge.setAttribute('cx', pt.x); bgGauge.setAttribute('cy', pt.y); bgGauge.setAttribute('r', '32'); bgGauge.setAttribute('class', 'task-timer-bg');
-          g.appendChild(bgGauge);
-          const fgGauge = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          fgGauge.setAttribute('cx', pt.x); fgGauge.setAttribute('cy', pt.y); fgGauge.setAttribute('r', '32'); fgGauge.setAttribute('class', 'task-timer-gauge'); fgGauge.setAttribute('id', `gauge_${child}`);
-          fgGauge.setAttribute('stroke-dasharray', 2 * Math.PI * 32); fgGauge.setAttribute('stroke-dashoffset', (2 * Math.PI * 32) * (1 - (state.stepTotal>0 ? state.stepRemaining/state.stepTotal : 0)));
-          g.appendChild(fgGauge);
+            // Combine fixed morning tasks with the selected chores
+            return [...morningTasks, ...selectedChores.slice(0, choreCount)];
         }
 
-        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', pt.x); text.setAttribute('y', pt.y + 8); text.setAttribute('text-anchor', 'middle'); text.setAttribute('font-size', '24'); text.textContent = isDone ? '⭐' : step.icon;
-        g.appendChild(text);
-
-        if (isActive) {
-          const avatarG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-          const tCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          tCircle.setAttribute('cx', pt.x + 22); tCircle.setAttribute('cy', pt.y - 22); tCircle.setAttribute('r', '17'); tCircle.setAttribute('fill', '#ffeb3b'); tCircle.setAttribute('stroke', '#ffffff'); tCircle.setAttribute('stroke-width', '2.5');
-          avatarG.appendChild(tCircle);
-          const tTxt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          tTxt.setAttribute('x', pt.x + 22); tTxt.setAttribute('y', pt.y - 16); tTxt.setAttribute('text-anchor', 'middle'); tTxt.setAttribute('font-size', '15'); tTxt.textContent = state.avatar;
-          if (state.isBlue) tTxt.setAttribute('class', 'avatar-haisley');
-          avatarG.appendChild(tTxt);
-          g.appendChild(avatarG);
+        // --- UI Rendering ---
+        function renderTrack(containerId, tasks) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = ''; // Clear existing
+            
+            tasks.forEach((task, index) => {
+                let isFirst = index === 0;
+                let nodeHTML = `
+                    <div class="task-node">
+                        ${index > 1 ? `<button class="reroll-btn" onclick="alert('Will swap this chore!')">🎲</button>` : ''}
+                        <div class="node-circle ${isFirst ? 'active' : ''}" onclick="completeTask(this, '${task.name}', ${task.time})">
+                            ${task.emoji}
+                        </div>
+                        <div class="task-label">${task.name}</div>
+                        <div class="task-time">${task.time}:00</div>
+                    </div>
+                `;
+                container.innerHTML += nodeHTML;
+            });
         }
-        svg.appendChild(g);
 
-        if (isActive) {
-          const namePill = document.createElement('div'); namePill.className = 'task-name-pill';
-          namePill.style.left = `${(pt.x/1000)*100}%`; namePill.style.top = `calc(${(pt.y/350)*100}% - 42px)`; namePill.innerHTML = `${step.label} ${step.icon}`;
-          canvas.appendChild(namePill);
-          const timeBubble = document.createElement('div'); timeBubble.className = 'time-bubble'; timeBubble.id = `timeBubble_${child}`;
-          timeBubble.style.left = `${(pt.x/1000)*100}%`; timeBubble.style.top = `calc(${(pt.y/350)*100}% + 42px)`;
-          timeBubble.textContent = `${String(Math.floor(state.stepRemaining/60)).padStart(2,'0')}:${String(state.stepRemaining%60).padStart(2,'0')}`;
-          canvas.appendChild(timeBubble);
+        // --- Interaction Logic ---
+        function completeTask(element, taskName, minutes) {
+            if (!element.classList.contains('active')) return; // Can only click active node
+
+            // Speak immediately
+            let utterThis = new SpeechSynthesisUtterance(`Great job finishing ${taskName}!`);
+            synth.speak(utterThis);
+
+            // Change UI to gold star
+            element.classList.remove('active');
+            element.classList.add('completed');
+            element.innerHTML = '⭐';
+
+            // Find next node and activate it
+            let nextNode = element.parentElement.nextElementSibling;
+            if (nextNode && nextNode.querySelector('.node-circle')) {
+                nextNode.querySelector('.node-circle').classList.add('active');
+            }
+
+            // In the real app, we will subtract time from the donut here.
+            updateDonut('harper', 75); // Example: drain visually to 75%
         }
-      });
 
-      const laneEl = document.getElementById(`lane${child}`);
-      laneEl.querySelector(`#inspect${child}`).style.display = state.isInspecting ? 'flex' : 'none';
-      laneEl.querySelector(`#free${child}`).style.display = state.isFreeTime ? 'block' : 'none';
-      laneEl.querySelector(`#badge${child}`).style.display = (!state.isInspecting && !state.isFreeTime) ? 'block' : 'none';
-    }
-
-    // ==========================================
-    // INTERACTION
-    // ==========================================
-    function finishStep(child, idx) {
-      const state = appState[child];
-      state.activeIdx++;
-      if (child === 'Harper') chimeHarper(); else chimeHaisley();
-      showToast(`🎉 ${child} finished: ${state.steps[idx].label}!`);
-      speak(`${child} finished ${state.steps[idx].label}!`);
-
-      if (state.activeIdx < state.steps.length) {
-        state.stepTotal = state.steps[state.activeIdx].minutes * 60;
-        state.stepRemaining = state.stepTotal;
-      } else {
-        clearInterval(state.interval); state.isRunning = false; state.isInspecting = true;
-        document.getElementById(`sandStream${child}`).style.opacity = '0';
-        speak(`Hooray! Calling Mom and Dad for inspection!`);
-      }
-      renderAll(); updateHourglass(child);
-    }
-
-    function approveInspection(child) {
-      const state = appState[child];
-      state.isInspecting = false; state.isFreeTime = true;
-      if (state.missionRemaining > 0) {
-        state.bankedFreeTime += state.missionRemaining; 
-        localStorage.setItem(`timy_${child.toLowerCase()}_bank`, state.bankedFreeTime);
-      }
-      if (child === 'Harper') chimeHarper(); else chimeHaisley();
-      speak(`Approved! Enjoy your free time, ${child}!`);
-      startTimer(child); renderAll(); updateHourglass(child);
-    }
-
-    function tryAgain(child) {
-      const state = appState[child];
-      if (state.activeIdx > 0) {
-        state.activeIdx--; state.isInspecting = false;
-        state.stepTotal = state.steps[state.activeIdx].minutes * 60; state.stepRemaining = state.stepTotal;
-        showToast(`↩️ Let's try that last step again!`);
-        renderAll(); updateHourglass(child);
-      }
-    }
-
-    function toggleTimer(child) {
-      const state = appState[child];
-      if (state.isRunning) {
-        clearInterval(state.interval); state.isRunning = false;
-        document.getElementById(`sandStream${child}`).style.opacity = '0';
-      } else startTimer(child);
-    }
-
-    function startTimer(child) {
-      const state = appState[child];
-      if (state.isInspecting || (state.isFreeTime && state.bankedFreeTime <= 0)) return;
-      state.isRunning = true;
-      if (state.interval) clearInterval(state.interval);
-      document.getElementById(`sandStream${child}`).style.opacity = '1';
-
-      state.interval = setInterval(() => {
-        if (state.isFreeTime) {
-          if (state.bankedFreeTime > 0) {
-            state.bankedFreeTime--;
-            if (state.bankedFreeTime % 5 === 0) localStorage.setItem(`timy_${child.toLowerCase()}_bank`, state.bankedFreeTime);
-          }
-          if (state.bankedFreeTime <= 0) {
-            clearInterval(state.interval); state.isRunning = false;
-            document.getElementById(`sandStream${child}`).style.opacity = '0';
-            speak(`${child}'s free time is finished!`);
-          }
-        } else {
-          if (state.missionRemaining > 0) state.missionRemaining--;
-          if (state.stepRemaining > 0) {
-            state.stepRemaining--;
-            if (state.stepRemaining === 30) (child === 'Harper') ? warningHarper() : warningHaisley();
-          }
-          updateStepTimer(child);
+        function updateDonut(child, percentage) {
+            // Colors: Green -> Yellow -> Red based on percentage
+            let color = '#4caf50';
+            if (percentage < 50) color = '#ffeb3b';
+            if (percentage < 15) color = '#f44336';
+            
+            document.getElementById(`${child}-donut`).style.background = 
+                `conic-gradient(${color} ${percentage}%, #e0e0e0 0)`;
         }
-        updateHourglass(child);
-      }, 1000);
-    }
 
-    function updateStepTimer(child) {
-      const state = appState[child];
-      const bubble = document.getElementById(`timeBubble_${child}`);
-      if (bubble) bubble.textContent = `${String(Math.floor(state.stepRemaining/60)).padStart(2,'0')}:${String(state.stepRemaining%60).padStart(2,'0')}`;
-      const gauge = document.getElementById(`gauge_${child}`);
-      if (gauge && state.stepTotal > 0) gauge.style.strokeDashoffset = (2 * Math.PI * 32) * (1 - (state.stepRemaining / state.stepTotal));
-    }
+        function celebrate(name) {
+            let utter = new SpeechSynthesisUtterance(`Congratulations ${name}! You reached the castle and earned your free time!`);
+            synth.speak(utter);
+            alert(`🎉 ${name} Finished! (Google Sheet Sync Triggered)`);
+        }
 
-    function updateHourglass(child) {
-      const state = appState[child];
-      const pill = document.getElementById(`totalPill${child}`);
-      const dispSecs = state.isFreeTime ? state.bankedFreeTime : state.missionRemaining;
-      
-      pill.textContent = state.isFreeTime ? `Free: ${Math.floor(dispSecs/60)}:${String(dispSecs%60).padStart(2,'0')}` : `Total: ${Math.floor(dispSecs/60)}:${String(dispSecs%60).padStart(2,'0')}`;
-      let ratio = state.isFreeTime ? Math.min(1, state.bankedFreeTime / 1800) : (state.missionTotal > 0 ? (state.missionRemaining / state.missionTotal) : 0);
-
-      const topY = 49 - (29 * ratio);
-      document.getElementById(`sandTop${child}`).setAttribute('d', `M 20 ${topY} Q 20 48, 40 49 Q 60 48, 60 ${topY} Z`);
-      const bottomY = 85 - (23 * (1 - ratio));
-      document.getElementById(`sandBottom${child}`).setAttribute('d', `M 20 85 Q 40 ${bottomY}, 60 85 Z`);
-    }
-
-    function showToast(text) {
-      const toast = document.getElementById('toast');
-      document.getElementById('toastMsg').textContent = text;
-      toast.classList.add('show');
-      clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => toast.classList.remove('show'), 4000);
-    }
-
-    window.addEventListener('resize', () => renderAll());
-  </script>
+    </script>
 </body>
 </html>
