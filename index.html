@@ -31,7 +31,7 @@
       overflow: hidden;
     }
 
-    /* START OVERLAY (Audio & WakeLock Unlocker) */
+    /* START OVERLAY */
     #startOverlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -55,10 +55,7 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
       animation: pulseBtn 1.5s infinite alternate;
     }
-    @keyframes pulseBtn {
-      from { transform: scale(1); }
-      to { transform: scale(1.05); }
-    }
+    @keyframes pulseBtn { from { transform: scale(1); } to { transform: scale(1.05); } }
 
     /* TOP APP BAR */
     header {
@@ -73,322 +70,72 @@
       box-shadow: 0 4px 14px rgba(0,0,0,0.3);
       flex-shrink: 0;
     }
-    .brand {
-      font-size: 18px;
-      font-weight: 900;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .brand-clock {
-      background: #00e5ff;
-      border: 2px solid #fff;
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-    }
-    .tabs {
-      display: flex;
-      background: rgba(0,0,0,0.35);
-      padding: 3px;
-      border-radius: 30px;
-      gap: 4px;
-    }
-    .tab-btn {
-      border: none;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 800;
-      background: transparent;
-      color: #cfbce8;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .tab-btn.active {
-      background: linear-gradient(135deg, #ff7ba8, #ff4081);
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(255,64,129,0.5);
-    }
+    .brand { font-size: 18px; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .brand-clock { background: #00e5ff; border: 2px solid #fff; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+    .tabs { display: flex; background: rgba(0,0,0,0.35); padding: 3px; border-radius: 30px; gap: 4px; }
+    .tab-btn { border: none; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 800; background: transparent; color: #cfbce8; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+    .tab-btn.active { background: linear-gradient(135deg, #ff7ba8, #ff4081); color: #fff; box-shadow: 0 2px 8px rgba(255,64,129,0.5); }
     .header-actions { display: flex; gap: 8px; }
-    .icon-btn {
-      background: rgba(255,255,255,0.18);
-      border: none;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      font-size: 14px;
-      color: white;
-      cursor: pointer;
-    }
+    .icon-btn { background: rgba(255,255,255,0.18); border: none; width: 28px; height: 28px; border-radius: 50%; font-size: 14px; color: white; cursor: pointer; }
 
     /* DUAL TRACK ARENA */
-    .arena {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      padding: 6px 10px;
-      overflow: hidden;
-    }
-
-    /* INDIVIDUAL LANES */
-    .lane {
-      flex: 1;
-      border-radius: 22px;
-      display: flex;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.35);
-      border: 3px solid rgba(255,255,255,0.85);
-    }
+    .arena { flex: 1; display: flex; flex-direction: column; gap: 6px; padding: 6px 10px; overflow: hidden; }
+    .lane { flex: 1; border-radius: 22px; display: flex; position: relative; overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,0.35); border: 3px solid rgba(255,255,255,0.85); }
     .lane-harper { background: linear-gradient(180deg, #d8b4e2 0%, #ecd4f0 45%, #cae8ec 100%); }
     .lane-haisley { background: linear-gradient(180deg, #98cff5 0%, #c4e4f8 45%, #bfe8df 100%); }
 
     /* LEFT SIDEBAR */
-    .sidebar {
-      width: 120px;
-      background: rgba(255,255,255,0.32);
-      backdrop-filter: blur(10px);
-      border-right: 3px solid rgba(255,255,255,0.6);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-evenly;
-      padding: 4px;
-      z-index: 10;
-      flex-shrink: 0;
-    }
-    .child-card {
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 4px 6px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.12);
-      border: 2px solid rgba(255,255,255,0.9);
-      width: 100%;
-    }
-    .avatar-bubble {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: #ffecb3;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      border: 2px solid #ffb300;
-      flex-shrink: 0;
-    }
-    /* Magic CSS to tint Haisley's dog blue */
-    .avatar-haisley {
-      filter: sepia(1) hue-rotate(180deg) saturate(3);
-    }
+    .sidebar { width: 120px; background: rgba(255,255,255,0.32); backdrop-filter: blur(10px); border-right: 3px solid rgba(255,255,255,0.6); display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; padding: 4px; z-index: 10; flex-shrink: 0; }
+    .child-card { background: #ffffff; border-radius: 14px; padding: 4px 6px; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.12); border: 2px solid rgba(255,255,255,0.9); width: 100%; }
+    .avatar-bubble { width: 32px; height: 32px; border-radius: 50%; background: #ffecb3; display: flex; align-items: center; justify-content: center; font-size: 18px; border: 2px solid #ffb300; flex-shrink: 0; }
+    .avatar-haisley { filter: sepia(1) hue-rotate(180deg) saturate(3); }
     .child-info { display: flex; flex-direction: column; }
     .child-name { font-size: 13px; font-weight: 900; color: #2e1e47; line-height: 1.1; }
     .child-age { font-size: 10px; font-weight: 700; color: #786b8c; }
 
     /* BIG HOURGLASS */
-    .hourglass-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: pointer;
-    }
-    .hourglass-svg {
-      width: 65px;
-      height: 85px;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
-    }
-    .total-time-pill {
-      background: rgba(46, 30, 71, 0.85);
-      color: #fff;
-      font-size: 10px;
-      font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 12px;
-      border: 2px solid #ffffff;
-      margin-top: -4px;
-      z-index: 5;
-    }
+    .hourglass-container { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+    .hourglass-svg { width: 65px; height: 85px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); }
+    .total-time-pill { background: rgba(46, 30, 71, 0.85); color: #fff; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 12px; border: 2px solid #ffffff; margin-top: -4px; z-index: 5; }
 
     /* WINDING QUEST VIEWPORT */
-    .quest-canvas {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-    }
-    .landscape-bg {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none;
-    }
-    .trail-layer {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-    }
+    .quest-canvas { flex: 1; position: relative; overflow: hidden; }
+    .landscape-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+    .trail-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
     /* 3D STEPPING STONES */
     .stone-group { cursor: pointer; touch-action: none; }
-    .stone-disc {
-      fill: #ffffff;
-      stroke: #d0c2de;
-      stroke-width: 4;
-      filter: drop-shadow(0 6px 8px rgba(0,0,0,0.25));
-      transition: all 0.25s ease;
-    }
+    .stone-disc { fill: #ffffff; stroke: #d0c2de; stroke-width: 4; filter: drop-shadow(0 6px 8px rgba(0,0,0,0.25)); transition: all 0.25s ease; }
     .stone-group.done .stone-disc { fill: #b9f6ca; stroke: #00c853; }
     .stone-group.active .stone-disc { stroke: #ffca28; stroke-width: 5; }
 
     .task-timer-bg { fill: none; stroke: rgba(0,0,0,0.1); stroke-width: 7; }
-    .task-timer-gauge {
-      fill: none;
-      stroke-width: 7;
-      stroke-linecap: round;
-      transform-origin: center;
-      transform: rotate(-90deg);
-      transition: stroke-dashoffset 1s linear;
-    }
+    .task-timer-gauge { fill: none; stroke-width: 7; stroke-linecap: round; transform-origin: center; transform: rotate(-90deg); transition: stroke-dashoffset 1s linear; }
     .lane-harper .task-timer-gauge { stroke: var(--harper-pink); }
     .lane-haisley .task-timer-gauge { stroke: var(--haisley-blue); }
 
     /* FLOATING PILLS */
-    .task-name-pill {
-      position: absolute;
-      transform: translate(-50%, -100%);
-      background: #ffffff;
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-size: 10px;
-      font-weight: 900;
-      color: #372352;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.16);
-      border: 2px solid rgba(0,0,0,0.06);
-      white-space: nowrap;
-      pointer-events: none;
-      z-index: 15;
-    }
-    .time-bubble {
-      position: absolute;
-      transform: translate(-50%, 0);
-      background: #ffffff;
-      padding: 2px 10px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 900;
-      color: #2b1c42;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.18);
-      border: 2px solid #ffca28;
-      pointer-events: none;
-      z-index: 15;
-    }
+    .task-name-pill { position: absolute; transform: translate(-50%, -100%); background: #ffffff; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: 900; color: #372352; box-shadow: 0 4px 10px rgba(0,0,0,0.16); border: 2px solid rgba(0,0,0,0.06); white-space: nowrap; pointer-events: none; z-index: 15; }
+    .time-bubble { position: absolute; transform: translate(-50%, 0); background: #ffffff; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 900; color: #2b1c42; box-shadow: 0 4px 10px rgba(0,0,0,0.18); border: 2px solid #ffca28; pointer-events: none; z-index: 15; }
 
-    /* CASTLE GOAL & INSPECTION BUTTONS */
-    .castle-wrapper {
-      position: absolute;
-      right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 20;
-    }
-    .castle-svg {
-      width: 75px;
-      height: 75px;
-      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.22));
-      animation: floatCastle 3s infinite alternate ease-in-out;
-    }
+    /* CASTLE GOAL & BUTTONS */
+    .castle-wrapper { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; z-index: 20; }
+    .castle-svg { width: 75px; height: 75px; filter: drop-shadow(0 6px 10px rgba(0,0,0,0.22)); animation: floatCastle 3s infinite alternate ease-in-out; }
     @keyframes floatCastle { from { transform: translateY(0); } to { transform: translateY(-4px); } }
-    
-    .reward-badge {
-      background: linear-gradient(90deg, #ffb300, #ff8f00);
-      color: #fff;
-      font-size: 10px;
-      font-weight: 900;
-      padding: 2px 8px;
-      border-radius: 10px;
-      border: 2px solid #fff;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      margin-top: -6px;
-    }
-    
-    .inspect-actions {
-      display: none;
-      flex-direction: column;
-      gap: 4px;
-      margin-top: -4px;
-    }
-    .btn-approve {
-      background: #00e676;
-      color: #104222;
-      font-size: 11px;
-      font-weight: 900;
-      padding: 4px 10px;
-      border-radius: 12px;
-      border: 2px solid #fff;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,230,118,0.4);
-      animation: pulse 1s infinite alternate;
-    }
-    .btn-try-again {
-      background: #ff6d00;
-      color: #fff;
-      font-size: 10px;
-      font-weight: 900;
-      padding: 3px 10px;
-      border-radius: 12px;
-      border: 2px solid #fff;
-      cursor: pointer;
-    }
-    .btn-free-time {
-      background: #00e5ff;
-      color: #003333;
-      font-size: 11px;
-      font-weight: 900;
-      padding: 4px 10px;
-      border-radius: 12px;
-      border: 2px solid #fff;
-      display: none;
-      margin-top: -4px;
-    }
+    .reward-badge { background: linear-gradient(90deg, #ffb300, #ff8f00); color: #fff; font-size: 10px; font-weight: 900; padding: 2px 8px; border-radius: 10px; border: 2px solid #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.2); margin-top: -6px; }
+    .inspect-actions { display: none; flex-direction: column; gap: 4px; margin-top: -4px; }
+    .btn-approve { background: #00e676; color: #104222; font-size: 11px; font-weight: 900; padding: 4px 10px; border-radius: 12px; border: 2px solid #fff; cursor: pointer; box-shadow: 0 4px 12px rgba(0,230,118,0.4); animation: pulse 1s infinite alternate; }
+    .btn-try-again { background: #ff6d00; color: #fff; font-size: 10px; font-weight: 900; padding: 3px 10px; border-radius: 12px; border: 2px solid #fff; cursor: pointer; }
+    .btn-free-time { background: #00e5ff; color: #003333; font-size: 11px; font-weight: 900; padding: 4px 10px; border-radius: 12px; border: 2px solid #fff; display: none; margin-top: -4px; }
 
     /* BANNER TOAST */
-    .toast-banner {
-      position: fixed;
-      bottom: 14px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: #ffffff;
-      padding: 8px 20px;
-      border-radius: 30px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.45);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 900;
-      font-size: 12px;
-      border: 3px solid #ffb300;
-      z-index: 100;
-      transition: transform 0.35s ease;
-    }
+    .toast-banner { position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%) translateY(100px); background: #ffffff; padding: 8px 20px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.45); display: flex; align-items: center; gap: 12px; font-weight: 900; font-size: 12px; border: 3px solid #ffb300; z-index: 100; transition: transform 0.35s ease; }
     .toast-banner.show { transform: translateX(-50%) translateY(0); }
-
   </style>
 </head>
 <body>
 
-  <!-- START OVERLAY FOR AUDIO/WAKELOCK -->
+  <!-- START OVERLAY -->
   <div id="startOverlay" onclick="initQuest()">
     <button class="btn-start-quest">Tap to Start Quest! 🚀</button>
   </div>
@@ -430,11 +177,11 @@
         </div>
       </div>
       <div class="quest-canvas" id="canvasHarper">
-        <svg class="landscape-bg" viewBox="0 0 1000 350" preserveAspectRatio="none">
+        <svg class="landscape-bg" viewBox="0 0 1000 350" preserveAspectRatio="xMidYMid slice">
           <path d="M 0 350 L 0 180 Q 280 110, 520 190 T 1000 150 L 1000 350 Z" fill="rgba(255,255,255,0.2)"/>
           <path d="M 0 350 L 0 240 Q 340 180, 680 250 T 1000 220 L 1000 350 Z" fill="rgba(255,255,255,0.3)"/>
         </svg>
-        <svg class="trail-layer" id="svgHarper" viewBox="0 0 1000 350" preserveAspectRatio="none"></svg>
+        <svg class="trail-layer" id="svgHarper" viewBox="0 0 1000 350" preserveAspectRatio="xMidYMid slice"></svg>
         <div class="castle-wrapper">
           <svg class="castle-svg" viewBox="0 0 100 100">
             <rect x="25" y="45" width="50" height="45" rx="4" fill="#ba68c8" stroke="#4a148c" stroke-width="2"/>
@@ -478,11 +225,11 @@
         </div>
       </div>
       <div class="quest-canvas" id="canvasHaisley">
-        <svg class="landscape-bg" viewBox="0 0 1000 350" preserveAspectRatio="none">
+        <svg class="landscape-bg" viewBox="0 0 1000 350" preserveAspectRatio="xMidYMid slice">
           <path d="M 0 350 L 0 180 Q 280 110, 520 190 T 1000 150 L 1000 350 Z" fill="rgba(255,255,255,0.2)"/>
           <path d="M 0 350 L 0 240 Q 340 180, 680 250 T 1000 220 L 1000 350 Z" fill="rgba(255,255,255,0.3)"/>
         </svg>
-        <svg class="trail-layer" id="svgHaisley" viewBox="0 0 1000 350" preserveAspectRatio="none"></svg>
+        <svg class="trail-layer" id="svgHaisley" viewBox="0 0 1000 350" preserveAspectRatio="xMidYMid slice"></svg>
         <div class="castle-wrapper">
           <svg class="castle-svg" viewBox="0 0 100 100">
             <rect x="25" y="45" width="50" height="45" rx="4" fill="#0288d1" stroke="#01579b" stroke-width="2"/>
@@ -509,10 +256,8 @@
   <div class="toast-banner" id="toast"><span id="toastMsg">✨</span></div>
 
   <script>
-    // ==========================================
-    // PASTE YOUR PUBLISHED GOOGLE SHEET CSV LINK HERE:
+    // HARDCODED YOUR GOOGLE APPS SCRIPT URL HERE
     const SHEET_CSV_URL = "https://script.google.com/macros/s/AKfycbzK0kHEOXN2vTz4CypxBoKjD5kbJ_4ckdn_MSHXq7yOs-CxB4toahwUVB28y9utY8tpKQ/exec";
-    // ==========================================
 
     let rawSheetData = [
       { Child: 'Harper', Category: 'Morning', Step: 1, Task: 'Wake up & make bed', Minutes: 5, Emoji: '🛏️' },
@@ -537,18 +282,18 @@
       Haisley: { steps: [], activeIdx: 0, stepRemaining: 0, stepTotal: 0, missionTotal: 0, missionRemaining: 0, bankedFreeTime: 0, isRunning: false, isFreeTime: false, isInspecting: false, interval: null, avatar: '🐶', isBlue: true }
     };
 
-    // LOAD BANKED TIME
     appState.Harper.bankedFreeTime = parseInt(localStorage.getItem('timy_harper_bank') || '0', 10);
     appState.Haisley.bankedFreeTime = parseInt(localStorage.getItem('timy_haisley_bank') || '0', 10);
 
     // ==========================================
-    // INITIALIZATION (AUDIO & WAKE LOCK)
+    // INITIALIZATION & FETCH LOGIC
     // ==========================================
     async function initQuest() {
       document.getElementById('startOverlay').style.display = 'none';
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (audioCtx.state === 'suspended') audioCtx.resume();
       requestWakeLock();
+      await fetchSheetData();
       switchMode(getSmartMode());
     }
 
@@ -560,14 +305,45 @@
     document.addEventListener('visibilitychange', () => {
       if (wakeLockSentinel !== null && document.visibilityState === 'visible') requestWakeLock();
     });
-
-    // BEFOREUNLOAD SAFEGUARD
     window.addEventListener('beforeunload', (e) => {
-      if (appState.Harper.isRunning || appState.Haisley.isRunning) {
-        e.preventDefault();
-        e.returnValue = 'Timers are currently running!';
-      }
+      if (appState.Harper.isRunning || appState.Haisley.isRunning) { e.preventDefault(); e.returnValue = 'Timers running!'; }
     });
+
+    // UNIVERSAL JSON/CSV FETCHER
+    async function fetchSheetData() {
+      if (!SHEET_CSV_URL) return;
+      try {
+        const resp = await fetch(SHEET_CSV_URL);
+        const text = await resp.text();
+        let parsed = [];
+        try {
+          // Attempt JSON parsing (Google Apps Script)
+          const data = JSON.parse(text);
+          parsed = data.map(r => ({
+            Child: (r.Child || r.child || '').trim(),
+            Category: (r.Category || r.category || 'Morning').trim(),
+            Step: parseInt(r.Step || r.step) || 1,
+            Task: (r.Task || r.task || '').trim(),
+            Minutes: parseInt(r.Minutes || r.minutes) || 5,
+            Emoji: (r.Emoji || r.emoji || '⭐').trim()
+          })).filter(r => r.Child && r.Task);
+        } catch (err) {
+          // Fallback to CSV parsing (Publish to web)
+          const rows = text.split('\n').map(r => r.split(','));
+          for (let i = 1; i < rows.length; i++) {
+            if (!rows[i] || rows[i].length < 4) continue;
+            const [child, cat, step, task, mins, emoji] = rows[i];
+            if (child && task) {
+              parsed.push({ Child: child.trim(), Category: cat ? cat.trim() : 'Morning', Step: parseInt(step)||1, Task: task.trim(), Minutes: parseInt(mins)||5, Emoji: emoji ? emoji.trim() : '⭐' });
+            }
+          }
+        }
+        if (parsed.length > 0) {
+          rawSheetData = parsed;
+          showToast('🔄 Synced with Google Sheets!');
+        }
+      } catch (err) {}
+    }
 
     // ==========================================
     // AUDIO ENGINE
@@ -579,14 +355,9 @@
           if (audioCtx.state === 'suspended') audioCtx.resume();
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
-          osc.type = type;
-          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-          gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start();
-          osc.stop(audioCtx.currentTime + duration);
+          osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+          gain.gain.setValueAtTime(0.2, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+          osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + duration);
         } catch (e) {}
       }, delay);
     }
@@ -598,40 +369,18 @@
     function speak(msg) {
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(msg);
-        utter.pitch = 1.25; utter.rate = 1.05;
-        window.speechSynthesis.speak(utter);
+        const utter = new SpeechSynthesisUtterance(msg); utter.pitch = 1.25; utter.rate = 1.05; window.speechSynthesis.speak(utter);
       }
     }
 
     // ==========================================
-    // DATA SYNC & MODE SWITCH
+    // STATE LOGIC
     // ==========================================
     function getSmartMode() {
       const h = new Date().getHours();
       if (h >= 6 && h < 11) return 'Morning';
       if (h >= 11 && h < 18) return 'Chores';
       return 'Bedtime';
-    }
-
-    async function fetchSheetData() {
-      if (!SHEET_CSV_URL) return;
-      try {
-        const resp = await fetch(SHEET_CSV_URL);
-        const text = await resp.text();
-        const rows = text.split('\n').map(r => r.split(','));
-        const parsed = [];
-        for (let i = 1; i < rows.length; i++) {
-          if (!rows[i] || rows[i].length < 4) continue;
-          const [child, cat, step, task, mins, emoji] = rows[i];
-          if (child && task) {
-            parsed.push({ Child: child.trim(), Category: cat ? cat.trim() : 'Morning', Step: parseInt(step)||1, Task: task.trim(), Minutes: parseInt(mins)||5, Emoji: emoji ? emoji.trim() : '⭐' });
-          }
-        }
-        if (parsed.length > 0) rawSheetData = parsed;
-        setupMode(currentMode);
-        showToast('🔄 Synced with Google Sheets!');
-      } catch (err) {}
     }
 
     function switchMode(mode) {
@@ -667,7 +416,7 @@
     }
 
     // ==========================================
-    // RENDER ENGINE
+    // RENDERING
     // ==========================================
     function renderAll() { renderTrack('Harper', 'svgHarper', 'canvasHarper'); renderTrack('Haisley', 'svgHaisley', 'canvasHaisley'); }
 
@@ -763,7 +512,7 @@
     }
 
     // ==========================================
-    // LOGIC & TIMERS
+    // INTERACTION
     // ==========================================
     function finishStep(child, idx) {
       const state = appState[child];
@@ -785,10 +534,9 @@
 
     function approveInspection(child) {
       const state = appState[child];
-      state.isInspecting = false;
-      state.isFreeTime = true;
+      state.isInspecting = false; state.isFreeTime = true;
       if (state.missionRemaining > 0) {
-        state.bankedFreeTime += state.missionRemaining; // Bank leftover time
+        state.bankedFreeTime += state.missionRemaining; 
         localStorage.setItem(`timy_${child.toLowerCase()}_bank`, state.bankedFreeTime);
       }
       if (child === 'Harper') chimeHarper(); else chimeHaisley();
@@ -799,10 +547,8 @@
     function tryAgain(child) {
       const state = appState[child];
       if (state.activeIdx > 0) {
-        state.activeIdx--;
-        state.isInspecting = false;
-        state.stepTotal = state.steps[state.activeIdx].minutes * 60;
-        state.stepRemaining = state.stepTotal;
+        state.activeIdx--; state.isInspecting = false;
+        state.stepTotal = state.steps[state.activeIdx].minutes * 60; state.stepRemaining = state.stepTotal;
         showToast(`↩️ Let's try that last step again!`);
         renderAll(); updateHourglass(child);
       }
@@ -859,13 +605,8 @@
       const pill = document.getElementById(`totalPill${child}`);
       const dispSecs = state.isFreeTime ? state.bankedFreeTime : state.missionRemaining;
       
-      pill.textContent = state.isFreeTime 
-        ? `Free: ${Math.floor(dispSecs/60)}:${String(dispSecs%60).padStart(2,'0')}` 
-        : `Total: ${Math.floor(dispSecs/60)}:${String(dispSecs%60).padStart(2,'0')}`;
-
-      let ratio = 0;
-      if (state.isFreeTime) ratio = Math.min(1, state.bankedFreeTime / 1800); // 30min max scale for free time glass
-      else ratio = state.missionTotal > 0 ? (state.missionRemaining / state.missionTotal) : 0;
+      pill.textContent = state.isFreeTime ? `Free: ${Math.floor(dispSecs/60)}:${String(dispSecs%60).padStart(2,'0')}` : `Total: ${Math.floor(dispSecs/60)}:${String(dispSecs%60).padStart(2,'0')}`;
+      let ratio = state.isFreeTime ? Math.min(1, state.bankedFreeTime / 1800) : (state.missionTotal > 0 ? (state.missionRemaining / state.missionTotal) : 0);
 
       const topY = 49 - (29 * ratio);
       document.getElementById(`sandTop${child}`).setAttribute('d', `M 20 ${topY} Q 20 48, 40 49 Q 60 48, 60 ${topY} Z`);
