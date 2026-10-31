@@ -26,15 +26,44 @@
       background: #2a1447;
       display: flex;
       flex-direction: column;
-      height: 100vh;
+      height: 100dvh;
       width: 100vw;
       overflow: hidden;
+    }
+
+    /* START OVERLAY (Audio & WakeLock Unlocker) */
+    #startOverlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(42, 20, 71, 0.95);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+    .btn-start-quest {
+      background: linear-gradient(135deg, #ff4081, #00e5ff);
+      border: 4px solid #fff;
+      padding: 16px 32px;
+      font-size: 28px;
+      font-weight: 900;
+      border-radius: 40px;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      animation: pulseBtn 1.5s infinite alternate;
+    }
+    @keyframes pulseBtn {
+      from { transform: scale(1); }
+      to { transform: scale(1.05); }
     }
 
     /* TOP APP BAR */
     header {
       background: #3e1b69;
-      height: 48px;
+      height: 42px;
       padding: 0 16px;
       display: flex;
       justify-content: space-between;
@@ -42,26 +71,26 @@
       border-bottom: 2px solid rgba(255,255,255,0.12);
       z-index: 50;
       box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+      flex-shrink: 0;
     }
     .brand {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 900;
       color: #fff;
       display: flex;
       align-items: center;
       gap: 8px;
-      letter-spacing: 0.5px;
     }
     .brand-clock {
       background: #00e5ff;
       border: 2px solid #fff;
       border-radius: 50%;
-      width: 26px;
-      height: 26px;
+      width: 24px;
+      height: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 12px;
     }
     .tabs {
       display: flex;
@@ -72,7 +101,7 @@
     }
     .tab-btn {
       border: none;
-      padding: 5px 14px;
+      padding: 4px 12px;
       border-radius: 20px;
       font-size: 13px;
       font-weight: 800;
@@ -82,33 +111,23 @@
       display: flex;
       align-items: center;
       gap: 5px;
-      transition: all 0.2s ease;
     }
     .tab-btn.active {
       background: linear-gradient(135deg, #ff7ba8, #ff4081);
       color: #fff;
       box-shadow: 0 2px 8px rgba(255,64,129,0.5);
     }
-    .header-actions {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
+    .header-actions { display: flex; gap: 8px; }
     .icon-btn {
       background: rgba(255,255,255,0.18);
       border: none;
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
-      font-size: 15px;
+      font-size: 14px;
       color: white;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
     }
-    .icon-btn:hover { background: rgba(255,255,255,0.3); }
 
     /* DUAL TRACK ARENA */
     .arena {
@@ -130,53 +149,53 @@
       box-shadow: 0 6px 18px rgba(0,0,0,0.35);
       border: 3px solid rgba(255,255,255,0.85);
     }
-    .lane-harper {
-      background: linear-gradient(180deg, #d8b4e2 0%, #ecd4f0 45%, #cae8ec 100%);
-    }
-    .lane-haisley {
-      background: linear-gradient(180deg, #98cff5 0%, #c4e4f8 45%, #bfe8df 100%);
-    }
+    .lane-harper { background: linear-gradient(180deg, #d8b4e2 0%, #ecd4f0 45%, #cae8ec 100%); }
+    .lane-haisley { background: linear-gradient(180deg, #98cff5 0%, #c4e4f8 45%, #bfe8df 100%); }
 
-    /* LEFT SIDEBAR (CARD + HOURGLASS) */
+    /* LEFT SIDEBAR */
     .sidebar {
-      width: 140px;
+      width: 120px;
       background: rgba(255,255,255,0.32);
       backdrop-filter: blur(10px);
       border-right: 3px solid rgba(255,255,255,0.6);
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      padding: 8px 6px;
+      justify-content: space-evenly;
+      padding: 4px;
       z-index: 10;
       flex-shrink: 0;
     }
     .child-card {
       background: #ffffff;
-      border-radius: 18px;
-      padding: 5px 10px;
+      border-radius: 14px;
+      padding: 4px 6px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.12);
       border: 2px solid rgba(255,255,255,0.9);
-      width: 95%;
+      width: 100%;
     }
     .avatar-bubble {
-      width: 38px;
-      height: 38px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       background: #ffecb3;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
+      font-size: 18px;
       border: 2px solid #ffb300;
       flex-shrink: 0;
     }
+    /* Magic CSS to tint Haisley's dog blue */
+    .avatar-haisley {
+      filter: sepia(1) hue-rotate(180deg) saturate(3);
+    }
     .child-info { display: flex; flex-direction: column; }
-    .child-name { font-size: 15px; font-weight: 900; color: #2e1e47; line-height: 1.1; }
-    .child-age { font-size: 11px; font-weight: 700; color: #786b8c; }
+    .child-name { font-size: 13px; font-weight: 900; color: #2e1e47; line-height: 1.1; }
+    .child-age { font-size: 10px; font-weight: 700; color: #786b8c; }
 
     /* BIG HOURGLASS */
     .hourglass-container {
@@ -184,24 +203,22 @@
       flex-direction: column;
       align-items: center;
       cursor: pointer;
-      position: relative;
     }
     .hourglass-svg {
-      width: 82px;
-      height: 102px;
+      width: 65px;
+      height: 85px;
       filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
     }
     .total-time-pill {
       background: rgba(46, 30, 71, 0.85);
       color: #fff;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 800;
-      padding: 3px 10px;
+      padding: 2px 8px;
       border-radius: 12px;
       border: 2px solid #ffffff;
-      margin-top: -6px;
+      margin-top: -4px;
       z-index: 5;
-      letter-spacing: 0.5px;
     }
 
     /* WINDING QUEST VIEWPORT */
@@ -220,33 +237,19 @@
       top: 0; left: 0; width: 100%; height: 100%;
     }
 
-    /* STEPPING STONES & UNIFIED TOUCH TARGET */
-    .stone-group {
-      cursor: pointer;
-      touch-action: none;
-    }
+    /* 3D STEPPING STONES */
+    .stone-group { cursor: pointer; touch-action: none; }
     .stone-disc {
       fill: #ffffff;
       stroke: #d0c2de;
       stroke-width: 4;
-      filter: drop-shadow(0 5px 6px rgba(0,0,0,0.18));
+      filter: drop-shadow(0 6px 8px rgba(0,0,0,0.25));
       transition: all 0.25s ease;
     }
-    .stone-group.done .stone-disc {
-      fill: #b9f6ca;
-      stroke: #00c853;
-    }
-    .stone-group.active .stone-disc {
-      stroke: #ffca28;
-      stroke-width: 5;
-    }
+    .stone-group.done .stone-disc { fill: #b9f6ca; stroke: #00c853; }
+    .stone-group.active .stone-disc { stroke: #ffca28; stroke-width: 5; }
 
-    /* ACTIVE TASK PIE TIMER RING */
-    .task-timer-bg {
-      fill: none;
-      stroke: rgba(0,0,0,0.1);
-      stroke-width: 7;
-    }
+    .task-timer-bg { fill: none; stroke: rgba(0,0,0,0.1); stroke-width: 7; }
     .task-timer-gauge {
       fill: none;
       stroke-width: 7;
@@ -258,14 +261,14 @@
     .lane-harper .task-timer-gauge { stroke: var(--harper-pink); }
     .lane-haisley .task-timer-gauge { stroke: var(--haisley-blue); }
 
-    /* FLOATING PILLS: TASK NAME & TIME */
+    /* FLOATING PILLS */
     .task-name-pill {
       position: absolute;
       transform: translate(-50%, -100%);
       background: #ffffff;
-      padding: 4px 10px;
-      border-radius: 14px;
-      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 10px;
       font-weight: 900;
       color: #372352;
       box-shadow: 0 4px 10px rgba(0,0,0,0.16);
@@ -278,9 +281,9 @@
       position: absolute;
       transform: translate(-50%, 0);
       background: #ffffff;
-      padding: 3px 12px;
-      border-radius: 14px;
-      font-size: 12px;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 11px;
       font-weight: 900;
       color: #2b1c42;
       box-shadow: 0 4px 10px rgba(0,0,0,0.18);
@@ -289,10 +292,10 @@
       z-index: 15;
     }
 
-    /* FAIRYTALE REWARD CASTLE */
+    /* CASTLE GOAL & INSPECTION BUTTONS */
     .castle-wrapper {
       position: absolute;
-      right: 18px;
+      right: 15px;
       top: 50%;
       transform: translateY(-50%);
       display: flex;
@@ -301,50 +304,63 @@
       z-index: 20;
     }
     .castle-svg {
-      width: 95px;
-      height: 95px;
-      filter: drop-shadow(0 8px 12px rgba(0,0,0,0.22));
+      width: 75px;
+      height: 75px;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.22));
       animation: floatCastle 3s infinite alternate ease-in-out;
     }
-    @keyframes floatCastle {
-      from { transform: translateY(0); }
-      to { transform: translateY(-6px); }
-    }
+    @keyframes floatCastle { from { transform: translateY(0); } to { transform: translateY(-4px); } }
+    
     .reward-badge {
       background: linear-gradient(90deg, #ffb300, #ff8f00);
       color: #fff;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 900;
-      padding: 3px 10px;
-      border-radius: 12px;
+      padding: 2px 8px;
+      border-radius: 10px;
       border: 2px solid #fff;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      margin-top: -8px;
-    }
-    .btn-inspect {
-      background: #ff6d00;
-      color: #fff;
-      font-size: 11px;
-      font-weight: 900;
-      padding: 4px 12px;
-      border-radius: 14px;
-      border: 2px solid #fff;
-      cursor: pointer;
-      display: none;
-      box-shadow: 0 4px 12px rgba(255,109,0,0.4);
-      animation: pulse 1s infinite alternate;
       margin-top: -6px;
     }
-    .btn-free-time {
+    
+    .inspect-actions {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: -4px;
+    }
+    .btn-approve {
       background: #00e676;
       color: #104222;
       font-size: 11px;
       font-weight: 900;
-      padding: 4px 12px;
-      border-radius: 14px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      border: 2px solid #fff;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,230,118,0.4);
+      animation: pulse 1s infinite alternate;
+    }
+    .btn-try-again {
+      background: #ff6d00;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 900;
+      padding: 3px 10px;
+      border-radius: 12px;
+      border: 2px solid #fff;
+      cursor: pointer;
+    }
+    .btn-free-time {
+      background: #00e5ff;
+      color: #003333;
+      font-size: 11px;
+      font-weight: 900;
+      padding: 4px 10px;
+      border-radius: 12px;
       border: 2px solid #fff;
       display: none;
-      margin-top: -6px;
+      margin-top: -4px;
     }
 
     /* BANNER TOAST */
@@ -354,71 +370,29 @@
       left: 50%;
       transform: translateX(-50%) translateY(100px);
       background: #ffffff;
-      padding: 10px 22px;
+      padding: 8px 20px;
       border-radius: 30px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.45);
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       font-weight: 900;
-      font-size: 13px;
-      color: #2b1842;
+      font-size: 12px;
       border: 3px solid #ffb300;
       z-index: 100;
-      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: transform 0.35s ease;
     }
     .toast-banner.show { transform: translateX(-50%) translateY(0); }
-    .btn-undo {
-      background: #eceff1;
-      border: 2px solid #b0bec5;
-      padding: 4px 12px;
-      border-radius: 16px;
-      font-size: 11px;
-      font-weight: 900;
-      cursor: pointer;
-      color: #37474f;
-    }
 
-    /* MODAL */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.65);
-      backdrop-filter: blur(4px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 200;
-    }
-    .modal-card {
-      background: #ffffff;
-      width: 90%;
-      max-width: 360px;
-      padding: 22px;
-      border-radius: 26px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    }
-    .modal-title { font-size: 19px; font-weight: 900; color: #3e1b69; }
-    .select-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 800; }
-    .select-input { padding: 4px 10px; border-radius: 10px; font-weight: bold; border: 2px solid #ccc; }
-    .modal-btn {
-      background: #3e1b69;
-      color: #fff;
-      border: none;
-      padding: 11px;
-      border-radius: 14px;
-      font-size: 13px;
-      font-weight: 900;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
 
-  <!-- TOP APP BAR -->
+  <!-- START OVERLAY FOR AUDIO/WAKELOCK -->
+  <div id="startOverlay" onclick="initQuest()">
+    <button class="btn-start-quest">Tap to Start Quest! 🚀</button>
+  </div>
+
   <header>
     <div class="brand">
       <div class="brand-clock">⏱️</div>
@@ -430,56 +404,37 @@
       <button class="tab-btn" id="tabBedtime" onclick="switchMode('Bedtime')">🌙 Bedtime</button>
     </div>
     <div class="header-actions">
-      <button class="icon-btn" onclick="fetchSheetData()" title="Sync Google Sheet">🔄</button>
-      <button class="icon-btn" onclick="openSettings()" title="Parent Settings">⚙️</button>
+      <button class="icon-btn" onclick="fetchSheetData()" title="Sync">🔄</button>
     </div>
   </header>
 
-  <!-- ARENA: HARPER & HAISLEY TRACKS -->
   <div class="arena">
-
     <!-- HARPER'S TRACK -->
     <div class="lane lane-harper" id="laneHarper">
       <div class="sidebar">
         <div class="child-card">
           <div class="avatar-bubble">🐱</div>
-          <div class="child-info">
-            <span class="child-name">Harper</span>
-            <span class="child-age">Age 7</span>
-          </div>
+          <div class="child-info"><span class="child-name">Harper</span><span class="child-age">Age 7</span></div>
         </div>
-
-        <!-- Big Hourglass Total Timer -->
         <div class="hourglass-container" onclick="toggleTimer('Harper')">
           <svg class="hourglass-svg" viewBox="0 0 80 100">
-            <!-- Wood Frame Caps -->
             <rect x="5" y="4" width="70" height="9" rx="4.5" fill="#8d5b36" stroke="#5c381e" stroke-width="2"/>
             <rect x="5" y="87" width="70" height="9" rx="4.5" fill="#8d5b36" stroke="#5c381e" stroke-width="2"/>
-            <!-- Glass Shell -->
             <path d="M 16 13 Q 16 48, 38 50 Q 16 52, 16 87 L 64 87 Q 64 52, 42 50 Q 64 48, 64 13 Z" fill="rgba(255,255,255,0.4)" stroke="#5c381e" stroke-width="2.5"/>
-            <!-- Top Sand Bulb -->
             <path id="sandTopHarper" d="M 20 20 Q 20 48, 40 49 Q 60 48, 60 20 Z" fill="var(--harper-sand)"/>
-            <!-- Sand Stream -->
             <line id="sandStreamHarper" x1="40" y1="50" x2="40" y2="85" stroke="var(--harper-sand)" stroke-width="2.5" stroke-dasharray="2 2" opacity="0"/>
-            <!-- Bottom Sand Bulb -->
             <path id="sandBottomHarper" d="M 22 85 Q 40 85, 58 85 Z" fill="var(--harper-sand)"/>
-            <!-- Glass Highlight Refraction -->
             <path d="M 20 18 Q 21 44, 34 47" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
           </svg>
           <div class="total-time-pill" id="totalPillHarper">Total: 25:00</div>
         </div>
       </div>
-
-      <!-- Winding Path Canvas -->
       <div class="quest-canvas" id="canvasHarper">
         <svg class="landscape-bg" viewBox="0 0 1000 350" preserveAspectRatio="none">
-          <!-- Gentle Background Hills -->
           <path d="M 0 350 L 0 180 Q 280 110, 520 190 T 1000 150 L 1000 350 Z" fill="rgba(255,255,255,0.2)"/>
           <path d="M 0 350 L 0 240 Q 340 180, 680 250 T 1000 220 L 1000 350 Z" fill="rgba(255,255,255,0.3)"/>
         </svg>
         <svg class="trail-layer" id="svgHarper" viewBox="0 0 1000 350" preserveAspectRatio="none"></svg>
-
-        <!-- Castle Goal -->
         <div class="castle-wrapper">
           <svg class="castle-svg" viewBox="0 0 100 100">
             <rect x="25" y="45" width="50" height="45" rx="4" fill="#ba68c8" stroke="#4a148c" stroke-width="2"/>
@@ -489,12 +444,14 @@
             <rect x="65" y="30" width="20" height="58" rx="3" fill="#ab47bc" stroke="#4a148c" stroke-width="2"/>
             <polygon points="62,30 75,6 88,30" fill="#e91e63" stroke="#880e4f" stroke-width="2"/>
             <polygon points="38,45 50,20 62,45" fill="#f06292" stroke="#880e4f" stroke-width="2"/>
-            <!-- Gold Flags -->
             <polygon points="25,6 25,0 35,3" fill="#ffd54f"/>
             <polygon points="75,6 75,0 85,3" fill="#ffd54f"/>
           </svg>
           <div class="reward-badge" id="badgeHarper">REWARD!</div>
-          <button class="btn-inspect" id="inspectHarper" onclick="approveInspection('Harper')">👀 Inspect</button>
+          <div class="inspect-actions" id="inspectHarper">
+            <button class="btn-approve" onclick="approveInspection('Harper')">✅ Approve</button>
+            <button class="btn-try-again" onclick="tryAgain('Harper')">↩️ Try Again</button>
+          </div>
           <div class="btn-free-time" id="freeHarper">FREE TIME!</div>
         </div>
       </div>
@@ -504,43 +461,28 @@
     <div class="lane lane-haisley" id="laneHaisley">
       <div class="sidebar">
         <div class="child-card">
-          <div class="avatar-bubble">🐶</div>
-          <div class="child-info">
-            <span class="child-name">Haisley</span>
-            <span class="child-age">Age 5</span>
-          </div>
+          <div class="avatar-bubble avatar-haisley">🐶</div>
+          <div class="child-info"><span class="child-name">Haisley</span><span class="child-age">Age 5</span></div>
         </div>
-
-        <!-- Big Hourglass Total Timer -->
         <div class="hourglass-container" onclick="toggleTimer('Haisley')">
           <svg class="hourglass-svg" viewBox="0 0 80 100">
-            <!-- Wood Frame Caps -->
             <rect x="5" y="4" width="70" height="9" rx="4.5" fill="#8d5b36" stroke="#5c381e" stroke-width="2"/>
             <rect x="5" y="87" width="70" height="9" rx="4.5" fill="#8d5b36" stroke="#5c381e" stroke-width="2"/>
-            <!-- Glass Shell -->
             <path d="M 16 13 Q 16 48, 38 50 Q 16 52, 16 87 L 64 87 Q 64 52, 42 50 Q 64 48, 64 13 Z" fill="rgba(255,255,255,0.4)" stroke="#5c381e" stroke-width="2.5"/>
-            <!-- Top Sand Bulb -->
             <path id="sandTopHaisley" d="M 20 20 Q 20 48, 40 49 Q 60 48, 60 20 Z" fill="var(--haisley-sand)"/>
-            <!-- Sand Stream -->
             <line id="sandStreamHaisley" x1="40" y1="50" x2="40" y2="85" stroke="var(--haisley-sand)" stroke-width="2.5" stroke-dasharray="2 2" opacity="0"/>
-            <!-- Bottom Sand Bulb -->
             <path id="sandBottomHaisley" d="M 22 85 Q 40 85, 58 85 Z" fill="var(--haisley-sand)"/>
-            <!-- Glass Highlight Refraction -->
             <path d="M 20 18 Q 21 44, 34 47" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
           </svg>
           <div class="total-time-pill" id="totalPillHaisley">Total: 25:00</div>
         </div>
       </div>
-
-      <!-- Winding Path Canvas -->
       <div class="quest-canvas" id="canvasHaisley">
         <svg class="landscape-bg" viewBox="0 0 1000 350" preserveAspectRatio="none">
           <path d="M 0 350 L 0 180 Q 280 110, 520 190 T 1000 150 L 1000 350 Z" fill="rgba(255,255,255,0.2)"/>
           <path d="M 0 350 L 0 240 Q 340 180, 680 250 T 1000 220 L 1000 350 Z" fill="rgba(255,255,255,0.3)"/>
         </svg>
         <svg class="trail-layer" id="svgHaisley" viewBox="0 0 1000 350" preserveAspectRatio="none"></svg>
-
-        <!-- Castle Goal -->
         <div class="castle-wrapper">
           <svg class="castle-svg" viewBox="0 0 100 100">
             <rect x="25" y="45" width="50" height="45" rx="4" fill="#0288d1" stroke="#01579b" stroke-width="2"/>
@@ -554,101 +496,84 @@
             <polygon points="75,6 75,0 85,3" fill="#ff4081"/>
           </svg>
           <div class="reward-badge" id="badgeHaisley">REWARD!</div>
-          <button class="btn-inspect" id="inspectHaisley" onclick="approveInspection('Haisley')">👀 Inspect</button>
+          <div class="inspect-actions" id="inspectHaisley">
+            <button class="btn-approve" onclick="approveInspection('Haisley')">✅ Approve</button>
+            <button class="btn-try-again" onclick="tryAgain('Haisley')">↩️ Try Again</button>
+          </div>
           <div class="btn-free-time" id="freeHaisley">FREE TIME!</div>
         </div>
       </div>
     </div>
-
   </div>
 
-  <!-- SPEECH & ACTION TOAST -->
-  <div class="toast-banner" id="toast">
-    <span id="toastMsg">✨ Step Completed!</span>
-    <button class="btn-undo" onclick="undoStep()">UNDO</button>
-  </div>
-
-  <!-- PARENT SETTINGS MODAL -->
-  <div class="modal-overlay" id="parentModal">
-    <div class="modal-card">
-      <div class="modal-title">⚙️ Parent Controls</div>
-      <div class="select-row">
-        <label>Daily Chores Quota:</label>
-        <select class="select-input" id="quotaSelect" onchange="setQuota(this.value)">
-          <option value="1">1 Chore</option>
-          <option value="2" selected>2 Chores</option>
-          <option value="3">3 Chores</option>
-          <option value="4">4 Chores</option>
-        </select>
-      </div>
-      <button class="modal-btn" onclick="reRollChores()">🎲 Re-Roll Chore Challenge</button>
-      <button class="modal-btn" style="background:#0288d1;" onclick="fetchSheetData()">🔄 Re-Sync with Sheet</button>
-      <button class="modal-btn" style="background:#8d5b36;" onclick="requestWakeLock()">📱 Keep Screen Awake</button>
-      <button class="modal-btn" style="background:#b0bec5;" onclick="closeSettings()">Close</button>
-    </div>
-  </div>
+  <div class="toast-banner" id="toast"><span id="toastMsg">✨</span></div>
 
   <script>
     // ==========================================
-    // CONFIGURATION & DATA SOURCE
-    // ==========================================
     // PASTE YOUR PUBLISHED GOOGLE SHEET CSV LINK HERE:
     const SHEET_CSV_URL = "https://script.google.com/macros/s/AKfycbzK0kHEOXN2vTz4CypxBoKjD5kbJ_4ckdn_MSHXq7yOs-CxB4toahwUVB28y9utY8tpKQ/exec";
+    // ==========================================
 
-    // Built-in offline fallback data from Family_Chore_Tracker_and_Dinner_Menu
     let rawSheetData = [
       { Child: 'Harper', Category: 'Morning', Step: 1, Task: 'Wake up & make bed', Minutes: 5, Emoji: '🛏️' },
       { Child: 'Harper', Category: 'Morning', Step: 2, Task: 'Get dressed', Minutes: 5, Emoji: '👕' },
       { Child: 'Harper', Category: 'Morning', Step: 3, Task: 'Eat breakfast & vitamins', Minutes: 10, Emoji: '🥣' },
       { Child: 'Harper', Category: 'Morning', Step: 4, Task: 'Brush teeth & style hair', Minutes: 5, Emoji: '🪥' },
-      { Child: 'Harper', Category: 'Morning', Step: 5, Task: 'Pack backpack & water bottle', Minutes: 5, Emoji: '🎒' },
-
-      { Child: 'Harper', Category: 'Bedtime', Step: 1, Task: '20 minutes reading', Minutes: 20, Emoji: '📖' },
-      { Child: 'Harper', Category: 'Bedtime', Step: 2, Task: 'Lay out clothes for tomorrow', Minutes: 5, Emoji: '👗' },
-      { Child: 'Harper', Category: 'Bedtime', Step: 3, Task: 'Brush teeth & floss', Minutes: 5, Emoji: '🪥' },
-      { Child: 'Harper', Category: 'Bedtime', Step: 4, Task: 'Clear bedroom floor', Minutes: 5, Emoji: '🧸' },
-      { Child: 'Harper', Category: 'Bedtime', Step: 5, Task: 'In bed & lights out', Minutes: 5, Emoji: '🌙' },
-
-      { Child: 'Harper', Category: 'Chores', Step: 1, Task: 'Feed pets & water bowls', Minutes: 5, Emoji: '🐾' },
-      { Child: 'Harper', Category: 'Chores', Step: 2, Task: 'Empty small bathroom trash', Minutes: 5, Emoji: '🗑️' },
-      { Child: 'Harper', Category: 'Chores', Step: 3, Task: 'Clear dining table & wipe', Minutes: 5, Emoji: '🍽️' },
-      { Child: 'Harper', Category: 'Chores', Step: 4, Task: 'Sort & match laundry socks', Minutes: 10, Emoji: '🧦' },
-
+      { Child: 'Harper', Category: 'Morning', Step: 5, Task: 'Pack backpack', Minutes: 5, Emoji: '🎒' },
       { Child: 'Haisley', Category: 'Morning', Step: 1, Task: 'Potty & wash face', Minutes: 5, Emoji: '🧼' },
       { Child: 'Haisley', Category: 'Morning', Step: 2, Task: 'Get dressed', Minutes: 5, Emoji: '👕' },
       { Child: 'Haisley', Category: 'Morning', Step: 3, Task: 'Eat breakfast', Minutes: 10, Emoji: '🥣' },
       { Child: 'Haisley', Category: 'Morning', Step: 4, Task: 'Brush teeth', Minutes: 5, Emoji: '🪥' },
-      { Child: 'Haisley', Category: 'Morning', Step: 5, Task: 'Shoes by front door', Minutes: 5, Emoji: '👟' },
-
-      { Child: 'Haisley', Category: 'Bedtime', Step: 1, Task: 'Pick up 5 toys into bin', Minutes: 5, Emoji: '🧸' },
-      { Child: 'Haisley', Category: 'Bedtime', Step: 2, Task: 'Pajamas on', Minutes: 5, Emoji: '👚' },
-      { Child: 'Haisley', Category: 'Bedtime', Step: 3, Task: 'Brush teeth', Minutes: 5, Emoji: '🪥' },
-      { Child: 'Haisley', Category: 'Bedtime', Step: 4, Task: 'Pick 2 bedtime stories', Minutes: 10, Emoji: '📚' },
-      { Child: 'Haisley', Category: 'Bedtime', Step: 5, Task: 'In bed & tuck-in', Minutes: 5, Emoji: '🌙' },
-
-      { Child: 'Haisley', Category: 'Chores', Step: 1, Task: 'Pick up 5 toys off floor', Minutes: 5, Emoji: '🧸' },
-      { Child: 'Haisley', Category: 'Chores', Step: 2, Task: 'Shoes & coats in cubby', Minutes: 5, Emoji: '👟' },
-      { Child: 'Haisley', Category: 'Chores', Step: 3, Task: 'Wipe placemats after meals', Minutes: 5, Emoji: '🧽' },
-      { Child: 'Haisley', Category: 'Chores', Step: 4, Task: 'Set napkins & silverware', Minutes: 5, Emoji: '🍴' }
+      { Child: 'Haisley', Category: 'Morning', Step: 5, Task: 'Shoes by front door', Minutes: 5, Emoji: '👟' }
     ];
 
     let currentMode = 'Morning';
-    let choreQuota = 2;
-    let lastAction = null;
     let toastTimeout = null;
     let wakeLockSentinel = null;
+    let audioCtx = null;
 
     let appState = {
-      Harper: { steps: [], activeIdx: 0, stepRemaining: 0, stepTotal: 0, missionTotal: 0, missionRemaining: 0, isRunning: false, isFreeTime: false, isInspecting: false, interval: null, avatar: '🐱' },
-      Haisley: { steps: [], activeIdx: 0, stepRemaining: 0, stepTotal: 0, missionTotal: 0, missionRemaining: 0, isRunning: false, isFreeTime: false, isInspecting: false, interval: null, avatar: '🐶' }
+      Harper: { steps: [], activeIdx: 0, stepRemaining: 0, stepTotal: 0, missionTotal: 0, missionRemaining: 0, bankedFreeTime: 0, isRunning: false, isFreeTime: false, isInspecting: false, interval: null, avatar: '🐱', isBlue: false },
+      Haisley: { steps: [], activeIdx: 0, stepRemaining: 0, stepTotal: 0, missionTotal: 0, missionRemaining: 0, bankedFreeTime: 0, isRunning: false, isFreeTime: false, isInspecting: false, interval: null, avatar: '🐶', isBlue: true }
     };
 
-    // ==========================================
-    // WEB AUDIO API - DISTINCT SIGNATURE CHIMES
-    // ==========================================
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // LOAD BANKED TIME
+    appState.Harper.bankedFreeTime = parseInt(localStorage.getItem('timy_harper_bank') || '0', 10);
+    appState.Haisley.bankedFreeTime = parseInt(localStorage.getItem('timy_haisley_bank') || '0', 10);
 
-    function playTone(freq, type, duration, delay = 0, gainLevel = 0.2) {
+    // ==========================================
+    // INITIALIZATION (AUDIO & WAKE LOCK)
+    // ==========================================
+    async function initQuest() {
+      document.getElementById('startOverlay').style.display = 'none';
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      requestWakeLock();
+      switchMode(getSmartMode());
+    }
+
+    async function requestWakeLock() {
+      if ('wakeLock' in navigator) {
+        try { wakeLockSentinel = await navigator.wakeLock.request('screen'); } catch (err) {}
+      }
+    }
+    document.addEventListener('visibilitychange', () => {
+      if (wakeLockSentinel !== null && document.visibilityState === 'visible') requestWakeLock();
+    });
+
+    // BEFOREUNLOAD SAFEGUARD
+    window.addEventListener('beforeunload', (e) => {
+      if (appState.Harper.isRunning || appState.Haisley.isRunning) {
+        e.preventDefault();
+        e.returnValue = 'Timers are currently running!';
+      }
+    });
+
+    // ==========================================
+    // AUDIO ENGINE
+    // ==========================================
+    function playTone(freq, type, duration, delay = 0) {
+      if (!audioCtx) return;
       setTimeout(() => {
         try {
           if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -656,7 +581,7 @@
           const gain = audioCtx.createGain();
           osc.type = type;
           osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-          gain.gain.setValueAtTime(gainLevel, audioCtx.currentTime);
+          gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
           gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
           osc.connect(gain);
           gain.connect(audioCtx.destination);
@@ -666,53 +591,31 @@
       }, delay);
     }
 
-    // Harper: Bright higher-pitched chime (Glockenspiel Major chord)
-    function chimeHarper() {
-      playTone(523.25, 'triangle', 0.4, 0, 0.25);   // C5
-      playTone(659.25, 'triangle', 0.4, 120, 0.25); // E5
-      playTone(783.99, 'sine', 0.7, 240, 0.3);      // G5
-    }
-    // Haisley: Warm, round lower chime (Marimba bouncy interval)
-    function chimeHaisley() {
-      playTone(349.23, 'sine', 0.35, 0, 0.3);       // F4
-      playTone(440.00, 'sine', 0.35, 120, 0.3);     // A4
-      playTone(523.25, 'triangle', 0.6, 240, 0.25); // C5
-    }
-
-    // 30-Second Friendly Warning Ticks
-    function warningHarper() {
-      playTone(783.99, 'sine', 0.15, 0, 0.15);
-      playTone(1046.50, 'sine', 0.25, 120, 0.2);
-    }
-    function warningHaisley() {
-      playTone(440.00, 'sine', 0.15, 0, 0.18);
-      playTone(587.33, 'sine', 0.25, 120, 0.22);
-    }
-
-    // ==========================================
-    // SCREEN WAKE LOCK (PREVENT TABLET SLEEP)
-    // ==========================================
-    async function requestWakeLock() {
-      if ('wakeLock' in navigator) {
-        try {
-          wakeLockSentinel = await navigator.wakeLock.request('screen');
-        } catch (err) {}
+    function chimeHarper() { playTone(523.25, 'triangle', 0.4, 0); playTone(659.25, 'triangle', 0.4, 120); playTone(783.99, 'sine', 0.7, 240); }
+    function chimeHaisley() { playTone(349.23, 'sine', 0.35, 0); playTone(440.00, 'sine', 0.35, 120); playTone(523.25, 'triangle', 0.6, 240); }
+    function warningHarper() { playTone(783.99, 'sine', 0.15, 0); playTone(1046.50, 'sine', 0.25, 120); }
+    function warningHaisley() { playTone(440.00, 'sine', 0.15, 0); playTone(587.33, 'sine', 0.25, 120); }
+    function speak(msg) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(msg);
+        utter.pitch = 1.25; utter.rate = 1.05;
+        window.speechSynthesis.speak(utter);
       }
     }
-    document.addEventListener('visibilitychange', () => {
-      if (wakeLockSentinel !== null && document.visibilityState === 'visible') {
-        requestWakeLock();
-      }
-    });
 
     // ==========================================
-    // GOOGLE SHEETS LIVE SYNC
+    // DATA SYNC & MODE SWITCH
     // ==========================================
+    function getSmartMode() {
+      const h = new Date().getHours();
+      if (h >= 6 && h < 11) return 'Morning';
+      if (h >= 11 && h < 18) return 'Chores';
+      return 'Bedtime';
+    }
+
     async function fetchSheetData() {
-      if (!SHEET_CSV_URL) {
-        setupMode(currentMode);
-        return;
-      }
+      if (!SHEET_CSV_URL) return;
       try {
         const resp = await fetch(SHEET_CSV_URL);
         const text = await resp.text();
@@ -722,32 +625,13 @@
           if (!rows[i] || rows[i].length < 4) continue;
           const [child, cat, step, task, mins, emoji] = rows[i];
           if (child && task) {
-            parsed.push({
-              Child: child.trim(),
-              Category: cat ? cat.trim() : 'Morning',
-              Step: parseInt(step) || 1,
-              Task: task.trim(),
-              Minutes: parseInt(mins) || 5,
-              Emoji: emoji ? emoji.trim() : '⭐'
-            });
+            parsed.push({ Child: child.trim(), Category: cat ? cat.trim() : 'Morning', Step: parseInt(step)||1, Task: task.trim(), Minutes: parseInt(mins)||5, Emoji: emoji ? emoji.trim() : '⭐' });
           }
         }
         if (parsed.length > 0) rawSheetData = parsed;
         setupMode(currentMode);
-        showToast('🔄 Synced fresh data from Google Sheet!');
-      } catch (err) {
-        setupMode(currentMode);
-      }
-    }
-
-    // ==========================================
-    // MODE SWITCHING & SETUP
-    // ==========================================
-    function getSmartMode() {
-      const h = new Date().getHours();
-      if (h >= 6 && h < 11) return 'Morning';
-      if (h >= 11 && h < 18) return 'Chores';
-      return 'Bedtime';
+        showToast('🔄 Synced with Google Sheets!');
+      } catch (err) {}
     }
 
     function switchMode(mode) {
@@ -762,18 +646,11 @@
       ['Harper', 'Haisley'].forEach(child => {
         const state = appState[child];
         clearInterval(state.interval);
-        state.interval = null;
-        state.isRunning = false;
-        state.isFreeTime = false;
-        state.isInspecting = false;
-        state.activeIdx = 0;
+        state.isRunning = false; state.isFreeTime = false; state.isInspecting = false; state.activeIdx = 0;
+        document.getElementById(`sandStream${child}`).style.opacity = '0';
 
         let available = rawSheetData.filter(d => d.Child.toLowerCase() === child.toLowerCase() && d.Category.toLowerCase() === mode.toLowerCase());
-
-        if (mode === 'Chores') {
-          available = [...available].sort(() => 0.5 - Math.random()).slice(0, choreQuota);
-        }
-
+        if (mode === 'Chores') available = [...available].sort(() => 0.5 - Math.random()).slice(0, 2);
         state.steps = available.map(a => ({ label: a.Task, icon: a.Emoji, minutes: a.Minutes }));
 
         let totalMins = state.steps.reduce((sum, s) => sum + s.minutes, 0);
@@ -784,81 +661,47 @@
           state.stepTotal = state.steps[0].minutes * 60;
           state.stepRemaining = state.stepTotal;
         }
-
         updateHourglass(child);
       });
       renderAll();
     }
 
-    function reRollChores() {
-      setupMode('Chores');
-      closeSettings();
-    }
-
     // ==========================================
-    // CURVED PATH & MILESTONE RENDERING
+    // RENDER ENGINE
     // ==========================================
-    function renderAll() {
-      renderTrack('Harper', 'svgHarper', 'canvasHarper');
-      renderTrack('Haisley', 'svgHaisley', 'canvasHaisley');
-    }
+    function renderAll() { renderTrack('Harper', 'svgHarper', 'canvasHarper'); renderTrack('Haisley', 'svgHaisley', 'canvasHaisley'); }
 
     function renderTrack(child, svgId, canvasId) {
       const svg = document.getElementById(svgId);
       const canvas = document.getElementById(canvasId);
       svg.innerHTML = '';
-
-      // Remove existing HTML floating labels
       canvas.querySelectorAll('.task-name-pill, .time-bubble').forEach(el => el.remove());
 
       const state = appState[child];
       const count = state.steps.length;
       if (count === 0) return;
 
-      // Distribute coordinates along a gentle S-curve across 1000px coordinate space
-      const startX = 70;
-      const endX = 820;
-      const stepX = (endX - startX) / (count - 1 || 1);
-
+      const startX = 70, endX = 820, stepX = (endX - startX) / (count - 1 || 1);
       const points = [];
       for (let i = 0; i < count; i++) {
-        const x = startX + i * stepX;
-        // Natural sine wave wave curve: alternating up and down
-        const y = 175 + Math.sin((i / (count - 1 || 1)) * Math.PI * 2) * 55;
-        points.push({ x, y });
+        points.push({ x: startX + i * stepX, y: 175 + Math.sin((i / (count - 1 || 1)) * Math.PI * 2) * 55 });
       }
 
-      // Draw Curvy Cobblestone Path Underneath
       let pathD = `M ${points[0].x} ${points[0].y}`;
       for (let i = 1; i < count; i++) {
-        const prev = points[i - 1];
-        const curr = points[i];
-        const midX = (prev.x + curr.x) / 2;
-        pathD += ` Q ${prev.x + (curr.x - prev.x) * 0.4} ${prev.y}, ${midX} ${(prev.y + curr.y) / 2} T ${curr.x} ${curr.y}`;
+        const prev = points[i - 1], curr = points[i];
+        pathD += ` Q ${prev.x + (curr.x - prev.x) * 0.4} ${prev.y}, ${(prev.x + curr.x)/2} ${(prev.y + curr.y)/2} T ${curr.x} ${curr.y}`;
       }
-      // Connect final stone to castle
       pathD += ` Q ${endX + 40} ${points[count-1].y}, 910 175`;
 
-      // Thick Base Path
       const basePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      basePath.setAttribute('d', pathD);
-      basePath.setAttribute('fill', 'none');
-      basePath.setAttribute('stroke', 'rgba(186, 160, 209, 0.7)');
-      basePath.setAttribute('stroke-width', '42');
-      basePath.setAttribute('stroke-linecap', 'round');
+      basePath.setAttribute('d', pathD); basePath.setAttribute('fill', 'none'); basePath.setAttribute('stroke', 'rgba(186, 160, 209, 0.7)'); basePath.setAttribute('stroke-width', '42'); basePath.setAttribute('stroke-linecap', 'round');
       svg.appendChild(basePath);
 
-      // Cobblestone Paver Outline
       const stonePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      stonePath.setAttribute('d', pathD);
-      stonePath.setAttribute('fill', 'none');
-      stonePath.setAttribute('stroke', '#ffffff');
-      stonePath.setAttribute('stroke-width', '24');
-      stonePath.setAttribute('stroke-dasharray', '14 8');
-      stonePath.setAttribute('stroke-linecap', 'round');
+      stonePath.setAttribute('d', pathD); stonePath.setAttribute('fill', 'none'); stonePath.setAttribute('stroke', '#ffffff'); stonePath.setAttribute('stroke-width', '24'); stonePath.setAttribute('stroke-dasharray', '14 8'); stonePath.setAttribute('stroke-linecap', 'round');
       svg.appendChild(stonePath);
 
-      // Draw Interactive Stepping Stones
       points.forEach((pt, idx) => {
         const step = state.steps[idx];
         const isActive = idx === state.activeIdx;
@@ -867,279 +710,167 @@
         const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         g.setAttribute('class', `stone-group ${isActive ? 'active' : ''} ${isDone ? 'done' : ''}`);
 
-        // Big Touch-and-Hold Target (Safeguard)
         let holdTimer = null;
-        g.addEventListener('pointerdown', (e) => {
-          if (idx === state.activeIdx && !state.isInspecting && !state.isFreeTime) {
-            holdTimer = setTimeout(() => finishStep(child, idx), 500);
-          }
-        });
-        g.addEventListener('pointerup', () => clearTimeout(holdTimer));
-        g.addEventListener('pointerleave', () => clearTimeout(holdTimer));
+        g.addEventListener('pointerdown', () => { if (isActive && !state.isInspecting && !state.isFreeTime) holdTimer = setTimeout(() => finishStep(child, idx), 500); });
+        g.addEventListener('pointerup', () => clearTimeout(holdTimer)); g.addEventListener('pointerleave', () => clearTimeout(holdTimer));
 
-        // Stone Base Circle
         const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('cx', pt.x);
-        circle.setAttribute('cy', pt.y);
-        circle.setAttribute('r', '32');
-        circle.setAttribute('class', 'stone-disc');
+        circle.setAttribute('cx', pt.x); circle.setAttribute('cy', pt.y); circle.setAttribute('r', '32'); circle.setAttribute('class', 'stone-disc');
         g.appendChild(circle);
 
-        // Circular Task Countdown Gauge on Active Stone
         if (isActive && !state.isFreeTime && !state.isInspecting) {
           const bgGauge = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          bgGauge.setAttribute('cx', pt.x);
-          bgGauge.setAttribute('cy', pt.y);
-          bgGauge.setAttribute('r', '32');
-          bgGauge.setAttribute('class', 'task-timer-bg');
+          bgGauge.setAttribute('cx', pt.x); bgGauge.setAttribute('cy', pt.y); bgGauge.setAttribute('r', '32'); bgGauge.setAttribute('class', 'task-timer-bg');
           g.appendChild(bgGauge);
-
           const fgGauge = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          fgGauge.setAttribute('cx', pt.x);
-          fgGauge.setAttribute('cy', pt.y);
-          fgGauge.setAttribute('r', '32');
-          fgGauge.setAttribute('class', 'task-timer-gauge');
-          fgGauge.setAttribute('id', `gauge_${child}`);
-          const circumference = 2 * Math.PI * 32;
-          fgGauge.setAttribute('stroke-dasharray', circumference);
-          const fraction = state.stepTotal > 0 ? (state.stepRemaining / state.stepTotal) : 0;
-          fgGauge.setAttribute('stroke-dashoffset', circumference * (1 - fraction));
+          fgGauge.setAttribute('cx', pt.x); fgGauge.setAttribute('cy', pt.y); fgGauge.setAttribute('r', '32'); fgGauge.setAttribute('class', 'task-timer-gauge'); fgGauge.setAttribute('id', `gauge_${child}`);
+          fgGauge.setAttribute('stroke-dasharray', 2 * Math.PI * 32); fgGauge.setAttribute('stroke-dashoffset', (2 * Math.PI * 32) * (1 - (state.stepTotal>0 ? state.stepRemaining/state.stepTotal : 0)));
           g.appendChild(fgGauge);
         }
 
-        // Center Emoji or Checkmark
         const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', pt.x);
-        text.setAttribute('y', pt.y + 8);
-        text.setAttribute('text-anchor', 'middle');
-        text.setAttribute('font-size', '24');
-        text.textContent = isDone ? '⭐' : step.icon;
+        text.setAttribute('x', pt.x); text.setAttribute('y', pt.y + 8); text.setAttribute('text-anchor', 'middle'); text.setAttribute('font-size', '24'); text.textContent = isDone ? '⭐' : step.icon;
         g.appendChild(text);
 
-        // Avatar Token sitting on active stone
         if (isActive) {
           const avatarG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-          const tokenCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          tokenCircle.setAttribute('cx', pt.x + 22);
-          tokenCircle.setAttribute('cy', pt.y - 22);
-          tokenCircle.setAttribute('r', '17');
-          tokenCircle.setAttribute('fill', '#ffeb3b');
-          tokenCircle.setAttribute('stroke', '#ffffff');
-          tokenCircle.setAttribute('stroke-width', '2.5');
-          avatarG.appendChild(tokenCircle);
-
-          const tokenTxt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          tokenTxt.setAttribute('x', pt.x + 22);
-          tokenTxt.setAttribute('y', pt.y - 16);
-          tokenTxt.setAttribute('text-anchor', 'middle');
-          tokenTxt.setAttribute('font-size', '15');
-          tokenTxt.textContent = state.avatar;
-          avatarG.appendChild(tokenTxt);
+          const tCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          tCircle.setAttribute('cx', pt.x + 22); tCircle.setAttribute('cy', pt.y - 22); tCircle.setAttribute('r', '17'); tCircle.setAttribute('fill', '#ffeb3b'); tCircle.setAttribute('stroke', '#ffffff'); tCircle.setAttribute('stroke-width', '2.5');
+          avatarG.appendChild(tCircle);
+          const tTxt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          tTxt.setAttribute('x', pt.x + 22); tTxt.setAttribute('y', pt.y - 16); tTxt.setAttribute('text-anchor', 'middle'); tTxt.setAttribute('font-size', '15'); tTxt.textContent = state.avatar;
+          if (state.isBlue) tTxt.setAttribute('class', 'avatar-haisley');
+          avatarG.appendChild(tTxt);
           g.appendChild(avatarG);
         }
-
         svg.appendChild(g);
 
-        // Position Floating HTML Pills (Name above, Countdown below)
-        const leftPercent = (pt.x / 1000) * 100;
-        const topPercent = (pt.y / 350) * 100;
-
         if (isActive) {
-          const namePill = document.createElement('div');
-          namePill.className = 'task-name-pill';
-          namePill.style.left = `${leftPercent}%`;
-          namePill.style.top = `calc(${topPercent}% - 42px)`;
-          namePill.innerHTML = `${step.label} ${step.icon}`;
+          const namePill = document.createElement('div'); namePill.className = 'task-name-pill';
+          namePill.style.left = `${(pt.x/1000)*100}%`; namePill.style.top = `calc(${(pt.y/350)*100}% - 42px)`; namePill.innerHTML = `${step.label} ${step.icon}`;
           canvas.appendChild(namePill);
-
-          const timeBubble = document.createElement('div');
-          timeBubble.className = 'time-bubble';
-          timeBubble.id = `timeBubble_${child}`;
-          timeBubble.style.left = `${leftPercent}%`;
-          timeBubble.style.top = `calc(${topPercent}% + 42px)`;
-          const sM = Math.floor(state.stepRemaining / 60);
-          const sS = state.stepRemaining % 60;
-          timeBubble.textContent = `${String(sM).padStart(2,'0')}:${String(sS).padStart(2,'0')}`;
+          const timeBubble = document.createElement('div'); timeBubble.className = 'time-bubble'; timeBubble.id = `timeBubble_${child}`;
+          timeBubble.style.left = `${(pt.x/1000)*100}%`; timeBubble.style.top = `calc(${(pt.y/350)*100}% + 42px)`;
+          timeBubble.textContent = `${String(Math.floor(state.stepRemaining/60)).padStart(2,'0')}:${String(state.stepRemaining%60).padStart(2,'0')}`;
           canvas.appendChild(timeBubble);
         }
       });
 
-      // Update Castle End States
       const laneEl = document.getElementById(`lane${child}`);
-      const inspectBtn = laneEl.querySelector(`#inspect${child}`);
-      const freeBadge = laneEl.querySelector(`#free${child}`);
-      const rewardBadge = laneEl.querySelector(`#badge${child}`);
-
-      if (state.isInspecting) {
-        inspectBtn.style.display = 'block';
-        rewardBadge.style.display = 'none';
-        freeBadge.style.display = 'none';
-      } else if (state.isFreeTime) {
-        inspectBtn.style.display = 'none';
-        rewardBadge.style.display = 'none';
-        freeBadge.style.display = 'block';
-      } else {
-        inspectBtn.style.display = 'none';
-        rewardBadge.style.display = 'block';
-        freeBadge.style.display = 'none';
-      }
+      laneEl.querySelector(`#inspect${child}`).style.display = state.isInspecting ? 'flex' : 'none';
+      laneEl.querySelector(`#free${child}`).style.display = state.isFreeTime ? 'block' : 'none';
+      laneEl.querySelector(`#badge${child}`).style.display = (!state.isInspecting && !state.isFreeTime) ? 'block' : 'none';
     }
 
     // ==========================================
-    // STEP COMPLETION & VOICE PRAISE
+    // LOGIC & TIMERS
     // ==========================================
     function finishStep(child, idx) {
       const state = appState[child];
-      lastAction = { child, idx };
       state.activeIdx++;
-
-      // Play child's signature sound
-      if (child === 'Harper') chimeHarper();
-      else chimeHaisley();
-
-      const taskName = state.steps[idx].label;
-      speak(`${child} finished ${taskName}! Awesome job!`);
-      showToast(`🎉 ${child} finished: ${taskName}!`);
+      if (child === 'Harper') chimeHarper(); else chimeHaisley();
+      showToast(`🎉 ${child} finished: ${state.steps[idx].label}!`);
+      speak(`${child} finished ${state.steps[idx].label}!`);
 
       if (state.activeIdx < state.steps.length) {
         state.stepTotal = state.steps[state.activeIdx].minutes * 60;
         state.stepRemaining = state.stepTotal;
       } else {
-        // Routine Complete -> Parent Inspection Pause
-        clearInterval(state.interval);
-        state.isRunning = false;
-        state.isInspecting = true;
-        speak(`Hooray! ${child} finished all tasks. Parent inspection time!`);
-        showToast(`👀 ${child} finished! Tap "Inspect" to unlock Free Time.`);
+        clearInterval(state.interval); state.isRunning = false; state.isInspecting = true;
+        document.getElementById(`sandStream${child}`).style.opacity = '0';
+        speak(`Hooray! Calling Mom and Dad for inspection!`);
       }
-      renderAll();
-      updateHourglass(child);
+      renderAll(); updateHourglass(child);
     }
 
     function approveInspection(child) {
       const state = appState[child];
       state.isInspecting = false;
       state.isFreeTime = true;
-      if (child === 'Harper') chimeHarper();
-      else chimeHaisley();
-      speak(`Inspection approved! Enjoy your free time, ${child}!`);
-      startTimer(child);
-      renderAll();
-      updateHourglass(child);
+      if (state.missionRemaining > 0) {
+        state.bankedFreeTime += state.missionRemaining; // Bank leftover time
+        localStorage.setItem(`timy_${child.toLowerCase()}_bank`, state.bankedFreeTime);
+      }
+      if (child === 'Harper') chimeHarper(); else chimeHaisley();
+      speak(`Approved! Enjoy your free time, ${child}!`);
+      startTimer(child); renderAll(); updateHourglass(child);
     }
 
-    function undoStep() {
-      if (lastAction) {
-        const state = appState[lastAction.child];
-        state.activeIdx = lastAction.idx;
+    function tryAgain(child) {
+      const state = appState[child];
+      if (state.activeIdx > 0) {
+        state.activeIdx--;
         state.isInspecting = false;
-        state.isFreeTime = false;
         state.stepTotal = state.steps[state.activeIdx].minutes * 60;
         state.stepRemaining = state.stepTotal;
-        hideToast();
-        renderAll();
-        updateHourglass(lastAction.child);
-        lastAction = null;
+        showToast(`↩️ Let's try that last step again!`);
+        renderAll(); updateHourglass(child);
       }
     }
 
-    // ==========================================
-    // TIMERS & HOURGLASS PHYSICS
-    // ==========================================
     function toggleTimer(child) {
-      requestWakeLock();
       const state = appState[child];
       if (state.isRunning) {
-        clearInterval(state.interval);
-        state.isRunning = false;
+        clearInterval(state.interval); state.isRunning = false;
         document.getElementById(`sandStream${child}`).style.opacity = '0';
-      } else {
-        startTimer(child);
-      }
+      } else startTimer(child);
     }
 
     function startTimer(child) {
       const state = appState[child];
+      if (state.isInspecting || (state.isFreeTime && state.bankedFreeTime <= 0)) return;
       state.isRunning = true;
       if (state.interval) clearInterval(state.interval);
       document.getElementById(`sandStream${child}`).style.opacity = '1';
 
       state.interval = setInterval(() => {
-        if (state.missionRemaining > 0) {
-          state.missionRemaining--;
-        }
-
-        if (!state.isFreeTime && state.stepRemaining > 0) {
-          state.stepRemaining--;
-          // 30-Second Warning Chime
-          if (state.stepRemaining === 30) {
-            if (child === 'Harper') warningHarper();
-            else warningHaisley();
+        if (state.isFreeTime) {
+          if (state.bankedFreeTime > 0) {
+            state.bankedFreeTime--;
+            if (state.bankedFreeTime % 5 === 0) localStorage.setItem(`timy_${child.toLowerCase()}_bank`, state.bankedFreeTime);
           }
+          if (state.bankedFreeTime <= 0) {
+            clearInterval(state.interval); state.isRunning = false;
+            document.getElementById(`sandStream${child}`).style.opacity = '0';
+            speak(`${child}'s free time is finished!`);
+          }
+        } else {
+          if (state.missionRemaining > 0) state.missionRemaining--;
+          if (state.stepRemaining > 0) {
+            state.stepRemaining--;
+            if (state.stepRemaining === 30) (child === 'Harper') ? warningHarper() : warningHaisley();
+          }
+          updateStepTimer(child);
         }
-
         updateHourglass(child);
-        updateStepTimer(child);
-
-        if (state.isFreeTime && state.missionRemaining <= 0) {
-          clearInterval(state.interval);
-          state.isRunning = false;
-          document.getElementById(`sandStream${child}`).style.opacity = '0';
-          speak(`${child}'s free time is finished!`);
-        }
       }, 1000);
     }
 
     function updateStepTimer(child) {
       const state = appState[child];
       const bubble = document.getElementById(`timeBubble_${child}`);
-      if (bubble) {
-        const sM = Math.floor(state.stepRemaining / 60);
-        const sS = state.stepRemaining % 60;
-        bubble.textContent = `${String(sM).padStart(2,'0')}:${String(sS).padStart(2,'0')}`;
-      }
-
+      if (bubble) bubble.textContent = `${String(Math.floor(state.stepRemaining/60)).padStart(2,'0')}:${String(state.stepRemaining%60).padStart(2,'0')}`;
       const gauge = document.getElementById(`gauge_${child}`);
-      if (gauge && state.stepTotal > 0) {
-        const circumference = 2 * Math.PI * 32;
-        const fraction = state.stepRemaining / state.stepTotal;
-        gauge.style.strokeDashoffset = circumference * (1 - fraction);
-      }
+      if (gauge && state.stepTotal > 0) gauge.style.strokeDashoffset = (2 * Math.PI * 32) * (1 - (state.stepRemaining / state.stepTotal));
     }
 
     function updateHourglass(child) {
       const state = appState[child];
       const pill = document.getElementById(`totalPill${child}`);
+      const dispSecs = state.isFreeTime ? state.bankedFreeTime : state.missionRemaining;
+      
+      pill.textContent = state.isFreeTime 
+        ? `Free: ${Math.floor(dispSecs/60)}:${String(dispSecs%60).padStart(2,'0')}` 
+        : `Total: ${Math.floor(dispSecs/60)}:${String(dispSecs%60).padStart(2,'0')}`;
 
-      const tM = Math.floor(state.missionRemaining / 60);
-      const tS = state.missionRemaining % 60;
-      pill.textContent = state.isFreeTime ? `Free: ${tM}:${String(tS).padStart(2,'0')}` : `Total: ${tM}:${String(tS).padStart(2,'0')}`;
+      let ratio = 0;
+      if (state.isFreeTime) ratio = Math.min(1, state.bankedFreeTime / 1800); // 30min max scale for free time glass
+      else ratio = state.missionTotal > 0 ? (state.missionRemaining / state.missionTotal) : 0;
 
-      // Sand Level Geometry
-      const ratio = state.missionTotal > 0 ? (state.missionRemaining / state.missionTotal) : 0;
-      const topSand = document.getElementById(`sandTop${child}`);
-      const bottomSand = document.getElementById(`sandBottom${child}`);
-
-      // Top Bulb drains from top down (y=20 down to y=49)
       const topY = 49 - (29 * ratio);
-      topSand.setAttribute('d', `M 20 ${topY} Q 20 48, 40 49 Q 60 48, 60 ${topY} Z`);
-
-      // Bottom Bulb fills from bottom up (y=85 up to y=62)
+      document.getElementById(`sandTop${child}`).setAttribute('d', `M 20 ${topY} Q 20 48, 40 49 Q 60 48, 60 ${topY} Z`);
       const bottomY = 85 - (23 * (1 - ratio));
-      bottomSand.setAttribute('d', `M 20 85 Q 40 ${bottomY}, 60 85 Z`);
-    }
-
-    // ==========================================
-    // UTILITIES & FEEDBACK
-    // ==========================================
-    function speak(msg) {
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(msg);
-        utter.pitch = 1.25;
-        utter.rate = 1.05;
-        window.speechSynthesis.speak(utter);
-      }
+      document.getElementById(`sandBottom${child}`).setAttribute('d', `M 20 85 Q 40 ${bottomY}, 60 85 Z`);
     }
 
     function showToast(text) {
@@ -1147,20 +878,10 @@
       document.getElementById('toastMsg').textContent = text;
       toast.classList.add('show');
       clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(hideToast, 4000);
+      toastTimeout = setTimeout(() => toast.classList.remove('show'), 4000);
     }
-    function hideToast() {
-      document.getElementById('toast').classList.remove('show');
-    }
-
-    function openSettings() { document.getElementById('parentModal').style.display = 'flex'; }
-    function closeSettings() { document.getElementById('parentModal').style.display = 'none'; }
-    function setQuota(val) { choreQuota = parseInt(val, 10); }
 
     window.addEventListener('resize', () => renderAll());
-
-    // Boot app with smart time-of-day
-    switchMode(getSmartMode());
   </script>
 </body>
 </html>
