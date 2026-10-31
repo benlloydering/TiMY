@@ -180,7 +180,7 @@
     </div>
 
     <script>
-        // YOUR LIVE DATA URL
+        // BRAND NEW LIVE DATA URL
         const scriptUrl = "https://script.google.com/macros/s/AKfycbziEbryHj3F4eKYr8PWMc16BAFjbj8NJJvHs88M9eYo28Qy2mL27dmI7COTPkx6UCBxZQ/exec";
         
         let spreadsheetData = [];
@@ -196,13 +196,21 @@
         window.onload = async () => {
             const btn = document.getElementById('start-btn');
             try {
+                // Fetch with explicit redirect follow
                 const response = await fetch(scriptUrl + "?action=GET_TODAY_CHORES", { redirect: "follow" });
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
-                spreadsheetData = await response.json();
+                let result = await response.json();
+                
+                // If our Apps Script caught an internal error (like missing tab), it sends it here
+                if (result.status === "CRASH") {
+                    throw new Error("Backend Error: " + result.error);
+                }
+
+                spreadsheetData = result;
                 
                 btn.innerText = "Start TiMY Quest";
                 btn.disabled = false;
