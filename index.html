@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TiMY Quest - Dual Track</title>
     <style>
-        /* CSS Variables */
         :root {
             --harper-bg: linear-gradient(135deg, #fce4ec 0%, #e0f7fa 100%);
             --haisley-bg: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
@@ -34,11 +33,26 @@
         }
         .start-btn:disabled { background: #555; border-color: #777; cursor: not-allowed; }
 
-        /* --- Settings Header & Modal --- */
-        .header { display: flex; justify-content: space-between; align-items: center; color: white; padding: 0 20px; }
+        /* --- Header & Routine Mode Tabs --- */
+        .header { display: flex; justify-content: space-between; align-items: center; color: white; padding: 0 10px; }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .header h2 { margin: 0; font-size: 22px; }
+
+        .tabs-container {
+            display: flex; background: rgba(255, 255, 255, 0.15); border-radius: 30px; padding: 4px; gap: 5px;
+        }
+        .tab-btn {
+            background: transparent; border: none; color: #ddd; padding: 8px 16px;
+            font-size: 13px; font-weight: bold; border-radius: 20px; cursor: pointer; transition: all 0.2s;
+        }
+        .tab-btn.active {
+            background: #ff4081; color: white; box-shadow: 0 2px 8px rgba(255, 64, 129, 0.4);
+        }
+
         .gear-btn { background: none; border: none; font-size: 24px; cursor: pointer; transition: transform 0.2s; }
         .gear-btn:active { transform: rotate(45deg); }
         
+        /* --- Settings Modal --- */
         #settings-modal {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: white; padding: 20px; border-radius: 15px; z-index: 2000;
@@ -85,7 +99,7 @@
             font-weight: bold; font-size: 18px; color: #333;
         }
 
-        /* --- The Straight Line Path --- */
+        /* --- Straight Line Path --- */
         .path-container {
             display: flex; align-items: center; flex: 1; position: relative;
             padding-left: 20px; min-width: 600px;
@@ -121,7 +135,6 @@
         .castle-node .node-circle { background: transparent; border: none; font-size: 60px; box-shadow: none; }
         
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 202, 40, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 202, 40, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 202, 40, 0); } }
-
     </style>
 </head>
 <body>
@@ -141,9 +154,16 @@
         <button onclick="closeSettings()" style="background:#999;">Cancel</button>
     </div>
 
-    <!-- Header -->
+    <!-- Header with Routine Switcher Tabs -->
     <div class="header">
-        <h2>TiMY Quest</h2>
+        <div class="header-left">
+            <h2>TiMY Quest</h2>
+            <div class="tabs-container">
+                <button class="tab-btn active" id="tab-morning" onclick="setRoutineMode('morning')">☀️ Morning</button>
+                <button class="tab-btn" id="tab-chores" onclick="setRoutineMode('chores')">⭐ Chore Challenge</button>
+                <button class="tab-btn" id="tab-bedtime" onclick="setRoutineMode('bedtime')">🌙 Bedtime</button>
+            </div>
+        </div>
         <div>
             <button class="gear-btn" onclick="openSettings()">⚙️</button>
         </div>
@@ -180,45 +200,41 @@
     </div>
 
     <script>
-        // BRAND NEW LIVE DATA URL
         const scriptUrl = "https://script.google.com/macros/s/AKfycbziEbryHj3F4eKYr8PWMc16BAFjbj8NJJvHs88M9eYo28Qy2mL27dmI7COTPkx6UCBxZQ/exec";
         
         let spreadsheetData = [];
         let synth = window.speechSynthesis;
         let globalChoreTarget = parseInt(localStorage.getItem('timyChoreCount')) || 3;
+        let currentMode = 'morning';
 
-        const morningTasks = [
-            { name: "Breakfast & Vitamins", emoji: "🥣", time: 10 },
-            { name: "Brush Teeth", emoji: "🪥", time: 5 }
-        ];
+        const routines = {
+            morning: [
+                { name: "Breakfast & Vitamins", emoji: "🥣", time: 10 },
+                { name: "Brush Teeth & Hair", emoji: "🪥", time: 5 },
+                { name: "Get Dressed", emoji: "👕", time: 5 }
+            ],
+            bedtime: [
+                { name: "Put on Pajamas", emoji: "🧸", time: 5 },
+                { name: "Brush Teeth", emoji: "🪥", time: 5 },
+                { name: "Story Time", emoji: "📖", time: 15 }
+            ]
+        };
 
-        // --- 1. Boot up and Fetch Data ---
         window.onload = async () => {
             const btn = document.getElementById('start-btn');
             try {
-                // Fetch with explicit redirect follow
                 const response = await fetch(scriptUrl + "?action=GET_TODAY_CHORES", { redirect: "follow" });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 let result = await response.json();
-                
-                // If our Apps Script caught an internal error (like missing tab), it sends it here
-                if (result.status === "CRASH") {
-                    throw new Error("Backend Error: " + result.error);
-                }
+                if (result.status === "CRASH") throw new Error(result.error);
 
                 spreadsheetData = result;
-                
                 btn.innerText = "Start TiMY Quest";
                 btn.disabled = false;
                 btn.onclick = startApp;
             } catch (error) {
                 console.error("Fetch Error:", error);
-                btn.innerText = "Error: " + error.message;
-                btn.style.fontSize = "14px";
+                btn.innerText = "Start TiMY Quest";
                 btn.disabled = false;
                 btn.onclick = startApp; 
             }
@@ -231,25 +247,28 @@
             buildTracks();
         }
 
-        // --- 2. The Smart Randomizer Logic ---
-        function generateDailyRoutine() {
+        function setRoutineMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab-${mode}`).classList.add('active');
+            buildTracks();
+        }
+
+        function generateChores() {
             let today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
             let selectedChores = [];
             let allChores = [...spreadsheetData];
 
             if (allChores.length === 0) {
-                // Fallback dummy data if connection fails
                 allChores = [
                     { name: "Make Bed", emoji: "🛏️", time: 5, mustDo: false, day: "Any" },
                     { name: "Read Book", emoji: "📚", time: 15, mustDo: false, day: "Any" }
                 ];
             }
 
-            // A. Must Do (Checkboxes)
             let mustDo = allChores.filter(c => c.mustDo);
             selectedChores.push(...mustDo);
 
-            // B. Today's Chores
             if (selectedChores.length < globalChoreTarget) {
                 let todaysChores = allChores.filter(c => c.day === today && !c.mustDo);
                 todaysChores.sort(() => 0.5 - Math.random()); 
@@ -257,7 +276,6 @@
                 selectedChores.push(...todaysChores.slice(0, needed));
             }
 
-            // C. "Any" Chores
             if (selectedChores.length < globalChoreTarget) {
                 let anyChores = allChores.filter(c => c.day === "Any" && !c.mustDo);
                 anyChores.sort(() => 0.5 - Math.random()); 
@@ -265,13 +283,21 @@
                 selectedChores.push(...anyChores.slice(0, needed));
             }
 
-            return [...morningTasks, ...selectedChores.slice(0, globalChoreTarget)];
+            return selectedChores.slice(0, globalChoreTarget);
         }
 
-        // --- 3. UI Rendering ---
         function buildTracks() {
-            renderTrack('harper-nodes', generateDailyRoutine()); 
-            renderTrack('haisley-nodes', generateDailyRoutine()); 
+            let tasks = [];
+            if (currentMode === 'morning') {
+                tasks = [...routines.morning, ...generateChores()];
+            } else if (currentMode === 'bedtime') {
+                tasks = [...routines.bedtime];
+            } else if (currentMode === 'chores') {
+                tasks = generateChores();
+            }
+
+            renderTrack('harper-nodes', tasks); 
+            renderTrack('haisley-nodes', tasks); 
         }
 
         function renderTrack(containerId, tasks) {
@@ -309,21 +335,11 @@
             }
         }
 
-        // --- Visual Donut Timer Update Helper ---
-        function updateDonut(child, percentage) {
-            let color = '#4caf50';
-            if (percentage < 50) color = '#ffeb3b';
-            if (percentage < 15) color = '#f44336';
-            document.getElementById(`${child}-donut`).style.background = 
-                `conic-gradient(${color} ${percentage}%, #e0e0e0 0)`;
-        }
-
         function celebrate(name) {
             let utter = new SpeechSynthesisUtterance(`Congratulations ${name}! You reached the castle!`);
             synth.speak(utter);
         }
 
-        // --- 4. Settings Logic ---
         function openSettings() {
             document.getElementById('chore-count-input').value = globalChoreTarget;
             document.getElementById('settings-modal').style.display = 'block';
