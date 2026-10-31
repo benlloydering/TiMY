@@ -42,7 +42,7 @@
         #settings-modal {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: white; padding: 20px; border-radius: 15px; z-index: 2000;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; color: #333;
         }
         #settings-modal h3 { margin-top: 0; }
         #settings-modal input { width: 60px; font-size: 20px; text-align: center; margin: 10px; }
@@ -70,7 +70,7 @@
         #harper-avatar { filter: hue-rotate(250deg) saturate(1.5); } 
         #haisley-avatar { filter: hue-rotate(180deg) saturate(2); }  
 
-        .profile-name { font-weight: bold; font-size: 16px; margin: 0; }
+        .profile-name { font-weight: bold; font-size: 16px; margin: 0; color: #333; }
         .profile-age { font-size: 12px; color: #666; margin: 0 0 10px 0; }
 
         .donut-container {
@@ -112,7 +112,7 @@
         
         .task-label {
             background: white; padding: 4px 8px; border-radius: 10px; font-size: 12px;
-            font-weight: bold; margin-top: 8px; text-align: center; max-width: 90px;
+            font-weight: bold; margin-top: 8px; text-align: center; max-width: 90px; color: #333;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         .task-time { font-size: 11px; color: #666; margin-top: 2px; font-weight: bold; }
@@ -187,7 +187,6 @@
         let synth = window.speechSynthesis;
         let globalChoreTarget = parseInt(localStorage.getItem('timyChoreCount')) || 3;
 
-        // Fixed morning tasks that happen every day before chores
         const morningTasks = [
             { name: "Breakfast & Vitamins", emoji: "🥣", time: 10 },
             { name: "Brush Teeth", emoji: "🪥", time: 5 }
@@ -197,27 +196,30 @@
         window.onload = async () => {
             const btn = document.getElementById('start-btn');
             try {
-                const response = await fetch(scriptUrl + "?action=GET_TODAY_CHORES");
+                const response = await fetch(scriptUrl + "?action=GET_TODAY_CHORES", { redirect: "follow" });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 spreadsheetData = await response.json();
                 
-                // Unlock the start button once data is loaded
                 btn.innerText = "Start TiMY Quest";
                 btn.disabled = false;
                 btn.onclick = startApp;
             } catch (error) {
                 console.error("Fetch Error:", error);
-                btn.innerText = "Error loading. Start Anyway?";
+                btn.innerText = "Error: " + error.message;
+                btn.style.fontSize = "14px";
                 btn.disabled = false;
-                btn.onclick = startApp;
+                btn.onclick = startApp; 
             }
         };
 
         function startApp() {
             document.getElementById('start-overlay').style.display = 'none';
-            // Silent speech to unlock audio engine
             let utter = new SpeechSynthesisUtterance("");
             synth.speak(utter); 
-            
             buildTracks();
         }
 
@@ -227,6 +229,14 @@
             let selectedChores = [];
             let allChores = [...spreadsheetData];
 
+            if (allChores.length === 0) {
+                // Fallback dummy data if connection fails
+                allChores = [
+                    { name: "Make Bed", emoji: "🛏️", time: 5, mustDo: false, day: "Any" },
+                    { name: "Read Book", emoji: "📚", time: 15, mustDo: false, day: "Any" }
+                ];
+            }
+
             // A. Must Do (Checkboxes)
             let mustDo = allChores.filter(c => c.mustDo);
             selectedChores.push(...mustDo);
@@ -234,7 +244,7 @@
             // B. Today's Chores
             if (selectedChores.length < globalChoreTarget) {
                 let todaysChores = allChores.filter(c => c.day === today && !c.mustDo);
-                todaysChores.sort(() => 0.5 - Math.random()); // Shuffle
+                todaysChores.sort(() => 0.5 - Math.random()); 
                 let needed = globalChoreTarget - selectedChores.length;
                 selectedChores.push(...todaysChores.slice(0, needed));
             }
@@ -242,12 +252,11 @@
             // C. "Any" Chores
             if (selectedChores.length < globalChoreTarget) {
                 let anyChores = allChores.filter(c => c.day === "Any" && !c.mustDo);
-                anyChores.sort(() => 0.5 - Math.random()); // Shuffle
+                anyChores.sort(() => 0.5 - Math.random()); 
                 let needed = globalChoreTarget - selectedChores.length;
                 selectedChores.push(...anyChores.slice(0, needed));
             }
 
-            // Combine morning tasks with selected chores up to the target amount
             return [...morningTasks, ...selectedChores.slice(0, globalChoreTarget)];
         }
 
@@ -290,6 +299,15 @@
             if (nextNode && nextNode.querySelector('.node-circle')) {
                 nextNode.querySelector('.node-circle').classList.add('active');
             }
+        }
+
+        // --- Visual Donut Timer Update Helper ---
+        function updateDonut(child, percentage) {
+            let color = '#4caf50';
+            if (percentage < 50) color = '#ffeb3b';
+            if (percentage < 15) color = '#f44336';
+            document.getElementById(`${child}-donut`).style.background = 
+                `conic-gradient(${color} ${percentage}%, #e0e0e0 0)`;
         }
 
         function celebrate(name) {
