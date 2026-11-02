@@ -85,17 +85,21 @@
         .total-timer-digits { font-size: 16px; font-weight: 900; color: #2c1a4d; }
         .total-timer-digits.overtime { color: #d32f2f; animation: blink 1.2s infinite; }
 
-        /* Task Donut Timer */
+        /* Task Donut Timer Block */
         .donut-container {
             width: 72px; height: 72px; border-radius: 50%;
             background: conic-gradient(#4caf50 100%, #e0e0e0 0);
             display: flex; justify-content: center; align-items: center;
-            margin-bottom: 6px; transition: background 0.2s linear;
+            margin-bottom: 2px; transition: background 0.2s linear;
         }
         .donut-inner {
             width: 56px; height: 56px; background: white; border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
             font-weight: 800; font-size: 14px; color: #2c1a4d;
+        }
+        .task-overtime-label {
+            font-size: 9px; font-weight: 800; color: #d32f2f; text-transform: uppercase;
+            min-height: 12px; margin-bottom: 4px;
         }
 
         /* Central Control Hub */
@@ -145,13 +149,8 @@
             white-space: nowrap;
             line-height: 1;
         }
-        .node-emoji.single {
-            font-size: 26px;
-        }
-        .node-emoji.double {
-            font-size: 20px;
-            letter-spacing: -1px;
-        }
+        .node-emoji.single { font-size: 26px; }
+        .node-emoji.double { font-size: 20px; letter-spacing: -1px; }
 
         /* Press-and-Hold Progress Ring */
         .hold-progress-svg {
@@ -167,9 +166,7 @@
             animation: fillRing 0.6s linear forwards;
         }
 
-        @keyframes fillRing {
-            to { stroke-dashoffset: 0; }
-        }
+        @keyframes fillRing { to { stroke-dashoffset: 0; } }
 
         .reroll-btn {
             position: absolute; top: -6px; right: -6px; background: #2196f3; color: white;
@@ -305,6 +302,7 @@
             <div class="donut-container" id="harper-donut">
                 <div class="donut-inner" id="harper-task-text">05:00</div>
             </div>
+            <div class="task-overtime-label" id="harper-task-ot-label"></div>
 
             <div class="timer-controls">
                 <button class="timer-ctrl-btn" id="harper-play-btn" onclick="toggleTimers('harper')">▶️</button>
@@ -338,6 +336,7 @@
             <div class="donut-container" id="haisley-donut">
                 <div class="donut-inner" id="haisley-task-text">05:00</div>
             </div>
+            <div class="task-overtime-label" id="haisley-task-ot-label"></div>
 
             <div class="timer-controls">
                 <button class="timer-ctrl-btn" id="haisley-play-btn" onclick="toggleTimers('haisley')">▶️</button>
@@ -379,8 +378,6 @@
                 taskSecondsRemaining: 300,
                 taskTotalSeconds: 300,
                 totalSecondsRemaining: 1800,
-                isOvertime: false,
-                overtimeSeconds: 0,
                 timerInterval: null,
                 isRunning: false,
                 bankedSeconds: 0,
@@ -392,8 +389,6 @@
                 taskSecondsRemaining: 300,
                 taskTotalSeconds: 300,
                 totalSecondsRemaining: 1800,
-                isOvertime: false,
-                overtimeSeconds: 0,
                 timerInterval: null,
                 isRunning: false,
                 bankedSeconds: 0,
@@ -401,7 +396,6 @@
             }
         };
 
-        // Grapheme-aware Emoji scaling detector
         function getEmojiClass(emojiStr) {
             if (!emojiStr) return 'single';
             try {
@@ -537,8 +531,6 @@
                 cState.approved = false;
                 
                 cState.totalSecondsRemaining = modeMinutes * 60;
-                cState.isOvertime = false;
-                cState.overtimeSeconds = 0;
 
                 setupTask(child, 0);
                 renderTrackUI(child);
@@ -559,7 +551,7 @@
             updateDisplays(child);
         }
 
-        // --- 4. Synchronized Dual Timer Engine ---
+        // --- 4. Synchronized Dual Timer Engine (Continuous Negative Counting) ---
         function toggleTimers(child) {
             const cState = state[child];
             if (cState.isRunning) {
@@ -577,24 +569,18 @@
 
             clearInterval(cState.timerInterval);
             cState.timerInterval = setInterval(() => {
-                if (cState.taskSecondsRemaining > 0) {
-                    cState.taskSecondsRemaining--;
-                } else {
-                    if (cState.taskTotalSeconds > 0) {
-                        speak(`${capitalize(child)}, time is up for this task!`);
-                    }
+                // 1. Decrement Task Timer (Continuously counts negative past 0)
+                cState.taskSecondsRemaining--;
+                if (cState.taskSecondsRemaining === 0) {
+                    const activeTask = cState.tasks[cState.activeIndex];
+                    const taskTitle = activeTask ? activeTask.name : "this task";
+                    speak(`${capitalize(child)}, time is up for ${taskTitle}!`);
                 }
 
-                if (!cState.isOvertime) {
-                    if (cState.totalSecondsRemaining > 0) {
-                        cState.totalSecondsRemaining--;
-                    } else {
-                        cState.isOvertime = true;
-                        cState.overtimeSeconds = 1;
-                        speak(`${capitalize(child)} is now in overtime!`);
-                    }
-                } else {
-                    cState.overtimeSeconds++;
+                // 2. Decrement Overall Timer (Continuously counts negative past 0)
+                cState.totalSecondsRemaining--;
+                if (cState.totalSecondsRemaining === 0) {
+                    speak(`${capitalize(child)}, total routine time is up!`);
                 }
 
                 updateDisplays(child);
@@ -611,6 +597,7 @@
 
         function resetTaskTimer(child) {
             const cState = state[child];
+            // Resets ONLY the task timer, leaving the overall timer running unaffected
             setupTask(child, cState.activeIndex);
             updateDisplays(child);
         }
@@ -618,37 +605,52 @@
         function updateDisplays(child) {
             const cState = state[child];
 
+            // 1. Overall Timer Display (Counts Negative)
             const totalTextEl = document.getElementById(`${child}-total-text`);
             const totalLabelEl = document.getElementById(`${child}-total-label`);
+            const isTotalOvertime = cState.totalSecondsRemaining < 0;
+            const absTotalSecs = Math.abs(cState.totalSecondsRemaining);
+            const om = Math.floor(absTotalSecs / 60);
+            const os = absTotalSecs % 60;
+            const totalTimeFormatted = `${isTotalOvertime ? '-' : ''}${String(om).padStart(2,'0')}:${String(os).padStart(2,'0')}`;
 
-            if (cState.isOvertime) {
+            if (isTotalOvertime) {
                 totalLabelEl.innerText = "OVERTIME";
                 totalLabelEl.style.color = "#d32f2f";
                 totalTextEl.classList.add("overtime");
-                const m = Math.floor(cState.overtimeSeconds / 60);
-                const s = cState.overtimeSeconds % 60;
-                totalTextEl.innerText = `+${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+                totalTextEl.innerText = totalTimeFormatted;
             } else {
                 totalLabelEl.innerText = "TOTAL TIME";
                 totalLabelEl.style.color = "#6a1b9a";
                 totalTextEl.classList.remove("overtime");
-                const m = Math.floor(cState.totalSecondsRemaining / 60);
-                const s = cState.totalSecondsRemaining % 60;
-                totalTextEl.innerText = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+                totalTextEl.innerText = totalTimeFormatted;
             }
 
+            // 2. Task Donut Timer Display (Counts Negative)
             const taskTextEl = document.getElementById(`${child}-task-text`);
-            const tm = Math.floor(cState.taskSecondsRemaining / 60);
-            const ts = cState.taskSecondsRemaining % 60;
-            taskTextEl.innerText = `${String(tm).padStart(2,'0')}:${String(ts).padStart(2,'0')}`;
+            const taskOvertimeBadge = document.getElementById(`${child}-task-ot-label`);
+            const isTaskOvertime = cState.taskSecondsRemaining < 0;
+            const absTaskSecs = Math.abs(cState.taskSecondsRemaining);
+            const tm = Math.floor(absTaskSecs / 60);
+            const ts = absTaskSecs % 60;
+            const taskTimeFormatted = `${isTaskOvertime ? '-' : ''}${String(tm).padStart(2,'0')}:${String(ts).padStart(2,'0')}`;
 
-            let pct = cState.taskTotalSeconds > 0 ? (cState.taskSecondsRemaining / cState.taskTotalSeconds) * 100 : 0;
-            let color = '#4caf50';
-            if (pct < 50) color = '#ffeb3b';
-            if (pct < 20) color = '#f44336';
+            taskTextEl.innerText = taskTimeFormatted;
 
-            document.getElementById(`${child}-donut`).style.background = 
-                `conic-gradient(${color} ${pct}%, #e0e0e0 0)`;
+            if (isTaskOvertime) {
+                taskTextEl.style.color = '#d32f2f';
+                if (taskOvertimeBadge) taskOvertimeBadge.innerText = "OVERTIME";
+                // Solid red donut ring in overtime
+                document.getElementById(`${child}-donut`).style.background = `conic-gradient(#f44336 100%, #f44336 0)`;
+            } else {
+                taskTextEl.style.color = '#2c1a4d';
+                if (taskOvertimeBadge) taskOvertimeBadge.innerText = "";
+                let pct = cState.taskTotalSeconds > 0 ? (cState.taskSecondsRemaining / cState.taskTotalSeconds) * 100 : 0;
+                let color = '#4caf50';
+                if (pct < 50) color = '#ffeb3b';
+                if (pct < 20) color = '#f44336';
+                document.getElementById(`${child}-donut`).style.background = `conic-gradient(${color} ${pct}%, #e0e0e0 0)`;
+            }
         }
 
         // --- 5. Press-and-Hold Touch Completion (~600ms) ---
@@ -702,6 +704,7 @@
             const cState = state[child];
             if (index !== cState.activeIndex) return;
 
+            // Bank only positive unused seconds
             if (cState.taskSecondsRemaining > 0) {
                 cState.bankedSeconds += cState.taskSecondsRemaining;
                 let bm = Math.floor(cState.bankedSeconds / 60);
@@ -717,6 +720,8 @@
                 pauseTimers(child);
                 document.getElementById(`${child}-task-text`).innerText = "DONE!";
                 document.getElementById(`${child}-donut`).style.background = `conic-gradient(#4caf50 100%, #e0e0e0 0)`;
+                const otBadge = document.getElementById(`${child}-task-ot-label`);
+                if (otBadge) otBadge.innerText = "";
                 speak(`${capitalize(child)} finished all tasks! Ready for parent inspection.`);
             }
             renderTrackUI(child);
