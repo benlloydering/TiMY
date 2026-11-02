@@ -113,11 +113,11 @@
 
         /* --- Path & Line --- */
         .path-container {
-            display: flex; align-items: center; flex: 1; position: relative;
-            padding-left: 10px; min-width: 620px;
+            display: flex; align-items: flex-start; flex: 1; position: relative;
+            padding-left: 10px; padding-top: 15px; min-width: 620px;
         }
         .track-line {
-            position: absolute; top: 50%; left: 0; right: 0; height: 12px;
+            position: absolute; top: 49px; left: 0; right: 0; height: 12px;
             background: var(--track-color); transform: translateY(-50%); z-index: 1;
             border-radius: 10px; border: 2px solid white;
         }
@@ -125,7 +125,7 @@
         /* --- Task Nodes --- */
         .task-node {
             position: relative; z-index: 2; display: flex; flex-direction: column;
-            align-items: center; margin-right: 36px;
+            align-items: center; margin-right: 42px;
         }
         .node-circle {
             width: 68px; height: 68px; border-radius: 50%; background: white;
@@ -163,12 +163,14 @@
         }
         .reroll-btn:active { transform: scale(0.9); }
         
+        /* Updated Multi-Line Word Wrapping */
         .task-label {
-            background: white; padding: 3px 8px; border-radius: 10px; font-size: 11px;
-            font-weight: 700; margin-top: 6px; text-align: center; max-width: 95px; color: #333;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.12); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            background: white; padding: 5px 8px; border-radius: 8px; font-size: 11px;
+            font-weight: 700; margin-top: 6px; text-align: center; width: 104px; color: #333;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+            white-space: normal; line-height: 1.25; word-wrap: break-word; overflow-wrap: break-word;
         }
-        .task-time { font-size: 10px; color: #555; margin-top: 2px; font-weight: 700; }
+        .task-time { font-size: 10px; color: #555; margin-top: 3px; font-weight: 700; }
 
         /* Castle Node */
         .castle-node .node-circle {
@@ -297,7 +299,7 @@
         </div>
         <div class="path-container">
             <div class="track-line"></div>
-            <div id="harper-nodes" style="display:flex; z-index: 2;"></div>
+            <div id="harper-nodes" style="display:flex; align-items:flex-start; z-index: 2;"></div>
             <div class="task-node castle-node" id="harper-castle">
                 <div class="status-badge" id="harper-castle-badge" style="display:none;">Ready!</div>
                 <div class="node-circle" onclick="handleCastleClick('harper')">🏰</div>
@@ -330,7 +332,7 @@
         </div>
         <div class="path-container">
             <div class="track-line"></div>
-            <div id="haisley-nodes" style="display:flex; z-index: 2;"></div>
+            <div id="haisley-nodes" style="display:flex; align-items:flex-start; z-index: 2;"></div>
             <div class="task-node castle-node" id="haisley-castle">
                 <div class="status-badge" id="haisley-castle-badge" style="display:none;">Ready!</div>
                 <div class="node-circle" onclick="handleCastleClick('haisley')">🏰</div>
@@ -360,14 +362,11 @@
             harper: {
                 tasks: [],
                 activeIndex: 0,
-                // Task Timer
                 taskSecondsRemaining: 300,
                 taskTotalSeconds: 300,
-                // Overall Timer
                 totalSecondsRemaining: 1800,
                 isOvertime: false,
                 overtimeSeconds: 0,
-                // Common Loop
                 timerInterval: null,
                 isRunning: false,
                 bankedSeconds: 0,
@@ -449,7 +448,7 @@
                 const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
                 let selected = [];
 
-                // 1. Must Do
+                // 1. Must Do Checkboxes
                 let mustDo = chorePool.filter(c => c.mustDo === true);
                 selected.push(...mustDo);
 
@@ -513,7 +512,6 @@
                 cState.bankedSeconds = 0;
                 cState.approved = false;
                 
-                // Set Overall Routine Timer
                 cState.totalSecondsRemaining = modeMinutes * 60;
                 cState.isOvertime = false;
                 cState.overtimeSeconds = 0;
@@ -559,7 +557,6 @@
                 if (cState.taskSecondsRemaining > 0) {
                     cState.taskSecondsRemaining--;
                 } else {
-                    // Task expired
                     if (cState.taskTotalSeconds > 0) {
                         speak(`${capitalize(child)}, time is up for this task!`);
                     }
@@ -592,7 +589,6 @@
 
         function resetTaskTimer(child) {
             const cState = state[child];
-            // Reset ONLY the task timer, leaves total timer untouched
             setupTask(child, cState.activeIndex);
             updateDisplays(child);
         }
@@ -667,7 +663,7 @@
                     const dx = Math.abs(e.touches[0].clientX - touchStartPos.x);
                     const dy = Math.abs(e.touches[0].clientY - touchStartPos.y);
                     if (dx > 10 || dy > 10) {
-                        cancelHold(); // Swiping/scrolling cancels completion
+                        cancelHold();
                     }
                 }
             };
@@ -686,7 +682,6 @@
             const cState = state[child];
             if (index !== cState.activeIndex) return;
 
-            // Bank leftover seconds
             if (cState.taskSecondsRemaining > 0) {
                 cState.bankedSeconds += cState.taskSecondsRemaining;
                 let bm = Math.floor(cState.bankedSeconds / 60);
@@ -769,7 +764,6 @@
             speak(`Parent approved! Fantastic job ${capitalize(child)}, enjoy your free time!`);
             renderTrackUI(child);
 
-            // Background logging to spreadsheet
             try {
                 let payload = {
                     action: "LOG_CHORE",
@@ -801,7 +795,6 @@
                 const nodeEl = document.createElement('div');
                 nodeEl.className = 'task-node';
 
-                // Node circle with SVG progress ring for press-and-hold
                 nodeEl.innerHTML = `
                     ${task.isChore && !isCompleted ? `<button class="reroll-btn" onclick="rerollChore('${child}', ${index})">🎲</button>` : ''}
                     <div class="node-circle ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}" id="${child}-node-${index}">
@@ -814,14 +807,12 @@
 
                 container.appendChild(nodeEl);
 
-                // Attach hold listeners only to active node
                 if (isActive) {
                     const circle = nodeEl.querySelector('.node-circle');
                     attachHoldHandlers(circle, child, index);
                 }
             });
 
-            // Castle Node Visuals
             const castle = document.getElementById(`${child}-castle`);
             const badge = document.getElementById(`${child}-castle-badge`);
             const allDone = cState.activeIndex >= cState.tasks.length;
