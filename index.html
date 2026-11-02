@@ -12,7 +12,7 @@
             --text-dark: #2c1a4d;
         }
 
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; -webkit-touch-callout: none; }
         
         body { 
             margin: 0; padding: 10px; background-color: #2c1a4d; height: 100vh;
@@ -63,10 +63,10 @@
         #harper-track { background: var(--harper-bg); }
         #haisley-track { background: var(--haisley-bg); }
 
-        /* --- Profile & Timer Card --- */
+        /* --- Profile & Synchronized Dual Timer Card --- */
         .profile-card {
             background: white; border-radius: 16px; padding: 10px;
-            text-align: center; width: 148px; box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            text-align: center; width: 154px; box-shadow: 0 4px 12px rgba(0,0,0,0.12);
             display: flex; flex-direction: column; align-items: center; z-index: 10;
             flex-shrink: 0;
         }
@@ -76,24 +76,33 @@
         #haisley-avatar { filter: hue-rotate(185deg) saturate(2.2); }  
 
         .profile-name { font-weight: 800; font-size: 15px; margin: 0; color: #2c1a4d; }
-        .profile-age { font-size: 11px; color: #666; margin: 0 0 6px 0; font-weight: 600; }
+        
+        /* Total Routine Timer Block */
+        .total-timer-box {
+            margin: 4px 0 6px 0; background: #f4effc; border-radius: 8px; padding: 3px 8px; width: 100%;
+        }
+        .total-timer-label { font-size: 9px; font-weight: 800; color: #6a1b9a; text-transform: uppercase; }
+        .total-timer-digits { font-size: 16px; font-weight: 900; color: #2c1a4d; }
+        .total-timer-digits.overtime { color: #d32f2f; animation: blink 1.2s infinite; }
 
+        /* Task Donut Timer */
         .donut-container {
-            width: 78px; height: 78px; border-radius: 50%;
+            width: 72px; height: 72px; border-radius: 50%;
             background: conic-gradient(#4caf50 100%, #e0e0e0 0);
             display: flex; justify-content: center; align-items: center;
             margin-bottom: 6px; transition: background 0.2s linear;
         }
         .donut-inner {
-            width: 62px; height: 62px; background: white; border-radius: 50%;
+            width: 56px; height: 56px; background: white; border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
-            font-weight: 800; font-size: 16px; color: #2c1a4d;
+            font-weight: 800; font-size: 14px; color: #2c1a4d;
         }
 
-        .timer-controls { display: flex; gap: 6px; }
+        /* Central Control Hub */
+        .timer-controls { display: flex; gap: 8px; justify-content: center; width: 100%; }
         .timer-ctrl-btn {
             background: #f0f0f0; border: 1px solid #ccc; border-radius: 8px;
-            padding: 4px 10px; font-size: 13px; cursor: pointer; font-weight: bold;
+            padding: 4px 10px; font-size: 14px; cursor: pointer; font-weight: bold;
         }
         .timer-ctrl-btn:active { background: #ddd; }
 
@@ -122,10 +131,29 @@
             width: 68px; height: 68px; border-radius: 50%; background: white;
             border: 4px solid #ddd; display: flex; justify-content: center; align-items: center;
             font-size: 26px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.18);
-            transition: transform 0.2s, border-color 0.3s, background-color 0.3s;
+            position: relative; transition: transform 0.2s, border-color 0.3s;
+            touch-action: none;
         }
         .node-circle.active { border-color: #ffca28; transform: scale(1.12); animation: pulse 2s infinite; }
         .node-circle.completed { background: #ffca28; border-color: #ff8f00; color: #fff; }
+
+        /* Press-and-Hold Progress Ring */
+        .hold-progress-svg {
+            position: absolute; top: -6px; left: -6px; width: 72px; height: 72px;
+            transform: rotate(-90deg); pointer-events: none; display: none;
+        }
+        .hold-progress-circle {
+            fill: none; stroke: #ff4081; stroke-width: 6; stroke-linecap: round;
+            stroke-dasharray: 200; stroke-dashoffset: 200;
+        }
+        .node-circle.holding .hold-progress-svg { display: block; }
+        .node-circle.holding .hold-progress-circle {
+            animation: fillRing 0.6s linear forwards;
+        }
+
+        @keyframes fillRing {
+            to { stroke-dashoffset: 0; }
+        }
 
         .reroll-btn {
             position: absolute; top: -6px; right: -6px; background: #2196f3; color: white;
@@ -165,17 +193,24 @@
             justify-content: center; align-items: center;
         }
         .modal-card {
-            background: white; padding: 22px 28px; border-radius: 18px; width: 340px;
+            background: white; padding: 22px 28px; border-radius: 18px; width: 360px;
             text-align: center; box-shadow: 0 12px 30px rgba(0,0,0,0.4); color: #333;
         }
-        .modal-card h3 { margin: 0 0 10px 0; color: #2c1a4d; font-size: 20px; }
-        .modal-card p { font-size: 13px; color: #555; margin: 4px 0 16px 0; }
-        .modal-actions { display: flex; justify-content: center; gap: 10px; }
+        .modal-card h3 { margin: 0 0 12px 0; color: #2c1a4d; font-size: 20px; }
+        .settings-row {
+            display: flex; justify-content: space-between; align-items: center;
+            margin: 8px 0; font-size: 13px; font-weight: 600; text-align: left;
+        }
+        .settings-row input {
+            width: 65px; font-size: 16px; text-align: center; padding: 4px; border: 1px solid #ccc; border-radius: 6px;
+        }
+        .modal-actions { display: flex; justify-content: center; gap: 10px; margin-top: 16px; }
         .btn-primary { background: #4caf50; color: white; border: none; padding: 10px 22px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; }
         .btn-secondary { background: #9e9e9e; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; }
 
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 202, 40, 0.7); } 70% { box-shadow: 0 0 0 14px rgba(255, 202, 40, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 202, 40, 0); } }
         @keyframes pulse-orange { 0% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.7); } 70% { box-shadow: 0 0 0 14px rgba(255, 152, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0); } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
     </style>
 </head>
 <body>
@@ -188,21 +223,35 @@
     <!-- Parent Settings Modal -->
     <div class="modal" id="settings-modal">
         <div class="modal-card">
-            <h3>Parent Settings</h3>
-            <p>Target chores per child (1 to 5):</p>
-            <input type="number" id="chore-count-input" min="1" max="5" style="width:70px; font-size:22px; text-align:center; padding:4px; margin-bottom:14px;">
+            <h3>⚙️ Parent Routine Settings</h3>
+            <div class="settings-row">
+                <span>Chore Count (1-5):</span>
+                <input type="number" id="setting-chore-count" min="1" max="5">
+            </div>
+            <div class="settings-row">
+                <span>☀️ Morning Total (min):</span>
+                <input type="number" id="setting-morning-dur" min="5" max="90">
+            </div>
+            <div class="settings-row">
+                <span>⚡ Chores Total (min):</span>
+                <input type="number" id="setting-chores-dur" min="5" max="90">
+            </div>
+            <div class="settings-row">
+                <span>🌙 Bedtime Total (min):</span>
+                <input type="number" id="setting-bedtime-dur" min="5" max="90">
+            </div>
             <div class="modal-actions">
-                <button class="btn-primary" onclick="saveSettings()">Save Target</button>
+                <button class="btn-primary" onclick="saveSettings()">Save & Update</button>
                 <button class="btn-secondary" onclick="closeModal('settings-modal')">Cancel</button>
             </div>
         </div>
     </div>
 
-    <!-- Parent Approval Modal (NO PIN REQUIRED) -->
+    <!-- Parent Inspection Modal (No PIN required) -->
     <div class="modal" id="approval-modal">
         <div class="modal-card">
             <h3>🏰 Parent Inspection</h3>
-            <p id="approval-text">Check child's tasks before unlocking Free Time.</p>
+            <p id="approval-text">Review chores. Tap approve to unlock Free Time!</p>
             <div class="modal-actions">
                 <button class="btn-primary" onclick="confirmApproval()">Approve & Unlock</button>
                 <button class="btn-secondary" onclick="closeModal('approval-modal')">Return</button>
@@ -210,7 +259,7 @@
         </div>
     </div>
 
-    <!-- Header with Routine Switcher Tabs -->
+    <!-- Top Navigation Bar -->
     <div class="header">
         <div class="header-left">
             <h2>⏱️ TiMY Quest</h2>
@@ -230,13 +279,19 @@
         <div class="profile-card">
             <div class="avatar-emoji" id="harper-avatar">🐱</div>
             <p class="profile-name">Harper</p>
-            <p class="profile-age">Age 7</p>
-            <div class="donut-container" id="harper-donut">
-                <div class="donut-inner" id="harper-time-text">05:00</div>
+            
+            <div class="total-timer-box">
+                <div class="total-timer-label" id="harper-total-label">Total Time</div>
+                <div class="total-timer-digits" id="harper-total-text">30:00</div>
             </div>
+
+            <div class="donut-container" id="harper-donut">
+                <div class="donut-inner" id="harper-task-text">05:00</div>
+            </div>
+
             <div class="timer-controls">
-                <button class="timer-ctrl-btn" id="harper-play-btn" onclick="toggleTimer('harper')">▶️</button>
-                <button class="timer-ctrl-btn" onclick="resetTaskTimer('harper')">🔄</button>
+                <button class="timer-ctrl-btn" id="harper-play-btn" onclick="toggleTimers('harper')">▶️</button>
+                <button class="timer-ctrl-btn" title="Reset current task timer" onclick="resetTaskTimer('harper')">🔄</button>
             </div>
             <button class="undo-btn" onclick="undoTask('harper')">↶ Undo Step</button>
         </div>
@@ -257,13 +312,19 @@
         <div class="profile-card">
             <div class="avatar-emoji" id="haisley-avatar">🐶</div>
             <p class="profile-name">Haisley</p>
-            <p class="profile-age">Age 5</p>
-            <div class="donut-container" id="haisley-donut">
-                <div class="donut-inner" id="haisley-time-text">05:00</div>
+            
+            <div class="total-timer-box">
+                <div class="total-timer-label" id="haisley-total-label">Total Time</div>
+                <div class="total-timer-digits" id="haisley-total-text">30:00</div>
             </div>
+
+            <div class="donut-container" id="haisley-donut">
+                <div class="donut-inner" id="haisley-task-text">05:00</div>
+            </div>
+
             <div class="timer-controls">
-                <button class="timer-ctrl-btn" id="haisley-play-btn" onclick="toggleTimer('haisley')">▶️</button>
-                <button class="timer-ctrl-btn" onclick="resetTaskTimer('haisley')">🔄</button>
+                <button class="timer-ctrl-btn" id="haisley-play-btn" onclick="toggleTimers('haisley')">▶️</button>
+                <button class="timer-ctrl-btn" title="Reset current task timer" onclick="resetTaskTimer('haisley')">🔄</button>
             </div>
             <button class="undo-btn" onclick="undoTask('haisley')">↶ Undo Step</button>
         </div>
@@ -284,16 +345,29 @@
         
         let allSheetData = [];
         let synth = window.speechSynthesis;
-        let globalChoreTarget = parseInt(localStorage.getItem('timyChoreCount')) || 3;
         let currentMode = 'morning';
         let pendingApprovalChild = null;
+
+        // Parent Settings with Separate Durations
+        let settings = {
+            choreCount: parseInt(localStorage.getItem('timy_choreCount')) || 3,
+            morningDur: parseInt(localStorage.getItem('timy_morningDur')) || 30,
+            choresDur: parseInt(localStorage.getItem('timy_choresDur')) || 20,
+            bedtimeDur: parseInt(localStorage.getItem('timy_bedtimeDur')) || 30
+        };
 
         const state = {
             harper: {
                 tasks: [],
                 activeIndex: 0,
-                secondsRemaining: 300,
-                totalTaskSeconds: 300,
+                // Task Timer
+                taskSecondsRemaining: 300,
+                taskTotalSeconds: 300,
+                // Overall Timer
+                totalSecondsRemaining: 1800,
+                isOvertime: false,
+                overtimeSeconds: 0,
+                // Common Loop
                 timerInterval: null,
                 isRunning: false,
                 bankedSeconds: 0,
@@ -302,8 +376,11 @@
             haisley: {
                 tasks: [],
                 activeIndex: 0,
-                secondsRemaining: 300,
-                totalTaskSeconds: 300,
+                taskSecondsRemaining: 300,
+                taskTotalSeconds: 300,
+                totalSecondsRemaining: 1800,
+                isOvertime: false,
+                overtimeSeconds: 0,
                 timerInterval: null,
                 isRunning: false,
                 bankedSeconds: 0,
@@ -319,49 +396,12 @@
                 if (!response.ok) throw new Error("HTTP " + response.status);
                 let result = await response.json();
                 if (result.status === "CRASH") throw new Error(result.error);
-                
                 allSheetData = Array.isArray(result) ? result : [];
                 btn.innerText = "Start TiMY Quest";
                 btn.disabled = false;
                 btn.onclick = startApp;
             } catch (err) {
-                console.warn("Fetch failed, using local verified defaults:", err);
-                allSheetData = [
-                    // Harper Morning
-                    { child: "Harper", category: "Morning", step: 1, name: "Wake up & make bed", time: 5, emoji: "🛏️", day: "Daily", mustDo: false },
-                    { child: "Harper", category: "Morning", step: 2, name: "Get dressed", time: 5, emoji: "👕", day: "Daily", mustDo: false },
-                    { child: "Harper", category: "Morning", step: 3, name: "Eat breakfast & vitamins", time: 10, emoji: "🥣", day: "Daily", mustDo: false },
-                    { child: "Harper", category: "Morning", step: 4, name: "Brush teeth & style hair", time: 5, emoji: "🪥", day: "Daily", mustDo: false },
-                    { child: "Harper", category: "Morning", step: 5, name: "Pack backpack & water bottle", time: 5, emoji: "🎒", day: "Daily", mustDo: false },
-                    // Harper Bedtime
-                    { child: "Harper", category: "Bedtime", step: 1, name: "20 minutes reading", time: 20, emoji: "📖", day: "Daily", mustDo: false },
-                    { child: "Harper", category: "Bedtime", step: 2, name: "Lay out clothes for tomorrow", time: 5, emoji: "👕", day: "Daily", mustDo: false },
-                    { child: "Harper", category: "Bedtime", step: 3, name: "Brush teeth & floss", time: 5, emoji: "🪥", day: "Daily", mustDo: false },
-                    { child: "Harper", category: "Bedtime", step: 4, name: "Clear bedroom floor", time: 5, emoji: "🧹", day: "Daily", mustDo: false },
-                    { child: "Harper", category: "Bedtime", step: 5, name: "In bed & lights out", time: 5, emoji: "🌙", day: "Daily", mustDo: false },
-                    // Harper Chores
-                    { child: "Harper", category: "Chores", step: 1, name: "Feed pets & water bowls", time: 5, emoji: "🐾", day: "Any", mustDo: false },
-                    { child: "Harper", category: "Chores", step: 2, name: "Empty small bathroom trash", time: 5, emoji: "🗑️", day: "Any", mustDo: false },
-                    { child: "Harper", category: "Chores", step: 3, name: "Clear table & wipe down", time: 5, emoji: "🍽️", day: "Any", mustDo: false },
-                    { child: "Harper", category: "Chores", step: 4, name: "Sort & match socks", time: 5, emoji: "🧦", day: "Any", mustDo: false },
-                    // Haisley Morning
-                    { child: "Haisley", category: "Morning", step: 1, name: "Potty & wash face", time: 5, emoji: "🚽", day: "Daily", mustDo: false },
-                    { child: "Haisley", category: "Morning", step: 2, name: "Get dressed", time: 5, emoji: "👕", day: "Daily", mustDo: false },
-                    { child: "Haisley", category: "Morning", step: 3, name: "Eat breakfast", time: 10, emoji: "🥣", day: "Daily", mustDo: false },
-                    { child: "Haisley", category: "Morning", step: 4, name: "Brush teeth", time: 5, emoji: "🪥", day: "Daily", mustDo: false },
-                    { child: "Haisley", category: "Morning", step: 5, name: "Shoes by front door", time: 5, emoji: "👟", day: "Daily", mustDo: false },
-                    // Haisley Bedtime
-                    { child: "Haisley", category: "Bedtime", step: 1, name: "Pick up toys into bins", time: 5, emoji: "🧸", day: "Daily", mustDo: false },
-                    { child: "Haisley", category: "Bedtime", step: 2, name: "Pajamas on & dirty clothes in hamper", time: 5, emoji: "👕", day: "Daily", mustDo: false },
-                    { child: "Haisley", category: "Bedtime", step: 3, name: "Potty & brush teeth", time: 5, emoji: "🪥", day: "Daily", mustDo: false },
-                    { child: "Haisley", category: "Bedtime", step: 4, name: "Bedtime story with parent", time: 15, emoji: "📖", day: "Daily", mustDo: false },
-                    { child: "Haisley", category: "Bedtime", step: 5, name: "Tuck in & sound machine on", time: 5, emoji: "🌙", day: "Daily", mustDo: false },
-                    // Haisley Chores
-                    { child: "Haisley", category: "Chores", step: 1, name: "Pick up 5 toys off floor", time: 5, emoji: "🧸", day: "Any", mustDo: false },
-                    { child: "Haisley", category: "Chores", step: 2, name: "Shoes & coats in cubby", time: 5, emoji: "👟", day: "Any", mustDo: false },
-                    { child: "Haisley", category: "Chores", step: 3, name: "Wipe placemats after meals", time: 5, emoji: "🧽", day: "Any", mustDo: false },
-                    { child: "Haisley", category: "Chores", step: 4, name: "Help set napkins and forks", time: 5, emoji: "🍴", day: "Any", mustDo: false }
-                ];
+                console.warn("Fetch fallback:", err);
                 btn.innerText = "Start TiMY Quest";
                 btn.disabled = false;
                 btn.onclick = startApp;
@@ -383,7 +423,7 @@
             } catch (e) {}
         }
 
-        // --- 2. STRICT CATEGORY FILTERING & CHORE RANDOMIZER ---
+        // --- 2. Category Isolation & Chore Autopilot ---
         function getFilteredTasks(childName, mode) {
             const childItems = allSheetData.filter(item => 
                 item.child && item.child.toLowerCase() === childName.toLowerCase()
@@ -409,39 +449,39 @@
                 const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
                 let selected = [];
 
-                // 1. Must Do Checkboxes
+                // 1. Must Do
                 let mustDo = chorePool.filter(c => c.mustDo === true);
                 selected.push(...mustDo);
 
-                // 2. Day-specific matches
-                if (selected.length < globalChoreTarget) {
+                // 2. Day Matches
+                if (selected.length < settings.choreCount) {
                     let dayMatches = chorePool.filter(c => 
                         !selected.some(s => s.name === c.name) && 
                         c.day && c.day.toLowerCase() === today.toLowerCase()
                     );
                     dayMatches.sort(() => 0.5 - Math.random());
-                    let needed = globalChoreTarget - selected.length;
+                    let needed = settings.choreCount - selected.length;
                     selected.push(...dayMatches.slice(0, needed));
                 }
 
-                // 3. Any fallback
-                if (selected.length < globalChoreTarget) {
+                // 3. Any Fallback
+                if (selected.length < settings.choreCount) {
                     let anyMatches = chorePool.filter(c => 
                         !selected.some(s => s.name === c.name) && 
                         (!c.day || c.day.toLowerCase() === 'any' || c.day.toLowerCase() === 'daily')
                     );
                     anyMatches.sort(() => 0.5 - Math.random());
-                    let needed = globalChoreTarget - selected.length;
+                    let needed = settings.choreCount - selected.length;
                     selected.push(...anyMatches.slice(0, needed));
                 }
 
-                return selected.slice(0, globalChoreTarget);
+                return selected.slice(0, settings.choreCount);
             }
 
             return [];
         }
 
-        // --- 3. Track Generation ---
+        // --- 3. Track Generation & Setup ---
         function setRoutineMode(mode) {
             currentMode = mode;
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -449,9 +489,17 @@
             buildTracks();
         }
 
+        function getModeDurationMinutes() {
+            if (currentMode === 'morning') return settings.morningDur;
+            if (currentMode === 'chores') return settings.choresDur;
+            return settings.bedtimeDur;
+        }
+
         function buildTracks() {
+            const modeMinutes = getModeDurationMinutes();
+
             ['harper', 'haisley'].forEach(child => {
-                pauseTimer(child);
+                pauseTimers(child);
                 const taskList = getFilteredTasks(child, currentMode).map(t => ({
                     name: t.name,
                     time: parseInt(t.time) || 5,
@@ -459,12 +507,20 @@
                     isChore: currentMode === 'chores'
                 }));
 
-                state[child].tasks = taskList;
-                state[child].activeIndex = 0;
-                state[child].bankedSeconds = 0;
-                state[child].approved = false;
+                const cState = state[child];
+                cState.tasks = taskList;
+                cState.activeIndex = 0;
+                cState.bankedSeconds = 0;
+                cState.approved = false;
+                
+                // Set Overall Routine Timer
+                cState.totalSecondsRemaining = modeMinutes * 60;
+                cState.isOvertime = false;
+                cState.overtimeSeconds = 0;
+
                 setupTask(child, 0);
                 renderTrackUI(child);
+                updateDisplays(child);
             });
         }
 
@@ -472,26 +528,26 @@
             const cState = state[child];
             if (index < cState.tasks.length) {
                 const task = cState.tasks[index];
-                cState.secondsRemaining = task.time * 60;
-                cState.totalTaskSeconds = task.time * 60;
+                cState.taskSecondsRemaining = task.time * 60;
+                cState.taskTotalSeconds = task.time * 60;
             } else {
-                cState.secondsRemaining = 0;
-                cState.totalTaskSeconds = 1;
+                cState.taskSecondsRemaining = 0;
+                cState.taskTotalSeconds = 1;
             }
-            updateTimerDisplay(child);
+            updateDisplays(child);
         }
 
-        // --- 4. Live Timer System ---
-        function toggleTimer(child) {
+        // --- 4. Synchronized Dual Timer Engine ---
+        function toggleTimers(child) {
             const cState = state[child];
             if (cState.isRunning) {
-                pauseTimer(child);
+                pauseTimers(child);
             } else {
-                startTimer(child);
+                startTimers(child);
             }
         }
 
-        function startTimer(child) {
+        function startTimers(child) {
             const cState = state[child];
             if (cState.activeIndex >= cState.tasks.length) return;
             cState.isRunning = true;
@@ -499,17 +555,34 @@
 
             clearInterval(cState.timerInterval);
             cState.timerInterval = setInterval(() => {
-                if (cState.secondsRemaining > 0) {
-                    cState.secondsRemaining--;
-                    updateTimerDisplay(child);
+                // 1. Decrement Task Timer
+                if (cState.taskSecondsRemaining > 0) {
+                    cState.taskSecondsRemaining--;
                 } else {
-                    pauseTimer(child);
-                    speak(`${capitalize(child)}, time is up for this task!`);
+                    // Task expired
+                    if (cState.taskTotalSeconds > 0) {
+                        speak(`${capitalize(child)}, time is up for this task!`);
+                    }
                 }
+
+                // 2. Decrement Overall Timer or Increment Overtime
+                if (!cState.isOvertime) {
+                    if (cState.totalSecondsRemaining > 0) {
+                        cState.totalSecondsRemaining--;
+                    } else {
+                        cState.isOvertime = true;
+                        cState.overtimeSeconds = 1;
+                        speak(`${capitalize(child)} is now in overtime!`);
+                    }
+                } else {
+                    cState.overtimeSeconds++;
+                }
+
+                updateDisplays(child);
             }, 1000);
         }
 
-        function pauseTimer(child) {
+        function pauseTimers(child) {
             const cState = state[child];
             cState.isRunning = false;
             clearInterval(cState.timerInterval);
@@ -518,19 +591,42 @@
         }
 
         function resetTaskTimer(child) {
-            pauseTimer(child);
             const cState = state[child];
+            // Reset ONLY the task timer, leaves total timer untouched
             setupTask(child, cState.activeIndex);
+            updateDisplays(child);
         }
 
-        function updateTimerDisplay(child) {
+        function updateDisplays(child) {
             const cState = state[child];
-            const mins = Math.floor(cState.secondsRemaining / 60);
-            const secs = cState.secondsRemaining % 60;
-            const formatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-            document.getElementById(`${child}-time-text`).innerText = formatted;
 
-            let pct = cState.totalTaskSeconds > 0 ? (cState.secondsRemaining / cState.totalTaskSeconds) * 100 : 0;
+            // 1. Overall Timer Display
+            const totalTextEl = document.getElementById(`${child}-total-text`);
+            const totalLabelEl = document.getElementById(`${child}-total-label`);
+
+            if (cState.isOvertime) {
+                totalLabelEl.innerText = "OVERTIME";
+                totalLabelEl.style.color = "#d32f2f";
+                totalTextEl.classList.add("overtime");
+                const m = Math.floor(cState.overtimeSeconds / 60);
+                const s = cState.overtimeSeconds % 60;
+                totalTextEl.innerText = `+${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+            } else {
+                totalLabelEl.innerText = "TOTAL TIME";
+                totalLabelEl.style.color = "#6a1b9a";
+                totalTextEl.classList.remove("overtime");
+                const m = Math.floor(cState.totalSecondsRemaining / 60);
+                const s = cState.totalSecondsRemaining % 60;
+                totalTextEl.innerText = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+            }
+
+            // 2. Task Donut Timer Display
+            const taskTextEl = document.getElementById(`${child}-task-text`);
+            const tm = Math.floor(cState.taskSecondsRemaining / 60);
+            const ts = cState.taskSecondsRemaining % 60;
+            taskTextEl.innerText = `${String(tm).padStart(2,'0')}:${String(ts).padStart(2,'0')}`;
+
+            let pct = cState.taskTotalSeconds > 0 ? (cState.taskSecondsRemaining / cState.taskTotalSeconds) * 100 : 0;
             let color = '#4caf50';
             if (pct < 50) color = '#ffeb3b';
             if (pct < 20) color = '#f44336';
@@ -539,27 +635,74 @@
                 `conic-gradient(${color} ${pct}%, #e0e0e0 0)`;
         }
 
-        // --- 5. Step Progression & Undo ---
-        function completeTask(child, clickedIndex) {
-            const cState = state[child];
-            if (clickedIndex !== cState.activeIndex) return;
+        // --- 5. Press-and-Hold Touch Completion (~600ms) ---
+        let holdTimeout = null;
+        let touchStartPos = { x: 0, y: 0 };
 
-            if (cState.secondsRemaining > 0) {
-                cState.bankedSeconds += cState.secondsRemaining;
-                let bankedMins = Math.floor(cState.bankedSeconds / 60);
-                document.getElementById(`${child}-banked-time`).innerText = `+${bankedMins}m banked`;
+        function attachHoldHandlers(element, child, index) {
+            const startHold = (e) => {
+                const cState = state[child];
+                if (index !== cState.activeIndex) return;
+
+                if (e.type === 'touchstart') {
+                    touchStartPos.x = e.touches[0].clientX;
+                    touchStartPos.y = e.touches[0].clientY;
+                }
+
+                element.classList.add('holding');
+                clearTimeout(holdTimeout);
+                holdTimeout = setTimeout(() => {
+                    element.classList.remove('holding');
+                    completeTask(child, index);
+                }, 600);
+            };
+
+            const cancelHold = (e) => {
+                element.classList.remove('holding');
+                clearTimeout(holdTimeout);
+            };
+
+            const moveHold = (e) => {
+                if (e.type === 'touchmove') {
+                    const dx = Math.abs(e.touches[0].clientX - touchStartPos.x);
+                    const dy = Math.abs(e.touches[0].clientY - touchStartPos.y);
+                    if (dx > 10 || dy > 10) {
+                        cancelHold(); // Swiping/scrolling cancels completion
+                    }
+                }
+            };
+
+            element.addEventListener('touchstart', startHold, { passive: true });
+            element.addEventListener('touchend', cancelHold);
+            element.addEventListener('touchcancel', cancelHold);
+            element.addEventListener('touchmove', moveHold, { passive: true });
+
+            element.addEventListener('mousedown', startHold);
+            element.addEventListener('mouseup', cancelHold);
+            element.addEventListener('mouseleave', cancelHold);
+        }
+
+        function completeTask(child, index) {
+            const cState = state[child];
+            if (index !== cState.activeIndex) return;
+
+            // Bank leftover seconds
+            if (cState.taskSecondsRemaining > 0) {
+                cState.bankedSeconds += cState.taskSecondsRemaining;
+                let bm = Math.floor(cState.bankedSeconds / 60);
+                document.getElementById(`${child}-banked-time`).innerText = `+${bm}m banked`;
             }
 
-            pauseTimer(child);
-            speak(`Great job on ${cState.tasks[clickedIndex].name}!`);
+            speak(`Awesome job on ${cState.tasks[index].name}!`);
 
             cState.activeIndex++;
             if (cState.activeIndex < cState.tasks.length) {
                 setupTask(child, cState.activeIndex);
             } else {
-                document.getElementById(`${child}-time-text`).innerText = "DONE!";
+                pauseTimers(child);
+                document.getElementById(`${child}-task-text`).innerText = "DONE!";
                 document.getElementById(`${child}-donut`).style.background = `conic-gradient(#4caf50 100%, #e0e0e0 0)`;
-                speak(`${capitalize(child)} has reached the castle! Ready for parent approval.`);
+                speak(`${capitalize(child)} finished all tasks! Ready for parent inspection.`);
             }
             renderTrackUI(child);
         }
@@ -567,7 +710,6 @@
         function undoTask(child) {
             const cState = state[child];
             if (cState.activeIndex <= 0) return;
-            pauseTimer(child);
             cState.activeIndex--;
             cState.approved = false;
             setupTask(child, cState.activeIndex);
@@ -576,21 +718,20 @@
         }
 
         function rerollChore(child, index) {
-            pauseTimer(child);
             const cState = state[child];
-            const childItems = allSheetData.filter(i => 
+            const childChores = allSheetData.filter(i => 
                 i.child && i.child.toLowerCase() === child.toLowerCase() &&
                 i.category && i.category.toLowerCase() === 'chores'
             );
 
-            let unused = childItems.filter(c => !cState.tasks.some(t => t.name === c.name));
-            if (unused.length === 0) unused = childItems;
-            let replacement = unused[Math.floor(Math.random() * unused.length)];
+            let unused = childChores.filter(c => !cState.tasks.some(t => t.name === c.name));
+            if (unused.length === 0) unused = childChores;
+            let pick = unused[Math.floor(Math.random() * unused.length)];
 
             cState.tasks[index] = {
-                name: replacement.name,
-                emoji: replacement.emoji || "🎲",
-                time: parseInt(replacement.time) || 5,
+                name: pick.name,
+                emoji: pick.emoji || "🎲",
+                time: parseInt(pick.time) || 5,
                 isChore: true
             };
 
@@ -598,17 +739,16 @@
                 setupTask(child, index);
             }
             renderTrackUI(child);
-            speak(`Swapped to ${replacement.name}`);
+            speak(`Swapped to ${pick.name}`);
         }
 
-        // --- 6. Castle & Direct Parent Approval (No PIN) ---
+        // --- 6. Castle Inspection (No PIN) ---
         function handleCastleClick(child) {
             const cState = state[child];
             if (cState.activeIndex < cState.tasks.length) {
-                speak(`${capitalize(child)} hasn't finished all tasks yet!`);
+                speak(`${capitalize(child)} hasn't completed all tasks yet!`);
                 return;
             }
-
             if (cState.approved) {
                 speak(`${capitalize(child)} has already unlocked Free Time!`);
                 return;
@@ -626,36 +766,29 @@
             cState.approved = true;
             closeModal('approval-modal');
 
-            speak(`Approved! Wonderful job ${capitalize(child)}, enjoy your free time!`);
+            speak(`Parent approved! Fantastic job ${capitalize(child)}, enjoy your free time!`);
             renderTrackUI(child);
 
-            logCompletionToSheet(child);
-        }
-
-        async function logCompletionToSheet(child) {
-            const cState = state[child];
+            // Background logging to spreadsheet
             try {
                 let payload = {
                     action: "LOG_CHORE",
                     person: capitalize(child),
-                    choreName: `${currentMode.toUpperCase()} Complete`,
+                    choreName: `${currentMode.toUpperCase()} Routine Complete`,
                     routineTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                     status: "Completed",
-                    notes: `All ${cState.tasks.length} items finished. Banked: ${Math.floor(cState.bankedSeconds/60)}m`
+                    notes: `Tasks: ${cState.tasks.length}. Banked: ${Math.floor(cState.bankedSeconds/60)}m`
                 };
-
-                await fetch(scriptUrl, {
+                fetch(scriptUrl, {
                     method: "POST",
                     mode: "no-cors",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload)
                 });
-            } catch (err) {
-                console.warn("Could not log completion:", err);
-            }
+            } catch (e) {}
         }
 
-        // --- 7. Rendering & DOM Helpers ---
+        // --- 7. Track DOM Rendering ---
         function renderTrackUI(child) {
             const cState = state[child];
             const container = document.getElementById(`${child}-nodes`);
@@ -667,17 +800,28 @@
 
                 const nodeEl = document.createElement('div');
                 nodeEl.className = 'task-node';
+
+                // Node circle with SVG progress ring for press-and-hold
                 nodeEl.innerHTML = `
                     ${task.isChore && !isCompleted ? `<button class="reroll-btn" onclick="rerollChore('${child}', ${index})">🎲</button>` : ''}
-                    <div class="node-circle ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}" onclick="completeTask('${child}', ${index})">
-                        ${isCompleted ? '⭐' : task.emoji}
+                    <div class="node-circle ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}" id="${child}-node-${index}">
+                        <svg class="hold-progress-svg"><circle class="hold-progress-circle" cx="36" cy="36" r="32"></circle></svg>
+                        <span>${isCompleted ? '⭐' : task.emoji}</span>
                     </div>
                     <div class="task-label">${task.name}</div>
                     <div class="task-time">${task.time}:00</div>
                 `;
+
                 container.appendChild(nodeEl);
+
+                // Attach hold listeners only to active node
+                if (isActive) {
+                    const circle = nodeEl.querySelector('.node-circle');
+                    attachHoldHandlers(circle, child, index);
+                }
             });
 
+            // Castle Node Visuals
             const castle = document.getElementById(`${child}-castle`);
             const badge = document.getElementById(`${child}-castle-badge`);
             const allDone = cState.activeIndex >= cState.tasks.length;
@@ -700,8 +844,12 @@
 
         function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
+        // --- 8. Settings Logic ---
         function openSettings() {
-            document.getElementById('chore-count-input').value = globalChoreTarget;
+            document.getElementById('setting-chore-count').value = settings.choreCount;
+            document.getElementById('setting-morning-dur').value = settings.morningDur;
+            document.getElementById('setting-chores-dur').value = settings.choresDur;
+            document.getElementById('setting-bedtime-dur').value = settings.bedtimeDur;
             document.getElementById('settings-modal').style.display = 'flex';
         }
 
@@ -710,14 +858,26 @@
         }
 
         function saveSettings() {
-            let val = parseInt(document.getElementById('chore-count-input').value);
-            if (val >= 1 && val <= 5) {
-                globalChoreTarget = val;
-                localStorage.setItem('timyChoreCount', val);
+            const cCount = parseInt(document.getElementById('setting-chore-count').value);
+            const mDur = parseInt(document.getElementById('setting-morning-dur').value);
+            const chDur = parseInt(document.getElementById('setting-chores-dur').value);
+            const bDur = parseInt(document.getElementById('setting-bedtime-dur').value);
+
+            if (cCount >= 1 && cCount <= 5 && mDur > 0 && chDur > 0 && bDur > 0) {
+                settings.choreCount = cCount;
+                settings.morningDur = mDur;
+                settings.choresDur = chDur;
+                settings.bedtimeDur = bDur;
+
+                localStorage.setItem('timy_choreCount', cCount);
+                localStorage.setItem('timy_morningDur', mDur);
+                localStorage.setItem('timy_choresDur', chDur);
+                localStorage.setItem('timy_bedtimeDur', bDur);
+
                 closeModal('settings-modal');
                 buildTracks();
             } else {
-                alert("Please enter a number between 1 and 5.");
+                alert("Please check your numbers. Chore count must be 1-5, and durations must be greater than 0.");
             }
         }
     </script>
