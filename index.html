@@ -22,7 +22,7 @@
         /* --- Audio & Boot Overlay --- */
         #start-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(18, 10, 35, 0.92); z-index: 2000;
+            background: rgba(18, 10, 35, 0.94); z-index: 2000;
             display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 15px;
         }
         .start-btn {
@@ -82,7 +82,7 @@
             width: 78px; height: 78px; border-radius: 50%;
             background: conic-gradient(#4caf50 100%, #e0e0e0 0);
             display: flex; justify-content: center; align-items: center;
-            margin-bottom: 6px; transition: background 0.3s ease;
+            margin-bottom: 6px; transition: background 0.2s linear;
         }
         .donut-inner {
             width: 62px; height: 62px; background: white; border-radius: 50%;
@@ -93,7 +93,7 @@
         .timer-controls { display: flex; gap: 6px; }
         .timer-ctrl-btn {
             background: #f0f0f0; border: 1px solid #ccc; border-radius: 8px;
-            padding: 3px 8px; font-size: 12px; cursor: pointer; font-weight: bold;
+            padding: 4px 10px; font-size: 13px; cursor: pointer; font-weight: bold;
         }
         .timer-ctrl-btn:active { background: #ddd; }
 
@@ -137,7 +137,7 @@
         
         .task-label {
             background: white; padding: 3px 8px; border-radius: 10px; font-size: 11px;
-            font-weight: 700; margin-top: 6px; text-align: center; max-width: 88px; color: #333;
+            font-weight: 700; margin-top: 6px; text-align: center; max-width: 95px; color: #333;
             box-shadow: 0 2px 4px rgba(0,0,0,0.12); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         .task-time { font-size: 10px; color: #555; margin-top: 2px; font-weight: 700; }
@@ -147,7 +147,7 @@
             background: #fff; border: 4px solid #9c27b0; font-size: 34px;
         }
         .castle-node.ready .node-circle {
-            border-color: #4caf50; animation: pulse-green 1.5s infinite;
+            border-color: #ff9800; animation: pulse-orange 1.5s infinite;
         }
         .castle-node.approved .node-circle {
             background: #4caf50; border-color: #2e7d32;
@@ -169,17 +169,13 @@
             text-align: center; box-shadow: 0 12px 30px rgba(0,0,0,0.4); color: #333;
         }
         .modal-card h3 { margin: 0 0 10px 0; color: #2c1a4d; font-size: 20px; }
-        .modal-card p { font-size: 13px; color: #555; margin: 4px 0 14px 0; }
-        .modal-card input[type="password"], .modal-card input[type="number"] {
-            width: 130px; font-size: 22px; text-align: center; padding: 6px;
-            letter-spacing: 4px; border: 2px solid #ccc; border-radius: 8px; margin-bottom: 12px;
-        }
+        .modal-card p { font-size: 13px; color: #555; margin: 4px 0 16px 0; }
         .modal-actions { display: flex; justify-content: center; gap: 10px; }
-        .btn-primary { background: #4caf50; color: white; border: none; padding: 9px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .btn-secondary { background: #9e9e9e; color: white; border: none; padding: 9px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .btn-primary { background: #4caf50; color: white; border: none; padding: 10px 22px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .btn-secondary { background: #9e9e9e; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; }
 
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 202, 40, 0.7); } 70% { box-shadow: 0 0 0 14px rgba(255, 202, 40, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 202, 40, 0); } }
-        @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); } 70% { box-shadow: 0 0 0 14px rgba(76, 175, 80, 0); } 100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); } }
+        @keyframes pulse-orange { 0% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.7); } 70% { box-shadow: 0 0 0 14px rgba(255, 152, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0); } }
     </style>
 </head>
 <body>
@@ -194,7 +190,7 @@
         <div class="modal-card">
             <h3>Parent Settings</h3>
             <p>Target chores per child (1 to 5):</p>
-            <input type="number" id="chore-count-input" min="1" max="5">
+            <input type="number" id="chore-count-input" min="1" max="5" style="width:70px; font-size:22px; text-align:center; padding:4px; margin-bottom:14px;">
             <div class="modal-actions">
                 <button class="btn-primary" onclick="saveSettings()">Save Target</button>
                 <button class="btn-secondary" onclick="closeModal('settings-modal')">Cancel</button>
@@ -202,21 +198,19 @@
         </div>
     </div>
 
-    <!-- Parent Inspection / Castle Approval Modal -->
+    <!-- Parent Approval Modal (NO PIN REQUIRED) -->
     <div class="modal" id="approval-modal">
         <div class="modal-card">
             <h3>🏰 Parent Inspection</h3>
             <p id="approval-text">Check child's tasks before unlocking Free Time.</p>
-            <p style="font-weight:bold; font-size:12px; margin-bottom:6px;">Enter 4-Digit Parent PIN (Default: 1234):</p>
-            <input type="password" id="parent-pin-input" maxlength="4" placeholder="••••">
             <div class="modal-actions">
-                <button class="btn-primary" onclick="submitParentApproval()">Approve & Unlock</button>
+                <button class="btn-primary" onclick="confirmApproval()">Approve & Unlock</button>
                 <button class="btn-secondary" onclick="closeModal('approval-modal')">Return</button>
             </div>
         </div>
     </div>
 
-    <!-- Top Navigation Bar -->
+    <!-- Header with Routine Switcher Tabs -->
     <div class="header">
         <div class="header-left">
             <h2>⏱️ TiMY Quest</h2>
@@ -288,13 +282,12 @@
     <script>
         const scriptUrl = "https://script.google.com/macros/s/AKfycbziEbryHj3F4eKYr8PWMc16BAFjbj8NJJvHs88M9eYo28Qy2mL27dmI7COTPkx6UCBxZQ/exec";
         
-        let spreadsheetData = [];
+        let allSheetData = [];
         let synth = window.speechSynthesis;
         let globalChoreTarget = parseInt(localStorage.getItem('timyChoreCount')) || 3;
         let currentMode = 'morning';
         let pendingApprovalChild = null;
 
-        // Active State Tracking for both children
         const state = {
             harper: {
                 tasks: [],
@@ -318,22 +311,7 @@
             }
         };
 
-        const staticRoutines = {
-            morning: [
-                { name: "Wake & Make Bed", emoji: "🛏️", time: 5, type: "routine" },
-                { name: "Breakfast & Vitamins", emoji: "🥣", time: 10, type: "routine" },
-                { name: "Brush Teeth & Hair", emoji: "🪥", time: 5, type: "routine" },
-                { name: "Get Dressed", emoji: "👕", time: 5, type: "routine" }
-            ],
-            bedtime: [
-                { name: "Pick Up Toys", emoji: "🧸", time: 5, type: "routine" },
-                { name: "Put on Pajamas", emoji: "🌙", time: 5, type: "routine" },
-                { name: "Brush Teeth", emoji: "🪥", time: 5, type: "routine" },
-                { name: "Story Time", emoji: "📖", time: 15, type: "routine" }
-            ]
-        };
-
-        // --- 1. System Boot & Data Sync ---
+        // --- 1. Boot & Data Sync ---
         window.onload = async () => {
             const btn = document.getElementById('start-btn');
             try {
@@ -342,18 +320,47 @@
                 let result = await response.json();
                 if (result.status === "CRASH") throw new Error(result.error);
                 
-                spreadsheetData = Array.isArray(result) ? result : [];
+                allSheetData = Array.isArray(result) ? result : [];
                 btn.innerText = "Start TiMY Quest";
                 btn.disabled = false;
                 btn.onclick = startApp;
             } catch (err) {
-                console.warn("Falling back to local cache/defaults:", err);
-                spreadsheetData = [
-                    { name: "Clean Playroom", emoji: "🧸", time: 10, day: "Any", mustDo: true },
-                    { name: "Clear Dishes", emoji: "🍽️", time: 5, day: "Any", mustDo: false },
-                    { name: "Put Away Shoes", emoji: "👟", time: 5, day: "Any", mustDo: false },
-                    { name: "Sweep Kitchen", emoji: "🧹", time: 10, day: "Any", mustDo: false },
-                    { name: "Feed Pets", emoji: "🐈", time: 5, day: "Any", mustDo: false }
+                console.warn("Fetch failed, using local verified defaults:", err);
+                allSheetData = [
+                    // Harper Morning
+                    { child: "Harper", category: "Morning", step: 1, name: "Wake up & make bed", time: 5, emoji: "🛏️", day: "Daily", mustDo: false },
+                    { child: "Harper", category: "Morning", step: 2, name: "Get dressed", time: 5, emoji: "👕", day: "Daily", mustDo: false },
+                    { child: "Harper", category: "Morning", step: 3, name: "Eat breakfast & vitamins", time: 10, emoji: "🥣", day: "Daily", mustDo: false },
+                    { child: "Harper", category: "Morning", step: 4, name: "Brush teeth & style hair", time: 5, emoji: "🪥", day: "Daily", mustDo: false },
+                    { child: "Harper", category: "Morning", step: 5, name: "Pack backpack & water bottle", time: 5, emoji: "🎒", day: "Daily", mustDo: false },
+                    // Harper Bedtime
+                    { child: "Harper", category: "Bedtime", step: 1, name: "20 minutes reading", time: 20, emoji: "📖", day: "Daily", mustDo: false },
+                    { child: "Harper", category: "Bedtime", step: 2, name: "Lay out clothes for tomorrow", time: 5, emoji: "👕", day: "Daily", mustDo: false },
+                    { child: "Harper", category: "Bedtime", step: 3, name: "Brush teeth & floss", time: 5, emoji: "🪥", day: "Daily", mustDo: false },
+                    { child: "Harper", category: "Bedtime", step: 4, name: "Clear bedroom floor", time: 5, emoji: "🧹", day: "Daily", mustDo: false },
+                    { child: "Harper", category: "Bedtime", step: 5, name: "In bed & lights out", time: 5, emoji: "🌙", day: "Daily", mustDo: false },
+                    // Harper Chores
+                    { child: "Harper", category: "Chores", step: 1, name: "Feed pets & water bowls", time: 5, emoji: "🐾", day: "Any", mustDo: false },
+                    { child: "Harper", category: "Chores", step: 2, name: "Empty small bathroom trash", time: 5, emoji: "🗑️", day: "Any", mustDo: false },
+                    { child: "Harper", category: "Chores", step: 3, name: "Clear table & wipe down", time: 5, emoji: "🍽️", day: "Any", mustDo: false },
+                    { child: "Harper", category: "Chores", step: 4, name: "Sort & match socks", time: 5, emoji: "🧦", day: "Any", mustDo: false },
+                    // Haisley Morning
+                    { child: "Haisley", category: "Morning", step: 1, name: "Potty & wash face", time: 5, emoji: "🚽", day: "Daily", mustDo: false },
+                    { child: "Haisley", category: "Morning", step: 2, name: "Get dressed", time: 5, emoji: "👕", day: "Daily", mustDo: false },
+                    { child: "Haisley", category: "Morning", step: 3, name: "Eat breakfast", time: 10, emoji: "🥣", day: "Daily", mustDo: false },
+                    { child: "Haisley", category: "Morning", step: 4, name: "Brush teeth", time: 5, emoji: "🪥", day: "Daily", mustDo: false },
+                    { child: "Haisley", category: "Morning", step: 5, name: "Shoes by front door", time: 5, emoji: "👟", day: "Daily", mustDo: false },
+                    // Haisley Bedtime
+                    { child: "Haisley", category: "Bedtime", step: 1, name: "Pick up toys into bins", time: 5, emoji: "🧸", day: "Daily", mustDo: false },
+                    { child: "Haisley", category: "Bedtime", step: 2, name: "Pajamas on & dirty clothes in hamper", time: 5, emoji: "👕", day: "Daily", mustDo: false },
+                    { child: "Haisley", category: "Bedtime", step: 3, name: "Potty & brush teeth", time: 5, emoji: "🪥", day: "Daily", mustDo: false },
+                    { child: "Haisley", category: "Bedtime", step: 4, name: "Bedtime story with parent", time: 15, emoji: "📖", day: "Daily", mustDo: false },
+                    { child: "Haisley", category: "Bedtime", step: 5, name: "Tuck in & sound machine on", time: 5, emoji: "🌙", day: "Daily", mustDo: false },
+                    // Haisley Chores
+                    { child: "Haisley", category: "Chores", step: 1, name: "Pick up 5 toys off floor", time: 5, emoji: "🧸", day: "Any", mustDo: false },
+                    { child: "Haisley", category: "Chores", step: 2, name: "Shoes & coats in cubby", time: 5, emoji: "👟", day: "Any", mustDo: false },
+                    { child: "Haisley", category: "Chores", step: 3, name: "Wipe placemats after meals", time: 5, emoji: "🧽", day: "Any", mustDo: false },
+                    { child: "Haisley", category: "Chores", step: 4, name: "Help set napkins and forks", time: 5, emoji: "🍴", day: "Any", mustDo: false }
                 ];
                 btn.innerText = "Start TiMY Quest";
                 btn.disabled = false;
@@ -372,45 +379,66 @@
             try {
                 synth.cancel();
                 let utter = new SpeechSynthesisUtterance(text);
-                utter.rate = 1.0;
                 synth.speak(utter);
-            } catch (e) {
-                console.warn("Speech synthesis error", e);
-            }
+            } catch (e) {}
         }
 
-        // --- 2. Chore Selection & Autopilot ---
-        function pickChores(count) {
-            let today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
-            let picked = [];
-            let pool = [...spreadsheetData];
+        // --- 2. STRICT CATEGORY FILTERING & CHORE RANDOMIZER ---
+        function getFilteredTasks(childName, mode) {
+            const childItems = allSheetData.filter(item => 
+                item.child && item.child.toLowerCase() === childName.toLowerCase()
+            );
 
-            // 1. Must-Do overrides
-            let mustDo = pool.filter(c => c.mustDo);
-            picked.push(...mustDo);
-
-            // 2. Day-specific matches
-            if (picked.length < count) {
-                let dayMatches = pool.filter(c => c.day === today && !c.mustDo);
-                dayMatches.sort(() => 0.5 - Math.random());
-                let needed = count - picked.length;
-                picked.push(...dayMatches.slice(0, needed));
+            if (mode === 'morning') {
+                return childItems
+                    .filter(item => item.category && item.category.toLowerCase() === 'morning')
+                    .sort((a, b) => a.step - b.step);
             }
 
-            // 3. Any fallback
-            if (picked.length < count) {
-                let anyMatches = pool.filter(c => (c.day === "Any" || !c.day) && !c.mustDo);
-                anyMatches.sort(() => 0.5 - Math.random());
-                let needed = count - picked.length;
-                picked.push(...anyMatches.slice(0, needed));
+            if (mode === 'bedtime') {
+                return childItems
+                    .filter(item => item.category && item.category.toLowerCase() === 'bedtime')
+                    .sort((a, b) => a.step - b.step);
             }
 
-            return picked.slice(0, count).map(c => ({
-                name: c.name,
-                emoji: c.emoji || "✨",
-                time: parseInt(c.time) || 5,
-                type: "chore"
-            }));
+            if (mode === 'chores') {
+                const chorePool = childItems.filter(item => 
+                    item.category && item.category.toLowerCase() === 'chores'
+                );
+
+                const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+                let selected = [];
+
+                // 1. Must Do Checkboxes
+                let mustDo = chorePool.filter(c => c.mustDo === true);
+                selected.push(...mustDo);
+
+                // 2. Day-specific matches
+                if (selected.length < globalChoreTarget) {
+                    let dayMatches = chorePool.filter(c => 
+                        !selected.some(s => s.name === c.name) && 
+                        c.day && c.day.toLowerCase() === today.toLowerCase()
+                    );
+                    dayMatches.sort(() => 0.5 - Math.random());
+                    let needed = globalChoreTarget - selected.length;
+                    selected.push(...dayMatches.slice(0, needed));
+                }
+
+                // 3. Any fallback
+                if (selected.length < globalChoreTarget) {
+                    let anyMatches = chorePool.filter(c => 
+                        !selected.some(s => s.name === c.name) && 
+                        (!c.day || c.day.toLowerCase() === 'any' || c.day.toLowerCase() === 'daily')
+                    );
+                    anyMatches.sort(() => 0.5 - Math.random());
+                    let needed = globalChoreTarget - selected.length;
+                    selected.push(...anyMatches.slice(0, needed));
+                }
+
+                return selected.slice(0, globalChoreTarget);
+            }
+
+            return [];
         }
 
         // --- 3. Track Generation ---
@@ -424,14 +452,12 @@
         function buildTracks() {
             ['harper', 'haisley'].forEach(child => {
                 pauseTimer(child);
-                let taskList = [];
-                if (currentMode === 'morning') {
-                    taskList = [...staticRoutines.morning, ...pickChores(globalChoreTarget)];
-                } else if (currentMode === 'bedtime') {
-                    taskList = [...staticRoutines.bedtime];
-                } else if (currentMode === 'chores') {
-                    taskList = pickChores(globalChoreTarget);
-                }
+                const taskList = getFilteredTasks(child, currentMode).map(t => ({
+                    name: t.name,
+                    time: parseInt(t.time) || 5,
+                    emoji: t.emoji || "⭐",
+                    isChore: currentMode === 'chores'
+                }));
 
                 state[child].tasks = taskList;
                 state[child].activeIndex = 0;
@@ -504,11 +530,10 @@
             const formatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
             document.getElementById(`${child}-time-text`).innerText = formatted;
 
-            // Visual Donut Color & Percentage
             let pct = cState.totalTaskSeconds > 0 ? (cState.secondsRemaining / cState.totalTaskSeconds) * 100 : 0;
-            let color = '#4caf50'; // Green
-            if (pct < 50) color = '#ffeb3b'; // Yellow
-            if (pct < 20) color = '#f44336'; // Red
+            let color = '#4caf50';
+            if (pct < 50) color = '#ffeb3b';
+            if (pct < 20) color = '#f44336';
 
             document.getElementById(`${child}-donut`).style.background = 
                 `conic-gradient(${color} ${pct}%, #e0e0e0 0)`;
@@ -519,7 +544,6 @@
             const cState = state[child];
             if (clickedIndex !== cState.activeIndex) return;
 
-            // Bank leftover seconds into Free Time
             if (cState.secondsRemaining > 0) {
                 cState.bankedSeconds += cState.secondsRemaining;
                 let bankedMins = Math.floor(cState.bankedSeconds / 60);
@@ -527,16 +551,15 @@
             }
 
             pauseTimer(child);
-            speak(`Awesome job completing ${cState.tasks[clickedIndex].name}!`);
+            speak(`Great job on ${cState.tasks[clickedIndex].name}!`);
 
             cState.activeIndex++;
             if (cState.activeIndex < cState.tasks.length) {
                 setupTask(child, cState.activeIndex);
             } else {
-                // All chores complete -> Unlock Castle for Parent Check
                 document.getElementById(`${child}-time-text`).innerText = "DONE!";
                 document.getElementById(`${child}-donut`).style.background = `conic-gradient(#4caf50 100%, #e0e0e0 0)`;
-                speak(`${capitalize(child)} has reached the castle! Ready for parent inspection.`);
+                speak(`${capitalize(child)} has reached the castle! Ready for parent approval.`);
             }
             renderTrackUI(child);
         }
@@ -555,30 +578,30 @@
         function rerollChore(child, index) {
             pauseTimer(child);
             const cState = state[child];
-            let currentChoreName = cState.tasks[index].name;
-            let unusedChores = spreadsheetData.filter(c => 
-                c.name !== currentChoreName && 
-                !cState.tasks.some(t => t.name === c.name)
+            const childItems = allSheetData.filter(i => 
+                i.child && i.child.toLowerCase() === child.toLowerCase() &&
+                i.category && i.category.toLowerCase() === 'chores'
             );
 
-            if (unusedChores.length === 0) unusedChores = spreadsheetData;
-            let replacement = unusedChores[Math.floor(Math.random() * unusedChores.length)];
+            let unused = childItems.filter(c => !cState.tasks.some(t => t.name === c.name));
+            if (unused.length === 0) unused = childItems;
+            let replacement = unused[Math.floor(Math.random() * unused.length)];
 
             cState.tasks[index] = {
                 name: replacement.name,
                 emoji: replacement.emoji || "🎲",
                 time: parseInt(replacement.time) || 5,
-                type: "chore"
+                isChore: true
             };
 
             if (index === cState.activeIndex) {
                 setupTask(child, index);
             }
             renderTrackUI(child);
-            speak(`Swapped chore to ${replacement.name}`);
+            speak(`Swapped to ${replacement.name}`);
         }
 
-        // --- 6. Castle & Parent Approval ---
+        // --- 6. Castle & Direct Parent Approval (No PIN) ---
         function handleCastleClick(child) {
             const cState = state[child];
             if (cState.activeIndex < cState.tasks.length) {
@@ -587,35 +610,25 @@
             }
 
             if (cState.approved) {
-                speak(`${capitalize(child)} is enjoying Free Time!`);
+                speak(`${capitalize(child)} has already unlocked Free Time!`);
                 return;
             }
 
-            // Open PIN dialog
             pendingApprovalChild = child;
             document.getElementById('approval-text').innerText = 
-                `Inspect ${capitalize(child)}'s tasks. Enter PIN to approve Free Time!`;
-            document.getElementById('parent-pin-input').value = "";
+                `Inspect ${capitalize(child)}'s tasks. Tap approve to award Free Time!`;
             document.getElementById('approval-modal').style.display = "flex";
-            document.getElementById('parent-pin-input').focus();
         }
 
-        function submitParentApproval() {
-            const pin = document.getElementById('parent-pin-input').value;
-            if (pin !== "1234") {
-                alert("Incorrect PIN. Please re-enter.");
-                return;
-            }
-
+        function confirmApproval() {
             const child = pendingApprovalChild;
             const cState = state[child];
             cState.approved = true;
             closeModal('approval-modal');
 
-            speak(`Parent approved! Fantastic job ${capitalize(child)}, enjoy your free time!`);
+            speak(`Approved! Wonderful job ${capitalize(child)}, enjoy your free time!`);
             renderTrackUI(child);
 
-            // Automatically Log to Spreadsheet
             logCompletionToSheet(child);
         }
 
@@ -625,10 +638,10 @@
                 let payload = {
                     action: "LOG_CHORE",
                     person: capitalize(child),
-                    choreName: `${currentMode.toUpperCase()} Routine Complete`,
+                    choreName: `${currentMode.toUpperCase()} Complete`,
                     routineTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                     status: "Completed",
-                    notes: `Finished ${cState.tasks.length} tasks. Free time banked: ${Math.floor(cState.bankedSeconds/60)}m`
+                    notes: `All ${cState.tasks.length} items finished. Banked: ${Math.floor(cState.bankedSeconds/60)}m`
                 };
 
                 await fetch(scriptUrl, {
@@ -637,9 +650,8 @@
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload)
                 });
-                console.log("Logged completion successfully for " + child);
             } catch (err) {
-                console.warn("Could not log to sheet:", err);
+                console.warn("Could not log completion:", err);
             }
         }
 
@@ -656,7 +668,7 @@
                 const nodeEl = document.createElement('div');
                 nodeEl.className = 'task-node';
                 nodeEl.innerHTML = `
-                    ${task.type === 'chore' && !isCompleted ? `<button class="reroll-btn" onclick="rerollChore('${child}', ${index})">🎲</button>` : ''}
+                    ${task.isChore && !isCompleted ? `<button class="reroll-btn" onclick="rerollChore('${child}', ${index})">🎲</button>` : ''}
                     <div class="node-circle ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}" onclick="completeTask('${child}', ${index})">
                         ${isCompleted ? '⭐' : task.emoji}
                     </div>
@@ -666,7 +678,6 @@
                 container.appendChild(nodeEl);
             });
 
-            // Castle Node Visuals
             const castle = document.getElementById(`${child}-castle`);
             const badge = document.getElementById(`${child}-castle-badge`);
             const allDone = cState.activeIndex >= cState.tasks.length;
