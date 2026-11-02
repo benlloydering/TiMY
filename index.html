@@ -130,12 +130,28 @@
         .node-circle {
             width: 68px; height: 68px; border-radius: 50%; background: white;
             border: 4px solid #ddd; display: flex; justify-content: center; align-items: center;
-            font-size: 26px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.18);
+            cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.18);
             position: relative; transition: transform 0.2s, border-color 0.3s;
             touch-action: none;
         }
         .node-circle.active { border-color: #ffca28; transform: scale(1.12); animation: pulse 2s infinite; }
         .node-circle.completed { background: #ffca28; border-color: #ff8f00; color: #fff; }
+
+        /* Auto-Sizing Emoji Container */
+        .node-emoji {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            white-space: nowrap;
+            line-height: 1;
+        }
+        .node-emoji.single {
+            font-size: 26px;
+        }
+        .node-emoji.double {
+            font-size: 20px;
+            letter-spacing: -1px;
+        }
 
         /* Press-and-Hold Progress Ring */
         .hold-progress-svg {
@@ -163,7 +179,6 @@
         }
         .reroll-btn:active { transform: scale(0.9); }
         
-        /* Updated Multi-Line Word Wrapping */
         .task-label {
             background: white; padding: 5px 8px; border-radius: 8px; font-size: 11px;
             font-weight: 700; margin-top: 6px; text-align: center; width: 104px; color: #333;
@@ -350,7 +365,6 @@
         let currentMode = 'morning';
         let pendingApprovalChild = null;
 
-        // Parent Settings with Separate Durations
         let settings = {
             choreCount: parseInt(localStorage.getItem('timy_choreCount')) || 3,
             morningDur: parseInt(localStorage.getItem('timy_morningDur')) || 30,
@@ -386,6 +400,19 @@
                 approved: false
             }
         };
+
+        // Grapheme-aware Emoji scaling detector
+        function getEmojiClass(emojiStr) {
+            if (!emojiStr) return 'single';
+            try {
+                if (typeof Intl !== 'undefined' && Intl.Segmenter) {
+                    const seg = new Intl.Segmenter('en', { granularity: 'grapheme' });
+                    return [...seg.segment(emojiStr)].length > 1 ? 'double' : 'single';
+                }
+            } catch(e) {}
+            const cleaned = emojiStr.replace(/\uFE0F/g, '');
+            return [...cleaned].length > 1 ? 'double' : 'single';
+        }
 
         // --- 1. Boot & Data Sync ---
         window.onload = async () => {
@@ -448,11 +475,9 @@
                 const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
                 let selected = [];
 
-                // 1. Must Do Checkboxes
                 let mustDo = chorePool.filter(c => c.mustDo === true);
                 selected.push(...mustDo);
 
-                // 2. Day Matches
                 if (selected.length < settings.choreCount) {
                     let dayMatches = chorePool.filter(c => 
                         !selected.some(s => s.name === c.name) && 
@@ -463,7 +488,6 @@
                     selected.push(...dayMatches.slice(0, needed));
                 }
 
-                // 3. Any Fallback
                 if (selected.length < settings.choreCount) {
                     let anyMatches = chorePool.filter(c => 
                         !selected.some(s => s.name === c.name) && 
@@ -553,7 +577,6 @@
 
             clearInterval(cState.timerInterval);
             cState.timerInterval = setInterval(() => {
-                // 1. Decrement Task Timer
                 if (cState.taskSecondsRemaining > 0) {
                     cState.taskSecondsRemaining--;
                 } else {
@@ -562,7 +585,6 @@
                     }
                 }
 
-                // 2. Decrement Overall Timer or Increment Overtime
                 if (!cState.isOvertime) {
                     if (cState.totalSecondsRemaining > 0) {
                         cState.totalSecondsRemaining--;
@@ -596,7 +618,6 @@
         function updateDisplays(child) {
             const cState = state[child];
 
-            // 1. Overall Timer Display
             const totalTextEl = document.getElementById(`${child}-total-text`);
             const totalLabelEl = document.getElementById(`${child}-total-label`);
 
@@ -616,7 +637,6 @@
                 totalTextEl.innerText = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
             }
 
-            // 2. Task Donut Timer Display
             const taskTextEl = document.getElementById(`${child}-task-text`);
             const tm = Math.floor(cState.taskSecondsRemaining / 60);
             const ts = cState.taskSecondsRemaining % 60;
@@ -791,6 +811,7 @@
             cState.tasks.forEach((task, index) => {
                 const isCompleted = index < cState.activeIndex;
                 const isActive = index === cState.activeIndex;
+                const emojiStyleClass = isCompleted ? 'single' : getEmojiClass(task.emoji);
 
                 const nodeEl = document.createElement('div');
                 nodeEl.className = 'task-node';
@@ -799,7 +820,7 @@
                     ${task.isChore && !isCompleted ? `<button class="reroll-btn" onclick="rerollChore('${child}', ${index})">🎲</button>` : ''}
                     <div class="node-circle ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}" id="${child}-node-${index}">
                         <svg class="hold-progress-svg"><circle class="hold-progress-circle" cx="36" cy="36" r="32"></circle></svg>
-                        <span>${isCompleted ? '⭐' : task.emoji}</span>
+                        <span class="node-emoji ${emojiStyleClass}">${isCompleted ? '⭐' : task.emoji}</span>
                     </div>
                     <div class="task-label">${task.name}</div>
                     <div class="task-time">${task.time}:00</div>
